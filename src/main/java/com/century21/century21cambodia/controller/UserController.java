@@ -1,19 +1,25 @@
 package com.century21.century21cambodia.controller;
 
+import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
+import com.century21.century21cambodia.configuration.upload.FileUploadService;
+import com.century21.century21cambodia.exception.CustomRuntimeException;
 import com.century21.century21cambodia.model.request.EnableEmail;
 import com.century21.century21cambodia.model.request.RefreshToken;
 import com.century21.century21cambodia.model.request.SignIn;
 import com.century21.century21cambodia.model.request.SignUp;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.model.response.OAuth2;
-import com.century21.century21cambodia.repository.user_contact.UserContact;
-import com.century21.century21cambodia.repository.user_question.UserQuestion;
-import com.century21.century21cambodia.service.signin.SignInService;
-import com.century21.century21cambodia.service.signup.SignUpService;
-import com.century21.century21cambodia.service.social_signin.SocialSignInService;
-import com.century21.century21cambodia.service.user_contact.UserContactService;
-import com.century21.century21cambodia.service.user_info.UserInfoService;
-import com.century21.century21cambodia.service.user_question.UserQuestionService;
+import com.century21.century21cambodia.repository.api_user_contact.UserContact;
+import com.century21.century21cambodia.repository.api_user_question.UserQuestion;
+import com.century21.century21cambodia.service.api_enable_email.EnableEmailService;
+import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
+import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
+import com.century21.century21cambodia.service.api_signin.SignInService;
+import com.century21.century21cambodia.service.api_signup.SignUpService;
+import com.century21.century21cambodia.service.api_social_signin.SocialSignInService;
+import com.century21.century21cambodia.service.api_user_contact.UserContactService;
+import com.century21.century21cambodia.service.api_user_info.UserInfoService;
+import com.century21.century21cambodia.service.api_user_question.UserQuestionService;
 import com.century21.century21cambodia.util.Url;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -21,14 +27,16 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import javax.xml.ws.Response;
+import java.io.IOException;
 
 @Api(value = "user management",description = "user management")
 @RestController
@@ -47,20 +55,30 @@ public class UserController {
     private UserQuestionService userQuestionService;
     @Autowired
     private UserContactService userContactService;
+    @Autowired
+    private FileUploadService fileUploadService;
+    @Autowired
+    private FileUploadProperty fileUploadProperty;
+
+    @Autowired
+    private SendEmailVerificationService sendEmailVerificationService;
 
     @ApiOperation("send 4 number to email to verify")
     @GetMapping(value = "/api/send-email-verification-code",produces = "application/json")
     public ResponseEntity emailVerification(@Email @RequestParam("email") String email, HttpServletRequest httpServletRequest){
-        signUpService.saveEmailId(email);
+        sendEmailVerificationService.saveEmailId(email);
         CustomResponse customResponse=new CustomResponse(200);
         customResponse.setStatus("Email has been send");
         return customResponse.httpResponse();
     }
 
+    @Autowired
+    EnableEmailService enableEmailService;
+
     @ApiOperation("retrieve email and code to enable email")
     @PatchMapping(value = "/api/enable-email",produces = "application/json")
     public ResponseEntity enableEmail(@Valid @RequestBody EnableEmail enableEmail){
-        signUpService.enableEmail(enableEmail.getEmail(),enableEmail.getCode());
+        enableEmailService.enableEmail(enableEmail.getEmail(),enableEmail.getCode());
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
@@ -151,4 +169,41 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
+    @ApiOperation("user image")
+    @GetMapping("/api/user-image/{fileName:.+}")
+    public ResponseEntity userImage(@PathVariable(value = "fileName")String fileName,HttpServletRequest request){
+        Resource resource = fileUploadService.loadFile(fileName,fileUploadProperty.getUserImage());
+        String contentType= null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+            if(contentType==null){
+                throw new CustomRuntimeException(500,"Invalid file type.");
+            }
+        } catch (IOException e) {
+            throw new CustomRuntimeException(500,e.getMessage());
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
+
+    @Autowired
+    private UserUploadImageService userUploadImageService;
+
+    @ApiOperation("user upload image")
+    @PostMapping(value="/api/user-upload-image",consumes ="multipart/form-data",produces = "application/json")
+    public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam("userID")int userID){
+        String fileName = fileUploadService.storeImage(file, fileUploadProperty.getUserImage());
+
+        String oldFile = userUploadImageService.findImageName(userID);
+        if(oldFile!=null) {
+            fileUploadService.removeImage(oldFile, fileUploadProperty.getUserImage());
+        }
+
+        userUploadImageService.saveUserImage(userID,fileName);
+
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
 }

@@ -1,14 +1,19 @@
 package com.century21.century21cambodia;
 
+import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.io.IOException;
 
 @SpringBootApplication
+@EnableConfigurationProperties({
+        FileUploadProperty.class
+})
 public class Century21cambodiaApplication {
 
     public static void main(String[] args) {

@@ -2,10 +2,8 @@ package com.century21.century21cambodia.service.search;
 
 import com.century21.century21cambodia.exception.CustomRuntimeException;
 import com.century21.century21cambodia.model.Pagination;
-import com.century21.century21cambodia.repository.projects.Country;
 import com.century21.century21cambodia.repository.search.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

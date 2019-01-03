@@ -1,7 +1,7 @@
 package com.century21.century21cambodia.service.authorize;
 
-import com.century21.century21cambodia.repository.signin.SignInRepo;
-import com.century21.century21cambodia.repository.social_signin.SocialSignInRepo;
+import com.century21.century21cambodia.repository.api_signin.SignInRepo;
+import com.century21.century21cambodia.repository.api_social_signin.SocialSignInRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
