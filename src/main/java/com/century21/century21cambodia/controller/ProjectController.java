@@ -100,7 +100,7 @@ public class ProjectController {
     }
 
     @ApiOperation("find country")
-    @GetMapping(value = "/api/find-countries-by-name",consumes ="multipart/form-data",produces = "application/json")
+    @GetMapping(value = "/api/find-countries-by-name",consumes ="application/json",produces = "application/json")
     public ResponseEntity findCountryByName(@RequestParam(value = "name")String name){
         name = "%"+name+"%";
         List<Country> countries=newProjectService.countries(name);
