@@ -20,10 +20,12 @@ public interface ProjectRepo {
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
     List<Project> projects(@Param("countryID")int countryID, @Param("typeID")int typeID, @Param("paging")Pagination pagination);
+
     @Select("SELECT name " +
-            "FROM address " +
+            "FROM country " +
             "WHERE id=#{country_id}")
     String projectCountry();
+
     @Select("SELECT name " +
             "FROM project_type " +
             "WHERE id=#{project_type_id}")
