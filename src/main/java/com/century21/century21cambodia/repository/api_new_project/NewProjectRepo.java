@@ -7,8 +7,8 @@ import java.util.List;
 
 @Repository
 public interface NewProjectRepo {
-    @Select("INSERT INTO project(name,grr,country_id,project_type_id,completed_date,built_date,description,thumbnail,start_price,end_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2) " +
-            "VALUES (#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.thumbnail},#{project.minPrice},#{project.maxPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.state},#{project.addressOne},#{project.addressTwo}) " +
+    @Select("INSERT INTO project(name,grr,country_id,project_type_id,completed_date,built_date,description,start_price,end_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2) " +
+            "VALUES (#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.minPrice},#{project.maxPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.status},#{project.addressOne},#{project.addressTwo}) " +
             "RETURNING id")
     int saveProject(@Param("project") Project project);
 

@@ -25,7 +25,7 @@ public class Project {
     private String addressOne;
     @JsonProperty("address_#2")
     private String addressTwo;
-    private String state;
+    private String status;
     @JsonProperty("min_price")
     private Double minPrice;
     @JsonProperty("max_price")
@@ -141,12 +141,12 @@ public class Project {
         this.addressTwo = addressTwo;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String state) {
+        this.status = status;
     }
 
     public Double getMinPrice() {
@@ -187,7 +187,7 @@ public class Project {
                 ", countryID=" + countryID +
                 ", addressOne='" + addressOne + '\'' +
                 ", addressTwo='" + addressTwo + '\'' +
-                ", state='" + state + '\'' +
+                ", status='" + status + '\'' +
                 ", minPrice=" + minPrice +
                 ", maxPrice=" + maxPrice +
                 ", propertyTypes=" + propertyTypes +

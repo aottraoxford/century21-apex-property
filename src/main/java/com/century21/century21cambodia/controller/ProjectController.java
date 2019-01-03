@@ -6,6 +6,7 @@ import com.century21.century21cambodia.model.Pagination;
 import com.century21.century21cambodia.model.request.Project;
 import com.century21.century21cambodia.repository.api_new_project.Country;
 import com.century21.century21cambodia.model.response.CustomResponse;
+import com.century21.century21cambodia.repository.api_projects.ProjectsRequest;
 import com.century21.century21cambodia.repository.search.SearchParam;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
 import com.century21.century21cambodia.service.api_project_details.ProjectDetailService;
@@ -38,7 +39,7 @@ public class ProjectController {
 
     @ApiOperation("list all project")
     @PostMapping(value="/api/projects",produces = "application/json")
-    public ResponseEntity projects(@RequestBody Project project, @RequestParam(value = "page",defaultValue = "1") int page, @RequestParam(value = "limit",defaultValue = "10") int limit){
+    public ResponseEntity projects(@RequestBody ProjectsRequest project, @RequestParam(value = "page",defaultValue = "1") int page, @RequestParam(value = "limit",defaultValue = "10") int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,projectService.projects(project.getCountryID(),project.getProjectTypeID(),pagination),pagination);
         return customResponse.httpResponse("result","paging");
