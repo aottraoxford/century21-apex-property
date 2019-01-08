@@ -32,6 +32,7 @@ import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -94,7 +95,6 @@ public class UserController {
     @ApiOperation("user login with century 21 cambodia account")
     @PostMapping(value="/api/sign-in",produces = "application/json")
     public ResponseEntity signIn(@Valid @RequestBody SignIn signIn, HttpServletRequest httpServletRequest){
-
         signInService.emailExist(signIn.getEmail());
         CustomResponse customResponse;
         try {
@@ -112,7 +112,6 @@ public class UserController {
             return customResponse.httpResponse();
         }
         return customResponse.httpResponse("result");
-
     }
 
     @ApiOperation("sign in with facebook,gmail,wechat")
@@ -169,23 +168,11 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
+    @ApiIgnore
     @ApiOperation("user image")
     @GetMapping("/api/user-image/{fileName:.+}")
     public ResponseEntity userImage(@PathVariable(value = "fileName")String fileName,HttpServletRequest request){
-        Resource resource = fileUploadService.loadFile(fileName,fileUploadProperty.getUserImage());
-        String contentType= null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            if(contentType==null){
-                throw new CustomRuntimeException(500,"Invalid file type.");
-            }
-        } catch (IOException e) {
-            throw new CustomRuntimeException(500,e.getMessage());
-        }
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(resource);
+        return fileUploadService.loadFile(fileName,fileUploadProperty.getUserImage(),request);
     }
 
     @Autowired

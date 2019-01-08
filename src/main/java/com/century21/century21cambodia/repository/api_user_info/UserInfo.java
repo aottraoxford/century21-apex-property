@@ -1,11 +1,24 @@
 package com.century21.century21cambodia.repository.api_user_info;
 
+import com.century21.century21cambodia.util.Url;
+
 public class UserInfo {
     private String firstName;
     private String lastName;
     private String gender;
     private String email;
     private String phoneNumber;
+    private String image;
+
+    public String getImage() {
+        if(image!=null)
+            return Url.userImageUrl+image;
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getFirstName() {
         return firstName;

@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProjectRepo {
     @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
             "FROM project " +
-            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} " +
+            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true " +
             "ORDER BY id " +
             "LIMIT #{paging.limit} OFFSET #{paging.offset}")
     @Results({
@@ -33,7 +33,7 @@ public interface ProjectRepo {
 
     @Select("SELECT count(id) " +
             "FROM project " +
-            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} ")
+            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true")
     int countProjects(@Param("countryID")int countryID,@Param("typeID")int typeID);
 
 }

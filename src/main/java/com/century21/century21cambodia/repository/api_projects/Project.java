@@ -1,6 +1,7 @@
 package com.century21.century21cambodia.repository.api_projects;
 
 
+import com.century21.century21cambodia.util.Url;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project {
@@ -57,6 +58,8 @@ public class Project {
     }
 
     public String getThumbnail() {
+        if(thumbnail!=null)
+            return Url.projectThumbnailUrl+thumbnail;
         return thumbnail;
     }
 

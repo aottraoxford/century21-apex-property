@@ -8,11 +8,13 @@ import java.util.List;
 @Repository
 public interface SearchRepo {
     @Select("SELECT DISTINCT(country.id),country.name " +
-            "FROM project INNER JOIN country ON country.id=project.country_id")
+            "FROM project INNER JOIN country ON country.id=project.country_id " +
+            "WHERE project.isdisplay IS true")
     List<Countries> countries();
 
     @Select("SELECT DISTINCT(project_type.id),project_type.name " +
-            "FROM project INNER JOIN project_type ON project_type.id=project.project_type_id")
+            "FROM project INNER JOIN project_type ON project_type.id=project.project_type_id " +
+            "WHERE project.isdisplay IS true")
     List<ProjectType> projectTypes();
 
     @Select(value= "{CALL search(#{searchParam.title},#{searchParam.rentOrBuy},#{searchParam.sort},#{searchParam.projectTypeID},#{searchParam.countryID},#{searchParam.roomAmount},#{searchParam.startPrice},#{searchParam.endPrice},#{limit},#{offset})}")
