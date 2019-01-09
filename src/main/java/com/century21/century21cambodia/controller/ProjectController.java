@@ -112,7 +112,7 @@ public class ProjectController {
     }
 
     @ApiOperation("(BACK END)find country")
-    @GetMapping(value = "/apis/find-countries-by-name",consumes ="application/json",produces = "application/json")
+    @GetMapping(value = "/api/find-countries-by-name",produces = "application/json")
     public ResponseEntity findCountryByName(@RequestParam(value = "name")String name){
         name = "%"+name+"%";
         List<Country> countries=newProjectService.countries(name);
@@ -149,7 +149,7 @@ public class ProjectController {
     private UpdateProjectService updateProjectService;
 
     @ApiOperation("(BACK END)update project")
-    @PutMapping(value = "/api/update-project",produces = "application/json",consumes ="application/json")
+    @PutMapping(value = "/apis/update-project",produces = "application/json",consumes ="application/json")
     public ResponseEntity editProject(@RequestBody UpdateProj updateProj){
         updateProjectService.updateProject(updateProj);
         CustomResponse customResponse=new CustomResponse(200);

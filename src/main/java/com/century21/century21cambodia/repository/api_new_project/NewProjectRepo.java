@@ -20,7 +20,8 @@ public interface NewProjectRepo {
             "VALUES (#{pt.type},#{pt.bedroom},#{pt.floor},#{pt.width},#{pt.height},#{pt.bathroom},#{pt.parking},#{pid})")
     int savePropertyType(@Param("pt")PropertyType propertyType, @Param("pid")int projectID);
 
-    @Select("SELECT id,name FROM country " +
-            "WHERE name ILIKE #{name}")
+    @Select("SELECT country.id,country.name FROM country " +
+            "INNER JOIN project ON country.id = project.country_id " +
+            "WHERE country.name ILIKE #{name} AND project.isdisplay IS TRUE")
     List<Country> countries(@Param("name")String name);
 }
