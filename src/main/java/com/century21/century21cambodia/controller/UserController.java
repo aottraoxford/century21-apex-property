@@ -20,6 +20,7 @@ import com.century21.century21cambodia.service.api_social_signin.SocialSignInSer
 import com.century21.century21cambodia.service.api_user_contact.UserContactService;
 import com.century21.century21cambodia.service.api_user_info.UserInfoService;
 import com.century21.century21cambodia.service.api_user_question.UserQuestionService;
+import com.century21.century21cambodia.util.JwtUtil;
 import com.century21.century21cambodia.util.Url;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.IOException;
@@ -67,6 +69,10 @@ public class UserController {
     @ApiOperation("send 4 number to email to verify")
     @GetMapping(value = "/api/send-email-verification-code",produces = "application/json")
     public ResponseEntity emailVerification(@Email @RequestParam("email") String email, HttpServletRequest httpServletRequest){
+
+        JwtUtil jwt=new JwtUtil();
+        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),"123",String.class);
+
         sendEmailVerificationService.saveEmailId(email);
         CustomResponse customResponse=new CustomResponse(200);
         customResponse.setStatus("Email has been send");
@@ -78,7 +84,11 @@ public class UserController {
 
     @ApiOperation("retrieve email and code to enable email")
     @PatchMapping(value = "/api/enable-email",produces = "application/json")
-    public ResponseEntity enableEmail(@Valid @RequestBody EnableEmail enableEmail){
+    public ResponseEntity enableEmail(@Valid @RequestBody EnableEmail enableEmail,HttpServletRequest httpServletRequest){
+
+        JwtUtil jwt=new JwtUtil();
+        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),"123",String.class);
+
         enableEmailService.enableEmail(enableEmail.getEmail(),enableEmail.getCode());
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
@@ -94,7 +104,8 @@ public class UserController {
 
     @ApiOperation("user login with century 21 cambodia account")
     @PostMapping(value="/api/sign-in",produces = "application/json")
-    public ResponseEntity signIn(@Valid @RequestBody SignIn signIn, HttpServletRequest httpServletRequest){
+    public ResponseEntity signIn(@Valid @RequestBody SignIn signIn){
+
         signInService.emailExist(signIn.getEmail());
         CustomResponse customResponse;
         try {
@@ -117,11 +128,7 @@ public class UserController {
     @ApiOperation("sign in with facebook,gmail,wechat")
     @PostMapping(value="/api/social-sign-in",produces = "application/json")
     public ResponseEntity socialSignIn(HttpServletRequest httpServletRequest){
-        if(httpServletRequest.getHeader("auth")==null){
-            CustomResponse customResponse=new CustomResponse(401);
-            return customResponse.httpResponse();
-        }
-        return socialSignInService.socialSignIn(httpServletRequest.getHeader("auth"));
+        return socialSignInService.socialSignIn(httpServletRequest.getHeader("x-auth"));
     }
 
     @ApiOperation("refresh token")
@@ -146,7 +153,7 @@ public class UserController {
     }
 
     @ApiOperation("user information")
-    @GetMapping("/api/user-info")
+    @GetMapping("/apis/user-info")
     public ResponseEntity userInfo(@RequestParam(value = "id")int userID){
         CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID));
         return customResponse.httpResponse("result");
@@ -154,7 +161,8 @@ public class UserController {
 
     @ApiOperation("user question")
     @PostMapping("/api/user-question")
-    public ResponseEntity userQuestion(@RequestBody @Valid UserQuestion userQuestion){
+    public ResponseEntity userQuestion(@RequestBody @Valid UserQuestion userQuestion,HttpServletRequest httpServletRequest){
+
         userQuestionService.saveUserQuestion(userQuestion);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
@@ -162,7 +170,8 @@ public class UserController {
 
     @ApiOperation("user contact")
     @PostMapping("/api/user-contact")
-    public ResponseEntity useContact(@RequestBody @Valid UserContact userContact){
+    public ResponseEntity useContact(@RequestBody @Valid UserContact userContact,HttpServletRequest httpServletRequest){
+
         userContactService.saveUserContact(userContact);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
@@ -170,7 +179,7 @@ public class UserController {
 
     @ApiIgnore
     @ApiOperation("user image")
-    @GetMapping("/api/user-image/{fileName:.+}")
+    @GetMapping("/api/user/image/{fileName:.+}")
     public ResponseEntity userImage(@PathVariable(value = "fileName")String fileName,HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getUserImage(),request);
     }
@@ -179,7 +188,7 @@ public class UserController {
     private UserUploadImageService userUploadImageService;
 
     @ApiOperation("user upload image")
-    @PostMapping(value="/api/user-upload-image",consumes ="multipart/form-data",produces = "application/json")
+    @PostMapping(value="/apis/user-upload-image",produces = "application/json")
     public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam("userID")int userID){
         String fileName = fileUploadService.storeImage(file, fileUploadProperty.getUserImage());
 

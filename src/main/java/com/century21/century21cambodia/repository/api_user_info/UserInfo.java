@@ -1,12 +1,16 @@
 package com.century21.century21cambodia.repository.api_user_info;
 
 import com.century21.century21cambodia.util.Url;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserInfo {
+    @JsonProperty("first_name")
     private String firstName;
+    @JsonProperty("last_name")
     private String lastName;
     private String gender;
     private String email;
+    @JsonProperty("phone_number")
     private String phoneNumber;
     private String image;
 

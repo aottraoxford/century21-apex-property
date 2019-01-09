@@ -5,7 +5,7 @@ import com.century21.century21cambodia.model.request.SocialSignIn;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.model.response.OAuth2;
 import com.century21.century21cambodia.repository.api_social_signin.SocialSignInRepo;
-import com.century21.century21cambodia.util.HeaderDecode;
+import com.century21.century21cambodia.util.JwtUtil;
 import com.century21.century21cambodia.util.Url;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -19,13 +19,13 @@ import java.util.UUID;
 @Service
 public class SocialSignInServiceImpl implements SocialSignInService {
     @Autowired
-    private HeaderDecode headerDecode;
+    private JwtUtil jwtUtil;
     @Autowired
     private SocialSignInRepo socialSignInRepo;
 
     @Override
     public ResponseEntity socialSignIn(String token) {
-        SocialSignIn socialSignIn = (SocialSignIn) headerDecode.tokenToObject(token, "123", SocialSignIn.class);
+        SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, "123", SocialSignIn.class);
         CustomResponse customResponse;
 
         String email = socialSignIn.getEmail();

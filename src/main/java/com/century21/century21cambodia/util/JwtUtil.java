@@ -17,8 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 
 @Configuration
-public class HeaderDecode<T> {
+public class JwtUtil<T> {
     public T tokenToObject(String token,String secret,T t){
+        if(token==null){
+            throw new CustomRuntimeException(401,"UNAUTHORIZED");
+        }
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm).build();
@@ -30,6 +33,7 @@ public class HeaderDecode<T> {
         }
         return t;
     }
+
     public String objectToToken(T t,String secret){
         Algorithm algorithm = Algorithm.HMAC256(secret);
         String token = JWT.create()

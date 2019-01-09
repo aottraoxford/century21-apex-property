@@ -55,7 +55,7 @@ public class ProjectController {
     }
 
     @ApiOperation("project details")
-    @GetMapping(value="/api/project-details",produces = "application/json")
+    @GetMapping(value="/apis/project-details",produces = "application/json")
     public ResponseEntity projectDetails(@RequestParam(value = "projectID")int projectID){
         CustomResponse customResponse=new CustomResponse(200,projectDetailService.projectDetails(projectID));
         return customResponse.httpResponse("result");
@@ -84,7 +84,7 @@ public class ProjectController {
     }
 
     @ApiOperation("(BACK END)create new project")
-    @PostMapping(value = "/api/new-project",produces = "application/json")
+    @PostMapping(value = "/apis/new-project",produces = "application/json")
     public ResponseEntity newProject(@RequestBody Project project){
         CustomResponse customResponse=new CustomResponse(200,newProjectService.createNewProject(project));
         return customResponse.httpResponse("project_id");
@@ -94,7 +94,7 @@ public class ProjectController {
     private ProjectGalleryService projectGalleryService;
 
     @ApiOperation("(BACK END)upload image to project(working only postman)")
-    @PostMapping(value = "/api/upload-project-images",produces = "application/json")
+    @PostMapping(value = "/apis/upload-project-images",produces = "application/json")
     public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID,@RequestPart(value = "thumbnail",required = false)MultipartFile thumbnail,@RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
         String thum=null;
         String tn=projectGalleryService.findThumbnail(projectID);
@@ -112,7 +112,7 @@ public class ProjectController {
     }
 
     @ApiOperation("(BACK END)find country")
-    @GetMapping(value = "/api/find-countries-by-name",consumes ="application/json",produces = "application/json")
+    @GetMapping(value = "/apis/find-countries-by-name",consumes ="application/json",produces = "application/json")
     public ResponseEntity findCountryByName(@RequestParam(value = "name")String name){
         name = "%"+name+"%";
         List<Country> countries=newProjectService.countries(name);
@@ -124,7 +124,7 @@ public class ProjectController {
     private RemoveProjectGalleryService removeProjectGalleryService;
 
     @ApiOperation("(BACK END)delete one image from project")
-    @DeleteMapping(value = "/api/remove-project-gallery",produces = "application/json")
+    @DeleteMapping(value = "/apis/remove-project-gallery",produces = "application/json")
     public ResponseEntity removeProjectGallery(@RequestParam(value = "imageName")String imageName){
         removeProjectGalleryService.removeGallery(imageName);
         CustomResponse customResponse=new CustomResponse(200);
