@@ -16,6 +16,7 @@ import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
 import com.century21.century21cambodia.service.api_update_project.UpdateProjectService;
 import com.century21.century21cambodia.service.api_upload_project_images.ProjectGalleryService;
+import com.century21.century21cambodia.service.api_visible_project.VisibleProjectService;
 import com.century21.century21cambodia.service.search.SearchService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class ProjectController {
     private ProjectGalleryService projectGalleryService;
 
     @ApiOperation("(BACK END)upload image to project(working only postman)")
-    @PostMapping(value = "/apis/upload-project-images",produces = "application/json")
+    @PostMapping(value = "/api/upload-project-images",produces = "application/json")
     public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID,@RequestPart(value = "thumbnail",required = false)MultipartFile thumbnail,@RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
         String thum=null;
         String tn=projectGalleryService.findThumbnail(projectID);
@@ -155,6 +156,18 @@ public class ProjectController {
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
+
+    @Autowired
+    private VisibleProjectService visibleProjectService;
+
+    @ApiOperation("(BACK END)visible project")
+    @PutMapping(value = "/apis/visible-project",produces = "application/json")
+    public ResponseEntity visibleProject(@RequestParam("status")boolean status,@RequestParam("projectID")int projectID ){
+        visibleProjectService.visibleProject(status,projectID);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
 
 }
 
