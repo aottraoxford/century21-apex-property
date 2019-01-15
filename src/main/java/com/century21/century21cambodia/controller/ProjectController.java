@@ -10,10 +10,14 @@ import com.century21.century21cambodia.repository.api_new_project.Project;
 import com.century21.century21cambodia.repository.api_projects.ProjectsRequest;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.repository.search.SearchParam;
+import com.century21.century21cambodia.service.api_events.EventsService;
+import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
+import com.century21.century21cambodia.service.api_post_event.PostEventService;
 import com.century21.century21cambodia.service.api_project_details.ProjectDetailService;
 import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
+import com.century21.century21cambodia.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.century21cambodia.service.api_update_project.UpdateProjectService;
 import com.century21.century21cambodia.service.api_upload_project_images.ProjectGalleryService;
 import com.century21.century21cambodia.service.api_visible_project.VisibleProjectService;
@@ -56,7 +60,7 @@ public class ProjectController {
     }
 
     @ApiOperation("project details")
-    @GetMapping(value="/apis/project-details",produces = "application/json")
+    @GetMapping(value="/api/project-details",produces = "application/json")
     public ResponseEntity projectDetails(@RequestParam(value = "projectID")int projectID){
         CustomResponse customResponse=new CustomResponse(200,projectDetailService.projectDetails(projectID));
         return customResponse.httpResponse("result");
@@ -85,7 +89,7 @@ public class ProjectController {
     }
 
     @ApiOperation("(BACK END)create new project")
-    @PostMapping(value = "/apis/new-project",produces = "application/json")
+    @PostMapping(value = "/api/new-project",produces = "application/json")
     public ResponseEntity newProject(@RequestBody Project project){
         CustomResponse customResponse=new CustomResponse(200,newProjectService.createNewProject(project));
         return customResponse.httpResponse("project_id");
@@ -125,7 +129,7 @@ public class ProjectController {
     private RemoveProjectGalleryService removeProjectGalleryService;
 
     @ApiOperation("(BACK END)delete one image from project")
-    @DeleteMapping(value = "/apis/remove-project-gallery",produces = "application/json")
+    @DeleteMapping(value = "/api/remove-project-gallery",produces = "application/json")
     public ResponseEntity removeProjectGallery(@RequestParam(value = "imageName")String imageName){
         removeProjectGalleryService.removeGallery(imageName);
         CustomResponse customResponse=new CustomResponse(200);
@@ -150,7 +154,7 @@ public class ProjectController {
     private UpdateProjectService updateProjectService;
 
     @ApiOperation("(BACK END)update project")
-    @PutMapping(value = "/apis/update-project",produces = "application/json",consumes ="application/json")
+    @PutMapping(value = "/api/update-project",produces = "application/json",consumes ="application/json")
     public ResponseEntity editProject(@RequestBody UpdateProj updateProj){
         updateProjectService.updateProject(updateProj);
         CustomResponse customResponse=new CustomResponse(200);
@@ -161,13 +165,54 @@ public class ProjectController {
     private VisibleProjectService visibleProjectService;
 
     @ApiOperation("(BACK END)visible project")
-    @PutMapping(value = "/apis/visible-project",produces = "application/json")
+    @PutMapping(value = "/api/visible-project",produces = "application/json")
     public ResponseEntity visibleProject(@RequestParam("status")boolean status,@RequestParam("projectID")int projectID ){
         visibleProjectService.visibleProject(status,projectID);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
+    @Autowired
+    private PostEventService postEventService;
+
+    @ApiOperation("(BACK END)post event")
+    @PostMapping(value = "/api/post-event",produces = "application/json")
+    public ResponseEntity postEvent(@RequestParam("title")String title,@RequestParam("description")String description ,@RequestPart("file") MultipartFile multipartFile){
+        postEventService.postEvent(title,description,fileUploadService.storeImage(multipartFile,fileUploadProperty.getEventImage()));
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
+    @Autowired
+    private EventsService eventsService;
+
+    @ApiOperation("(BACK END)get all event")
+    @GetMapping(value = "/api/events",produces = "application/json")
+    public ResponseEntity events(){
+        CustomResponse customResponse=new CustomResponse(200,eventsService.events());
+        return customResponse.httpResponse("result");
+    }
+
+    @Autowired
+    private ModifyEventStatusService modifyEventStatusService;
+
+    @ApiOperation("(BACK END) modify event status ")
+    @GetMapping(value = "/api/modify-events-status",produces = "application/json")
+    public ResponseEntity modifyEventsStatus(@RequestParam("eventID")int eventID,@RequestParam("status")boolean status){
+        modifyEventStatusService.updateStatus(eventID,status);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
+    @Autowired
+    private TypeCountryProjectService typeCountryProjectService;
+
+    @ApiOperation("get type country project ")
+    @GetMapping(value = "/api/type-country-project",produces = "application/json")
+    public ResponseEntity typeCountryProject(){
+        CustomResponse customResponse=new CustomResponse(200,typeCountryProjectService.typeCP());
+        return customResponse.httpResponse("result");
+    }
 
 }
 

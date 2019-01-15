@@ -7,6 +7,7 @@ public class FileUploadProperty {
     private String userImage;
     private String projectThumbnail;
     private String projectGallery;
+    private String eventImage;
 
     public String getUserImage() {
         return userImage;
@@ -32,12 +33,21 @@ public class FileUploadProperty {
         this.projectGallery = projectGallery;
     }
 
+    public String getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
+    }
+
     @Override
     public String toString() {
         return "FileUploadProperty{" +
                 "userImage='" + userImage + '\'' +
                 ", projectThumbnail='" + projectThumbnail + '\'' +
                 ", projectGallery='" + projectGallery + '\'' +
+                ", eventImage='" + eventImage + '\'' +
                 '}';
     }
 }
