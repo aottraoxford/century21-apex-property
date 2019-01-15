@@ -1,10 +1,13 @@
 package com.century21.century21cambodia.repository.api_type_country_project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ProjectType {
-    @JsonProperty("project_id")
+    @ApiModelProperty(position = 1)
+    @JsonProperty("id")
     private int projectID;
+    @ApiModelProperty (position = 2)
     @JsonProperty("type")
     private String typeName;
 
