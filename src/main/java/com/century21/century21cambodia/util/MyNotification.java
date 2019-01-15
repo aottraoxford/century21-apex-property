@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 @Configuration
 public class MyNotification {
-    public void sendToAllSubscriber(String title,String message){
+    public void sendToAllSubscriber(String title,String message,String imageUrl){
         String jsonResponse=""; int httpResponse=500;
         try {
 
@@ -29,7 +29,7 @@ public class MyNotification {
                     +   "\"included_segments\": [\"All\"],"
                     +   "\"headings\":{\"en\" : \""+title+"\"},"
                     +   "\"contents\": {\"en\": \""+message+"\"},"
-                    +   "\"big_picture\": \"https://picsum.photos/300/500/?random\""
+                    +   "\"big_picture\": \" "+imageUrl+"\""
                     + "}";
 
             byte[] sendBytes = strJsonBody.getBytes("UTF-8");
@@ -51,7 +51,7 @@ public class MyNotification {
                 jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                 scanner.close();
             }
-
+            System.out.println(jsonResponse);
         } catch(Throwable t) {
             throw new CustomRuntimeException(httpResponse,jsonResponse);
         }

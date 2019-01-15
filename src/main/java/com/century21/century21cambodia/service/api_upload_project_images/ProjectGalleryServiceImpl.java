@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,17 +16,21 @@ public class ProjectGalleryServiceImpl implements ProjectGalleryService {
     private ProjectGalleryRepo projectGalleryRepo;
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void saveProjectImage(String thumbnail,List<String> galleries, int projectID) {
+    public  GalleryResponse saveProjectImage(String thumbnail,List<String> galleries, int projectID) {
+        GalleryResponse galleryResponse=new GalleryResponse();
         try {
             if(projectGalleryRepo.saveThumbnail(thumbnail,projectID)<1){
                 throw new CustomRuntimeException(404,"project id not found.");
-            }
+            }else galleryResponse.setThumbnail(thumbnail);
+
             for (int i = 0; i < galleries.size(); i++) {
                 projectGalleryRepo.saveGallery(galleries.get(i), projectID);
             }
+            if(galleries!=null) galleryResponse.setGalleries(galleries);
         }catch (Exception e){
             throw new CustomRuntimeException(500,e.getMessage());
         }
+        return galleryResponse;
     }
 
     @Override

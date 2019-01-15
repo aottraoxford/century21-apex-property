@@ -111,9 +111,8 @@ public class ProjectController {
         if(galleries!=null || galleries.length>0){
             gall = fileUploadService.storeImages(galleries,fileUploadProperty.getProjectGallery());
         }
-        projectGalleryService.saveProjectImage(thum,gall,projectID);
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
+        CustomResponse customResponse=new CustomResponse(200,projectGalleryService.saveProjectImage(thum,gall,projectID));
+        return customResponse.httpResponse("result");
     }
 
     @ApiOperation("(BACK END)find country")
