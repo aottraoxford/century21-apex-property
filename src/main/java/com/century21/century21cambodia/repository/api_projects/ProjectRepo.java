@@ -21,6 +21,19 @@ public interface ProjectRepo {
     })
     List<Project> projects(@Param("countryID")int countryID, @Param("typeID")int typeID, @Param("paging")Pagination pagination);
 
+    @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
+            "FROM project " +
+            "WHERE isdisplay IS true " +
+            "ORDER BY id " +
+            "LIMIT #{paging.limit} OFFSET #{paging.offset}")
+    @Results({
+            @Result(property = "startPrice",column = "start_price"),
+            @Result(property = "endPrice",column = "end_price"),
+            @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
+            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+    })
+    List<Project> allProject(@Param("paging")Pagination pagination);
+
     @Select("SELECT name " +
             "FROM country " +
             "WHERE id=#{country_id}")
@@ -35,6 +48,11 @@ public interface ProjectRepo {
             "FROM project " +
             "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true")
     int countProjects(@Param("countryID")int countryID,@Param("typeID")int typeID);
+
+    @Select("SELECT count(id) " +
+            "FROM project " +
+            "WHERE isdisplay IS true")
+    int countAllProjects();
 
 }
 

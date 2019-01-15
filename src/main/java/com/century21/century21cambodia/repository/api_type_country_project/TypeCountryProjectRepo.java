@@ -21,14 +21,15 @@ public interface TypeCountryProjectRepo {
     })
     List<TypeCountryProject> typeCP();
 
-    @Select("SELECT id,name " +
+    @Select("SELECT DISTINCT project_type.name,project_type.id " +
             "FROM project_type " +
-            "WHERE id=#{id}")
+            "INNER JOIN project ON project.project_type_id=project_type.id " +
+            "WHERE project.country_id=#{id}" )
     @Results({
             @Result(property = "projectID",column = "id"),
             @Result(property = "typeName",column = "name")
     })
-    ProjectType findProjectTypes();
+    List<ProjectType> findProjectTypes();
 
 
 }

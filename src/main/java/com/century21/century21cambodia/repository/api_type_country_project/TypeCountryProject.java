@@ -1,10 +1,12 @@
 package com.century21.century21cambodia.repository.api_type_country_project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+@JsonPropertyOrder({"country_id","country_name","types"})
 public class TypeCountryProject {
     @ApiModelProperty(position = 1)
     @JsonProperty("country_id")

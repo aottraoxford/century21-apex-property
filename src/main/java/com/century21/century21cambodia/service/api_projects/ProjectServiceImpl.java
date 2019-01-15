@@ -15,11 +15,20 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepo projectRepo;
     @Override
     public List<Project> projects(int countryID, int projectTypeID, Pagination pagination) {
-        List<Project> projects=projectRepo.projects(countryID,projectTypeID,pagination);
-        if(projects.size()<1){
-            throw new CustomRuntimeException(404,"ZERO RESULT");
+        if(projectTypeID>0 && countryID>0) {
+            List<Project> projects = projectRepo.projects(countryID, projectTypeID, pagination);
+            if (projects.size() < 1) {
+                throw new CustomRuntimeException(404, "ZERO RESULT");
+            }
+            pagination.setTotalItem(projectRepo.countProjects(countryID, projectTypeID));
+            return projects;
+        }else{
+            List<Project> allProject = projectRepo.allProject(pagination);
+            if (allProject.size() < 1) {
+                throw new CustomRuntimeException(404, "ZERO RESULT");
+            }
+            pagination.setTotalItem(projectRepo.countAllProjects());
+            return allProject;
         }
-        pagination.setTotalItem(projectRepo.countProjects(countryID,projectTypeID));
-        return projects;
     }
 }
