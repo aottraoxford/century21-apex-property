@@ -7,10 +7,10 @@ import java.util.List;
 
 public class TypeCountryProject {
     @ApiModelProperty(position = 1)
-    @JsonProperty("id")
+    @JsonProperty("country_id")
     private int countryID;
     @ApiModelProperty (position = 2)
-    @JsonProperty("name")
+    @JsonProperty("country_name")
     private String countryName;
     @ApiModelProperty (position = 3)
     private List<ProjectType> types;
