@@ -1,6 +1,10 @@
 package com.century21.century21cambodia.util;
 
 import com.century21.century21cambodia.exception.CustomRuntimeException;
+import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.OutputStream;
@@ -10,7 +14,7 @@ import java.util.Scanner;
 
 @Configuration
 public class MyNotification {
-    public void sendToAllSubscriber(String title,String message,String imageUrl){
+    public void sendToAllSubscriber(String title,String message,String imageUrl,String token){
         String jsonResponse=""; int httpResponse=500;
         try {
 
@@ -51,10 +55,21 @@ public class MyNotification {
                 jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                 scanner.close();
             }
-            System.out.println(jsonResponse);
+            if(token!=null) {
+                String host = Url.host + "api/save-noti";
+                SaveNoti saveNoti = new SaveNoti();
+                saveNoti.setImage(imageUrl);
+                saveNoti.setMessage(message);
+                saveNoti.setTitle(title);
+                Unirest.post(host)
+                        .header("accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + token)
+                        .body(saveNoti)
+                        .asJson();
+            }
         } catch(Throwable t) {
             throw new CustomRuntimeException(httpResponse,jsonResponse);
         }
-
     }
 }

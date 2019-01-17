@@ -14,7 +14,7 @@ public class VisibleProjectServiceImpl implements VisibleProjectService {
     @Autowired
     private MyNotification myNotification;
     @Override
-    public void visibleProject(boolean status, int projectID) {
+    public void visibleProject(boolean status, int projectID,String token) {
         boolean projectStatus=visibleProjectRepo.checkProjectStatus(projectID);
         if(visibleProjectRepo.visibleProject(status,projectID)<1) throw new CustomRuntimeException(404,"project not found.");
         if(status==true && projectStatus==false) {
@@ -22,7 +22,7 @@ public class VisibleProjectServiceImpl implements VisibleProjectService {
             if(thumbnail==null)
                 thumbnail="";
             else thumbnail=Url.projectThumbnailUrl+thumbnail;
-            myNotification.sendToAllSubscriber("title", "message",thumbnail);
+            myNotification.sendToAllSubscriber("title", "message",thumbnail,token );
         }
     }
 }

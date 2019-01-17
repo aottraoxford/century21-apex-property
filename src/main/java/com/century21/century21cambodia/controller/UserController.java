@@ -153,7 +153,7 @@ public class UserController {
     }
 
     @ApiOperation("user information")
-    @GetMapping("/apis/user-info")
+    @GetMapping("/api/user-info")
     public ResponseEntity userInfo(@RequestParam(value = "id")int userID){
         CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID));
         return customResponse.httpResponse("result");
@@ -188,7 +188,7 @@ public class UserController {
     private UserUploadImageService userUploadImageService;
 
     @ApiOperation("user upload image")
-    @PostMapping(value="/apis/user-upload-image",produces = "application/json")
+    @PostMapping(value="/api/user-upload-image",produces = "application/json")
     public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam("userID")int userID){
         String fileName = fileUploadService.storeImage(file, fileUploadProperty.getUserImage());
 

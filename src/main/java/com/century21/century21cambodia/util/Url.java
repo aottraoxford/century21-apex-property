@@ -3,6 +3,9 @@ package com.century21.century21cambodia.util;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class Url {
+    public static final String host = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/")
+            .toUriString();
     public static final String oauthTokenUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/oauth/token")
             .toUriString();
@@ -14,5 +17,8 @@ public class Url {
             .toUriString();
     public static final String userImageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/user/image/")
+            .toUriString();
+    public static final String bannerUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/api/event/banner/")
             .toUriString();
 }

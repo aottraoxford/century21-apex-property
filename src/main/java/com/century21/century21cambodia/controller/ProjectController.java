@@ -8,6 +8,7 @@ import com.century21.century21cambodia.repository.api_new_project.Country;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.repository.api_new_project.Project;
 import com.century21.century21cambodia.repository.api_projects.ProjectsRequest;
+import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.repository.search.SearchParam;
 import com.century21.century21cambodia.service.api_events.EventsService;
@@ -17,6 +18,7 @@ import com.century21.century21cambodia.service.api_post_event.PostEventService;
 import com.century21.century21cambodia.service.api_project_details.ProjectDetailService;
 import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
+import com.century21.century21cambodia.service.api_save_noti.SaveNotiService;
 import com.century21.century21cambodia.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.century21cambodia.service.api_update_project.UpdateProjectService;
 import com.century21.century21cambodia.service.api_upload_project_images.ProjectGalleryService;
@@ -34,6 +36,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -165,8 +168,8 @@ public class ProjectController {
 
     @ApiOperation("(BACK END)visible project")
     @PutMapping(value = "/api/visible-project",produces = "application/json")
-    public ResponseEntity visibleProject(@RequestParam("status")boolean status,@RequestParam("projectID")int projectID ){
-        visibleProjectService.visibleProject(status,projectID);
+    public ResponseEntity visibleProject(@RequestParam("status")boolean status,@RequestParam("projectID")int projectID,HttpServletRequest request){
+        visibleProjectService.visibleProject(status,projectID,request.getHeader("Authorization"));
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
@@ -197,10 +200,16 @@ public class ProjectController {
 
     @ApiOperation("(BACK END) modify event status ")
     @GetMapping(value = "/api/modify-events-status",produces = "application/json")
-    public ResponseEntity modifyEventsStatus(@RequestParam("eventID")int eventID,@RequestParam("status")boolean status){
-        modifyEventStatusService.updateStatus(eventID,status);
+    public ResponseEntity modifyEventsStatus(@RequestParam("eventID")int eventID,@RequestParam("status")boolean status,HttpServletRequest request){
+        modifyEventStatusService.updateStatus(eventID,status,request.getHeader("Authorization"));
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
+    }
+
+    @ApiIgnore
+    @GetMapping("/api/event/banner/{fileName:.+}")
+    public ResponseEntity viewBanner(@PathVariable("fileName")String fileName, HttpServletRequest request){
+        return fileUploadService.loadFile(fileName,fileUploadProperty.getEventImage(),request);
     }
 
     @Autowired
@@ -213,5 +222,15 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
+    @Autowired
+    private SaveNotiService saveNotiService;
+
+    @ApiIgnore
+    @PostMapping(value = "/api/save-noti",produces = "application/json")
+    public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
+        saveNotiService.saveNoti(saveNoti, principal.getName());
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
 }
 
