@@ -11,7 +11,7 @@ public interface ProjectRepo {
     @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
             "FROM project " +
             "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true " +
-            "ORDER BY id " +
+            "ORDER BY id DESC " +
             "LIMIT #{paging.limit} OFFSET #{paging.offset}")
     @Results({
             @Result(property = "startPrice",column = "start_price"),
@@ -23,8 +23,8 @@ public interface ProjectRepo {
 
     @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
             "FROM project " +
-            "WHERE isdisplay IS true " +
-            "ORDER BY id " +
+            "WHERE isdisplay IS true AND country_id=#{countryID} " +
+            "ORDER BY id DESC " +
             "LIMIT #{paging.limit} OFFSET #{paging.offset}")
     @Results({
             @Result(property = "startPrice",column = "start_price"),
@@ -32,16 +32,18 @@ public interface ProjectRepo {
             @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
-    List<Project> allProject(@Param("paging")Pagination pagination);
+    List<Project> allProject(@Param("countryID")int countryID,@Param("paging")Pagination pagination);
 
     @Select("SELECT name " +
             "FROM country " +
-            "WHERE id=#{country_id}")
+            "WHERE id=#{country_id} " +
+            "ORDER BY id")
     String projectCountry();
 
     @Select("SELECT name " +
             "FROM project_type " +
-            "WHERE id=#{project_type_id}")
+            "WHERE id=#{project_type_id} " +
+            "ORDER BY id")
     String projectType();
 
     @Select("SELECT count(id) " +
@@ -51,8 +53,8 @@ public interface ProjectRepo {
 
     @Select("SELECT count(id) " +
             "FROM project " +
-            "WHERE isdisplay IS true")
-    int countAllProjects();
+            "WHERE isdisplay IS true AND country_id=#{countryID}")
+    int countAllProjects(@Param("countryID")int countryID);
 
 }
 
