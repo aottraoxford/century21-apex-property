@@ -35,7 +35,7 @@ public interface ProjectDetailRepo {
             "WHERE id=#{project_type_id}")
     String projectType();
 
-    @Select("SELECT name,description " +
+    @Select("SELECT id,name,description " +
             "FROM project_intro " +
             "WHERE project_id=#{id}")
     List<ProjectIntro> projectIntro();

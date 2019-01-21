@@ -1,8 +1,17 @@
 package com.century21.century21cambodia.repository.api_project_details;
 
 public class ProjectIntro {
+    private int id;
     private String name;
     private String description;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -23,7 +32,8 @@ public class ProjectIntro {
     @Override
     public String toString() {
         return "ProjectIntro{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

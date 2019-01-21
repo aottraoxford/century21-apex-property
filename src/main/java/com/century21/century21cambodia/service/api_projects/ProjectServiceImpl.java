@@ -11,24 +11,18 @@ import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+
     @Autowired
     private ProjectRepo projectRepo;
     @Override
     public List<Project> projects(int countryID, int projectTypeID, Pagination pagination) {
-        if(projectTypeID>0) {
-            List<Project> projects = projectRepo.projects(countryID, projectTypeID, pagination);
-            if (projects.size() < 1) {
-                throw new CustomRuntimeException(404, "ZERO RESULT");
-            }
-            pagination.setTotalItem(projectRepo.countProjects(countryID, projectTypeID));
-            return projects;
-        }else{
-            List<Project> allProject = projectRepo.allProject(countryID,pagination);
-            if (allProject.size() < 1) {
-                throw new CustomRuntimeException(404, "ZERO RESULT");
-            }
-            pagination.setTotalItem(projectRepo.countAllProjects(countryID));
-            return allProject;
+        projectRepo.findProject(countryID,projectTypeID,pagination);
+        List<Project> projects = projectRepo.findProject(countryID,projectTypeID,pagination);
+        if(projects==null || projects.size()<0){
+            throw new CustomRuntimeException(404, "ZERO RESULT");
         }
+        pagination.setTotalItem(projectRepo.countProject(countryID,projectTypeID));
+        return projects;
     }
+
 }

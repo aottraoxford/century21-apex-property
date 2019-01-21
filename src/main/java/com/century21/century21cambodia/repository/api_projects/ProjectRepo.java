@@ -1,6 +1,7 @@
 package com.century21.century21cambodia.repository.api_projects;
 
 import com.century21.century21cambodia.model.Pagination;
+import com.century21.century21cambodia.repository.api_projects.dym.ProjectUtil;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -8,31 +9,18 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepo {
-    @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
-            "FROM project " +
-            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true " +
-            "ORDER BY id DESC " +
-            "LIMIT #{paging.limit} OFFSET #{paging.offset}")
-    @Results({
-            @Result(property = "startPrice",column = "start_price"),
-            @Result(property = "endPrice",column = "end_price"),
-            @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
-    })
-    List<Project> projects(@Param("countryID")int countryID, @Param("typeID")int typeID, @Param("paging")Pagination pagination);
 
-    @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
-            "FROM project " +
-            "WHERE isdisplay IS true AND country_id=#{countryID} " +
-            "ORDER BY id DESC " +
-            "LIMIT #{paging.limit} OFFSET #{paging.offset}")
+    @SelectProvider(type= ProjectUtil.class,method = "getProject")
     @Results({
             @Result(property = "startPrice",column = "start_price"),
             @Result(property = "endPrice",column = "end_price"),
             @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
-    List<Project> allProject(@Param("countryID")int countryID,@Param("paging")Pagination pagination);
+    List<Project> findProject(@Param("cid")int cid,@Param("pid")int pid,@Param("paging")Pagination pagination);
+
+    @SelectProvider(type = ProjectUtil.class,method = "countProject")
+    Integer countProject(@Param("cid")int cid,@Param("pid")int pid);
 
     @Select("SELECT name " +
             "FROM country " +
@@ -45,16 +33,6 @@ public interface ProjectRepo {
             "WHERE id=#{project_type_id} " +
             "ORDER BY id")
     String projectType();
-
-    @Select("SELECT count(id) " +
-            "FROM project " +
-            "WHERE country_id=#{countryID} AND project_type_id=#{typeID} AND isdisplay IS true")
-    int countProjects(@Param("countryID")int countryID,@Param("typeID")int typeID);
-
-    @Select("SELECT count(id) " +
-            "FROM project " +
-            "WHERE isdisplay IS true AND country_id=#{countryID}")
-    int countAllProjects(@Param("countryID")int countryID);
 
 }
 

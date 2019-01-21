@@ -21,8 +21,8 @@ public interface UpdateProjectRepo {
     Integer findProjectTypeID(@Param("projectType")String projectType);
 
     @Update("UPDATE project_intro SET name = #{name},description = #{description} " +
-            "WHERE project_id=#{projectID} AND name ILIKE #{name}")
-    int updateIntroduction(@Param("projectID") int projectID,@Param("name")String name,@Param("description")String description);
+            "WHERE project_id=#{projectID} AND id = #{inID}")
+    int updateIntroduction(@Param("inID")int introID,@Param("projectID") int projectID,@Param("name")String name,@Param("description")String description);
 
     @Select(value= "{CALL update_project(#{uPro.projectID},#{uPro.title},#{cid},#{uPro.description},#{uPro.addressOne},#{uPro.addressTwo},#{uPro.minPrice},#{uPro.maxPrice},#{uPro.averageAnnualRentFrom},#{uPro.averageAnnualRentTo},#{uPro.downPayment},#{pid},#{uPro.status})}")
     @Options(statementType = StatementType.CALLABLE)
