@@ -16,6 +16,7 @@ import com.century21.century21cambodia.service.api_modify_event_status.ModifyEve
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
 import com.century21.century21cambodia.service.api_post_event.PostEventService;
 import com.century21.century21cambodia.service.api_project_details.ProjectDetailService;
+import com.century21.century21cambodia.service.api_project_related.ProjectRelatedService;
 import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
 import com.century21.century21cambodia.service.api_save_noti.SaveNotiService;
@@ -26,6 +27,7 @@ import com.century21.century21cambodia.service.api_visible_project.VisibleProjec
 import com.century21.century21cambodia.service.search.SearchService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -232,6 +234,17 @@ public class ProjectController {
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
+
+    @Autowired
+    private ProjectRelatedService projectRelatedService;
+
+    @PostMapping(value = "/api/project/related",produces = "application/json")
+    public ResponseEntity relatedProject(@RequestBody ProjectsRequest projectsRequest){
+        CustomResponse customResponse=new CustomResponse(200,projectRelatedService.getProjects(projectsRequest.getCountryID(),projectsRequest.getProjectTypeID()));
+        return customResponse.httpResponse("result");
+    }
+
+
 
 }
 

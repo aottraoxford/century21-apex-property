@@ -27,7 +27,6 @@ public class UpdateProjectServiceImpl implements UpdateProjectService {
 
         if(updateProj.getProjectIntro()!=null) {
             for (int i = 0; i < updateProj.getProjectIntro().size(); i++) {
-                System.out.println(updateProj.getProjectIntro().get(i).getId());
                 updateProjectRepo.updateIntroduction(updateProj.getProjectIntro().get(i).getId(),updateProj.getProjectID(), updateProj.getProjectIntro().get(i).getName(), updateProj.getProjectIntro().get(i).getDescription());
             }
         }
