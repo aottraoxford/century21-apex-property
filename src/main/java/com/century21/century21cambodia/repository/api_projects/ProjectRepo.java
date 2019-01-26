@@ -34,5 +34,34 @@ public interface ProjectRepo {
             "ORDER BY id")
     String projectType();
 
+    @Select("SELECT DISTINCT(country.name),country.id " +
+            "FROM country " +
+            "INNER JOIN project ON project.country_id=country.id " +
+            "WHERE project.isdisplay IS TRUE " +
+            "ORDER BY country.id ")
+    @Results({
+            @Result(property = "projectTypeForWebList",column = "id",many = @Many(select = "getProjectTypeForWeb")),
+            @Result(property = "countryName",column = "name"),
+            @Result(property = "countryID",column = "id")
+    })
+    List<CountryForWeb> getCountryForWeb();
+
+    @Select("SELECT DISTINCT(project_type.name),project_type.id ,project.country_id " +
+            "FROM project_type " +
+            "INNER JOIN project ON project.project_type_id=project_type.id " +
+            "WHERE project.country_id = #{id}")
+    @Results({
+            @Result(property = "projectList",column = "{cid=country_id,pid=id}",many = @Many(select = "getProjectForWeb")),
+            @Result(property = "type",column = "name")
+    })
+    List<ProjectTypeForWeb> getProjectTypeForWeb();
+
+    @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
+            "FROM project " +
+            "WHERE country_id=#{cid} AND project_type_id=#{pid} " +
+            "ORDER BY id DESC LIMIT 1")
+    List<Project> getProjectForWeb();
+
+
 }
 

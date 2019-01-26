@@ -7,6 +7,7 @@ import com.century21.century21cambodia.model.Pagination;
 import com.century21.century21cambodia.repository.api_new_project.Country;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.repository.api_new_project.Project;
+import com.century21.century21cambodia.repository.api_projects.ProjectRepo;
 import com.century21.century21cambodia.repository.api_projects.ProjectsRequest;
 import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
@@ -18,6 +19,7 @@ import com.century21.century21cambodia.service.api_post_event.PostEventService;
 import com.century21.century21cambodia.service.api_project_details.ProjectDetailService;
 import com.century21.century21cambodia.service.api_project_related.ProjectRelatedService;
 import com.century21.century21cambodia.service.api_projects.ProjectService;
+import com.century21.century21cambodia.service.api_projects.ProjectServiceImpl;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
 import com.century21.century21cambodia.service.api_save_noti.SaveNotiService;
 import com.century21.century21cambodia.service.api_type_country_project.TypeCountryProjectService;
@@ -29,6 +31,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ProjectController {
@@ -244,7 +248,11 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-
+    @GetMapping("/api/projects-forweb")
+    public ResponseEntity projectsForWeb(@RequestParam(value = "page",defaultValue = "10")int page,@RequestParam(value="limit",defaultValue = "1")int limit){
+        CustomResponse customResponse=new CustomResponse(200,projectService.getProjectsFroWeb(page,limit));
+        return customResponse.httpResponse("result");
+    }
 
 }
 
