@@ -13,6 +13,7 @@ public class SearchParam {
     private int projectTypeID;
     @JsonProperty("country_id")
     private int countryID;
+    private String city;
     @JsonProperty("room_amount")
     private int roomAmount;
     @JsonProperty("start_price")
@@ -57,6 +58,19 @@ public class SearchParam {
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public String getCity() {
+        if(city!=null) {
+            city = city.trim();
+            if (city.length() < 1)
+                return null;
+        }
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public int getProjectTypeID() {

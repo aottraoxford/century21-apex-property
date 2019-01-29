@@ -22,7 +22,7 @@ public class VisibleProjectServiceImpl implements VisibleProjectService {
             if(thumbnail==null)
                 thumbnail="";
             else thumbnail=Url.projectThumbnailUrl+thumbnail;
-            myNotification.sendToAllSubscriber("title", "message",thumbnail,token );
+            myNotification.sendToAllSubscriber("title", "message",thumbnail,token,"project",projectID );
         }
     }
 }

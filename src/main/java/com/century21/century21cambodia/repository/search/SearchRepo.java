@@ -17,7 +17,7 @@ public interface SearchRepo {
             "WHERE project.isdisplay IS true")
     List<ProjectType> projectTypes();
 
-    @Select(value= "{CALL search(#{searchParam.title},#{searchParam.rentOrBuy},#{searchParam.sort},#{searchParam.projectTypeID},#{searchParam.countryID},#{searchParam.roomAmount},#{searchParam.startPrice},#{searchParam.endPrice},#{limit},#{offset})}")
+    @Select(value= "{CALL search(#{searchParam.title},#{searchParam.rentOrBuy},#{searchParam.sort},#{searchParam.city},#{searchParam.projectTypeID},#{searchParam.countryID},#{searchParam.roomAmount},#{searchParam.startPrice},#{searchParam.endPrice},#{limit},#{offset})}")
     @Results({
             @Result(property = "id",column = "re_id"),
             @Result(property = "name",column = "re_name"),
@@ -31,7 +31,7 @@ public interface SearchRepo {
     @Options(statementType = StatementType.CALLABLE)
     List<Project> search(@Param("searchParam")SearchParam searchParam,@Param("limit")int limit,@Param("offset")int offset);
 
-    @Select(value= "{CALL count_search(#{searchParam.title},#{searchParam.rentOrBuy},#{searchParam.projectTypeID},#{searchParam.countryID},#{searchParam.roomAmount},#{searchParam.startPrice},#{searchParam.endPrice})}")
+    @Select(value= "{CALL count_search(#{searchParam.title},#{searchParam.rentOrBuy},#{searchParam.city},#{searchParam.projectTypeID},#{searchParam.countryID},#{searchParam.roomAmount},#{searchParam.startPrice},#{searchParam.endPrice})}")
     @Options(statementType = StatementType.CALLABLE)
     int countSearch(@Param("searchParam")SearchParam searchParam);
 }

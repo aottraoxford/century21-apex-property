@@ -24,7 +24,7 @@ public class ModifyEventStatusServiceImpl implements ModifyEventStatusService {
             if(banner!=null){
                 banner = banner.trim();
             }
-            myNotification.sendToAllSubscriber("aaaa","bbbb",banner,token);
+            myNotification.sendToAllSubscriber("aaaa","bbbb",banner,token,"event",eventID);
         }
     }
 }

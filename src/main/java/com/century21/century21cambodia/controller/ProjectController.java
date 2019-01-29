@@ -13,6 +13,7 @@ import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.repository.search.SearchParam;
 import com.century21.century21cambodia.service.api_events.EventsService;
+import com.century21.century21cambodia.service.api_get_noti.GetNotiService;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
 import com.century21.century21cambodia.service.api_post_event.PostEventService;
@@ -240,6 +241,16 @@ public class ProjectController {
     }
 
     @Autowired
+    private GetNotiService getNotiService;
+
+    @GetMapping(value = "/api/get-noti",produces = "application/json")
+    public ResponseEntity getNoti(Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,getNotiService.getNoti(principal.getName()),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
+
+    @Autowired
     private ProjectRelatedService projectRelatedService;
 
     @PostMapping(value = "/api/project/related",produces = "application/json")
@@ -249,7 +260,7 @@ public class ProjectController {
     }
 
     @GetMapping("/api/projects-forweb")
-    public ResponseEntity projectsForWeb(@RequestParam(value = "page",defaultValue = "10")int page,@RequestParam(value="limit",defaultValue = "1")int limit){
+    public ResponseEntity projectsForWeb(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         CustomResponse customResponse=new CustomResponse(200,projectService.getProjectsFroWeb(page,limit));
         return customResponse.httpResponse("result");
     }

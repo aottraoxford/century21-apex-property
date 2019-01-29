@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 @Configuration
 public class MyNotification {
-    public void sendToAllSubscriber(String title,String message,String imageUrl,String token){
+    public void sendToAllSubscriber(String title,String message,String imageUrl,String token,String type,int refID){
         String jsonResponse=""; int httpResponse=500;
         try {
 
@@ -58,13 +58,16 @@ public class MyNotification {
             if(token!=null) {
                 String host = Url.host + "api/save-noti";
                 SaveNoti saveNoti = new SaveNoti();
-                saveNoti.setImage(imageUrl);
+                saveNoti.setRefID(refID);
+                if(type.equals("event"))
+                    saveNoti.setType("event");
+                else saveNoti.setType("project");
                 saveNoti.setMessage(message);
                 saveNoti.setTitle(title);
                 Unirest.post(host)
                         .header("accept", "application/json")
                         .header("Content-Type", "application/json")
-                        .header("Authorization", "Bearer " + token)
+                        .header("Authorization",  token)
                         .body(saveNoti)
                         .asJson();
             }

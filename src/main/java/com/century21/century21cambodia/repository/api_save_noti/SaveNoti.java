@@ -3,8 +3,8 @@ package com.century21.century21cambodia.repository.api_save_noti;
 public class SaveNoti {
     private String title;
     private String message;
-    private String image;
     private String type;
+    private int refID;
 
     public String getType() {
         return type;
@@ -30,11 +30,11 @@ public class SaveNoti {
         this.message = message;
     }
 
-    public String getImage() {
-        return image;
+    public int getRefID() {
+        return refID;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setRefID(int refID) {
+        this.refID = refID;
     }
 }

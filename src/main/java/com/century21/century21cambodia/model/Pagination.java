@@ -1,6 +1,7 @@
 package com.century21.century21cambodia.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import springfox.documentation.annotations.ApiIgnore;
 
 public class Pagination {
@@ -8,7 +9,9 @@ public class Pagination {
     private int limit;
     @JsonIgnore
     private int offset;
+    @JsonProperty("total_page")
     private int totalPage;
+    @JsonProperty("total_item")
     private int totalItem;
 
     public Pagination(int page, int limit) {

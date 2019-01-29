@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SaveNotiRepo {
-    @Insert("INSERT INTO noti(title,message,image,user_id) " +
-            "VALUES (#{n.title},#{n.message},#{n.image},#{userID})")
+    @Insert("INSERT INTO noti(title,message,user_id,type,ref_id) " +
+            "VALUES (#{n.title},#{n.message},#{userID},#{n.type},#{n.refID})")
     Integer SaveNoti(@Param("n")SaveNoti saveNoti,@Param("userID")int userID);
 
     @Select("SELECT id " +

@@ -1,13 +1,16 @@
 package com.century21.century21cambodia.repository.api_projects;
 
 import com.century21.century21cambodia.model.Pagination;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class ProjectTypeForWeb {
     private int id;
     private String type;
+    @JsonProperty("data")
     private List<Project> projectList;
+    @JsonProperty("paging")
     private Pagination pagination;
 
     public int getId() {

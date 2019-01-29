@@ -34,6 +34,33 @@ public class ProjectServiceImpl implements ProjectService {
                 countryForWeb.get(i).getProjectTypeForWebList().get(j).setPagination(pagination);
             }
         }
+        Project pfw=new Project();
+        pfw.setCountry("Cambodia");
+        pfw.setEndPrice(10000);
+        pfw.setGrr(0.5);
+        pfw.setId(1);
+        pfw.setName("OLO");
+        pfw.setStartPrice(100);
+        pfw.setThumbnail("Ekerk");
+        pfw.setProjectType("Borey");
+        List<Project> lpfw =new ArrayList<>();
+        lpfw.add(pfw);
+
+        ProjectTypeForWeb projectTypeForWeb=new ProjectTypeForWeb();
+        projectTypeForWeb.setId(0);
+        projectTypeForWeb.setType("Borey");
+        projectTypeForWeb.setPagination(new Pagination(10,1));
+        projectTypeForWeb.setProjectList(lpfw);
+
+        List<ProjectTypeForWeb> ptfwl=new ArrayList<>();
+        ptfwl.add(projectTypeForWeb);
+
+        CountryForWeb cfw = new CountryForWeb();
+        cfw.setCountryID(0);
+        cfw.setCountryName("all");
+        cfw.setProjectTypeForWebList(ptfwl);
+        countryForWeb.add(0,cfw);
+
         return countryForWeb;
     }
 }
