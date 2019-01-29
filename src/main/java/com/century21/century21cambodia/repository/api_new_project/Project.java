@@ -26,6 +26,7 @@ public class Project {
     @JsonProperty("address_#2")
     private String addressTwo;
     private String status;
+    private String city;
     @JsonProperty("min_price")
     private Double minPrice;
     @JsonProperty("max_price")
@@ -36,6 +37,14 @@ public class Project {
     private Double avgRentFrom;
     @JsonProperty("avg_rent_to")
     private Double avgRentTo;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Double getAvgRentFrom() {
         return avgRentFrom;

@@ -28,8 +28,17 @@ public class UpdateProj {
     private String projectType;
     private String description;
     private String status;
+    private String city;
     @JsonProperty("introductions")
     private List<ProjectIntro> projectIntro;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public int getProjectID() {
         return projectID;
@@ -159,6 +168,7 @@ public class UpdateProj {
                 ", projectType='" + projectType + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
+                ", city='" + city + '\'' +
                 ", projectIntro=" + projectIntro +
                 '}';
     }

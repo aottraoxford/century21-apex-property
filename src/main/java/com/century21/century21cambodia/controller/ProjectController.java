@@ -12,6 +12,7 @@ import com.century21.century21cambodia.repository.api_projects.ProjectsRequest;
 import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.repository.search.SearchParam;
+import com.century21.century21cambodia.service.api_allcity.CityService;
 import com.century21.century21cambodia.service.api_events.EventsService;
 import com.century21.century21cambodia.service.api_get_noti.GetNotiService;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
@@ -262,6 +263,14 @@ public class ProjectController {
     @GetMapping("/api/projects-forweb")
     public ResponseEntity projectsForWeb(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         CustomResponse customResponse=new CustomResponse(200,projectService.getProjectsFroWeb(page,limit));
+        return customResponse.httpResponse("result");
+    }
+
+    @Autowired
+    private CityService cityService;
+    @GetMapping("/api/project/city")
+    public ResponseEntity cities(@RequestParam int countryID){
+        CustomResponse customResponse=new CustomResponse(200,cityService.allCity(countryID));
         return customResponse.httpResponse("result");
     }
 
