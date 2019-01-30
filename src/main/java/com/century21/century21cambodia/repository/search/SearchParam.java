@@ -9,20 +9,15 @@ public class SearchParam {
     @JsonProperty("rent_or_buy")
     private String rentOrBuy;
     private String sort;
-    @Positive
     @JsonProperty("project_type_id")
     private int projectTypeID;
-    @Positive
     @JsonProperty("country_id")
     private int countryID;
     private String city;
-    @Positive
     @JsonProperty("room_amount")
     private int roomAmount;
-    @Positive
     @JsonProperty("start_price")
     private double startPrice;
-    @Positive
     @JsonProperty("end_price")
     private double endPrice;
 

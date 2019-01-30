@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Positive;
 
 public class ProjectsRequest {
-    @Positive
     @JsonProperty("country_id")
     private int countryID;
-    @Positive
     @JsonProperty("project_type_id")
     private int projectTypeID;
 
