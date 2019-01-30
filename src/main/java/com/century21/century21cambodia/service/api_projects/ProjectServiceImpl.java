@@ -28,21 +28,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<CountryForWeb> getProjectsFroWeb(int page,int limit) {
         List<CountryForWeb> countryForWeb = projectRepo.getCountryForWeb();
-
-        int a;
-        List<Integer> b=new ArrayList<>();
-        a=countryForWeb.size();
-        for(int x=0;x<a;x++)
-            b.add(countryForWeb.get(x).getProjectTypeForWebList().size());
-        for(int i=0;i<a;i++) {
-            Pagination pagination=new Pagination(page,limit);
-            ProjectTypeForWeb projectTypeForWeb=new ProjectTypeForWeb();
-            projectTypeForWeb.setType("all");
-            projectTypeForWeb.setId(0);
-            projectTypeForWeb.setProjectList(new ArrayList<>());
-            countryForWeb.get(i).getProjectTypeForWebList().add(0,projectTypeForWeb);
-            for (int j = 0; j < b.get(i); j++) {
-                countryForWeb.get(i).getProjectTypeForWebList().get(j).setPagination(pagination);
+        for(int i=0;i<countryForWeb.size();i++){
+            for(int j=0;j<countryForWeb.get(i).getProjectTypeForWebList().size();j++){
+                countryForWeb.get(i).getProjectTypeForWebList().get(j).setProjectList(new ArrayList<>());
+                countryForWeb.get(i).getProjectTypeForWebList().get(j).setPagination(new Pagination(1,10));
+                if(j+1==countryForWeb.get(i).getProjectTypeForWebList().size()){
+                    ProjectTypeForWeb projectTypeForWeb=new ProjectTypeForWeb();
+                    projectTypeForWeb.setProjectList(new ArrayList<>());
+                    projectTypeForWeb.setPagination(new Pagination(1,10));
+                    projectTypeForWeb.setId(0);
+                    projectTypeForWeb.setType("all");
+                    countryForWeb.get(i).getProjectTypeForWebList().add(0,projectTypeForWeb);
+                    break;
+                }
             }
         }
         return countryForWeb;

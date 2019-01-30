@@ -49,9 +49,10 @@ public interface ProjectRepo {
     @Select("SELECT DISTINCT(project_type.name),project_type.id ,project.country_id " +
             "FROM project_type " +
             "INNER JOIN project ON project.project_type_id=project_type.id " +
-            "WHERE project.country_id = #{id}")
+            "WHERE project.country_id = #{id} " +
+            "ORDER BY project_type.id")
     @Results({
-            @Result(property = "projectList",column = "{cid=country_id,pid=id}",many = @Many(select = "getProjectForWeb")),
+            //@Result(property = "projectList",column = "{cid=country_id,pid=id}",many = @Many(select = "getProjectForWeb")),
             @Result(property = "type",column = "name")
     })
     List<ProjectTypeForWeb> getProjectTypeForWeb();
