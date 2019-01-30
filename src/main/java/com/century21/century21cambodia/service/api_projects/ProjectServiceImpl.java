@@ -28,39 +28,23 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<CountryForWeb> getProjectsFroWeb(int page,int limit) {
         List<CountryForWeb> countryForWeb = projectRepo.getCountryForWeb();
-        for(int i=0;i<countryForWeb.size();i++) {
+
+        int a;
+        List<Integer> b=new ArrayList<>();
+        a=countryForWeb.size();
+        for(int x=0;x<a;x++)
+            b.add(countryForWeb.get(x).getProjectTypeForWebList().size());
+        for(int i=0;i<a;i++) {
             Pagination pagination=new Pagination(page,limit);
-            for (int j = 0; j < countryForWeb.get(i).getProjectTypeForWebList().size(); j++) {
+            ProjectTypeForWeb projectTypeForWeb=new ProjectTypeForWeb();
+            projectTypeForWeb.setType("all");
+            projectTypeForWeb.setId(0);
+            projectTypeForWeb.setProjectList(new ArrayList<>());
+            countryForWeb.get(i).getProjectTypeForWebList().add(0,projectTypeForWeb);
+            for (int j = 0; j < b.get(i); j++) {
                 countryForWeb.get(i).getProjectTypeForWebList().get(j).setPagination(pagination);
             }
         }
-        Project pfw=new Project();
-        pfw.setCountry("Cambodia");
-        pfw.setEndPrice(10000);
-        pfw.setGrr(0.5);
-        pfw.setId(1);
-        pfw.setName("OLO");
-        pfw.setStartPrice(100);
-        pfw.setThumbnail("Ekerk");
-        pfw.setProjectType("Borey");
-        List<Project> lpfw =new ArrayList<>();
-        lpfw.add(pfw);
-
-        ProjectTypeForWeb projectTypeForWeb=new ProjectTypeForWeb();
-        projectTypeForWeb.setId(0);
-        projectTypeForWeb.setType("Borey");
-        projectTypeForWeb.setPagination(new Pagination(10,1));
-        projectTypeForWeb.setProjectList(lpfw);
-
-        List<ProjectTypeForWeb> ptfwl=new ArrayList<>();
-        ptfwl.add(projectTypeForWeb);
-
-        CountryForWeb cfw = new CountryForWeb();
-        cfw.setCountryID(0);
-        cfw.setCountryName("all");
-        cfw.setProjectTypeForWebList(ptfwl);
-        countryForWeb.add(0,cfw);
-
         return countryForWeb;
     }
 }
