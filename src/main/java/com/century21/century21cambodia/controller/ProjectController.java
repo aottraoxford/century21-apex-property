@@ -269,8 +269,8 @@ public class ProjectController {
     @Autowired
     private CityService cityService;
     @GetMapping("/api/project/city")
-    public ResponseEntity cities(@RequestParam int countryID){
-        CustomResponse customResponse=new CustomResponse(200,cityService.allCity(countryID));
+    public ResponseEntity cities(){
+        CustomResponse customResponse=new CustomResponse(200,cityService.allCity());
         return customResponse.httpResponse("result");
     }
 

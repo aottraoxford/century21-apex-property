@@ -24,17 +24,34 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
         int countEmail = sendEmailVerificationRepo.countEmailByEmail(email);
         if(countEmail>0) throw new CustomRuntimeException(409,"Email already exists");
 
-        try {
+      //  try {
 
             //read file from mail_template.txt
-            File file = ResourceUtils.getFile("classpath:static/mail_template.txt");
-            InputStream in = new FileInputStream(file);
-            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(in));
-            int i;
-            String mailTemplate="";
-            while((i=bufferedReader.read())!=-1) {
-                mailTemplate += (char) i + "";
-            }
+//            File file = ResourceUtils.getFile("classpath:static/mail_template.txt");
+//            InputStream in = new FileInputStream(file);
+//            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(in));
+//            int i;
+            String mailTemplate="<html>\n" +
+                    "\t<head>\n" +
+                    "\t\t<style>\n" +
+                    "\t\t\t.code{\n" +
+                    "\t\t\t\tbackground-color:red;\n" +
+                    "\t\t\t\tdisplay:inline;\n" +
+                    "\t\t\t\tfont-weight:bold;\n" +
+                    "\t\t\t\tcolor:white;\n" +
+                    "\t\t\t\tfont-family:arial;\n" +
+                    "\t\t\t}\n" +
+                    "\t\t</style>\n" +
+                    "\t</head>\n" +
+                    "\t<body>\n" +
+                    "\t    <p>Hi there!</p><h1></h1>\n" +
+                    "\t    <p>Somebody just tried to register for a CENTURY 21 CAMBODIA user account\n" +
+                    "           using this email address.<h1></h1> To complete the registration process,\n" +
+                    "           just copy this code below to verify your email:</p><h1></h1>\n" +
+                    "\t\t<h1 class='code'>";
+//            while((i=bufferedReader.read())!=-1) {
+//                mailTemplate += (char) i + "";
+//            }
 
             //random number to verify email and save to database
             int code = (int)(Math.random()*8999)+1000;
@@ -56,9 +73,9 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
                 }
             }, 120000, 1, TimeUnit.MILLISECONDS);
 
-        } catch (IOException e) {
-            throw new CustomRuntimeException(500,e.getMessage());
-        }
+//        } catch (IOException e) {
+//            throw new CustomRuntimeException(500,e.getMessage());
+//        }
     }
 
     @Override
