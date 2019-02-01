@@ -1,5 +1,7 @@
 package com.century21.century21cambodia.service.api_post_event;
 
+import java.sql.Timestamp;
+
 public interface PostEventService {
-    void postEvent(String title,String description,String banner);
+    Integer postEvent(String title, String description,String eventDate, String banner);
 }

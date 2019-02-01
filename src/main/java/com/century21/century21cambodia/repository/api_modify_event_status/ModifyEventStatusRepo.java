@@ -20,4 +20,6 @@ public interface ModifyEventStatusRepo {
             "FROM events " +
             "WHERE id=#{eventID}")
     boolean checkEvent(@Param("eventID")int eventID);
+
+
 }

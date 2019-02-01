@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -187,10 +188,10 @@ public class ProjectController {
 
     @ApiOperation("(BACK END)post event")
     @PostMapping(value = "/api/post-event",produces = "application/json")
-    public ResponseEntity postEvent(@RequestParam("title")String title,@RequestParam("description")String description ,@RequestPart("file") MultipartFile multipartFile){
-        postEventService.postEvent(title,description,fileUploadService.storeImage(multipartFile,fileUploadProperty.getEventImage()));
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
+    public ResponseEntity postEvent(@RequestParam("title")String title, @RequestParam("description")String description, @RequestParam(value="eventDate",required = false)String eventDate, @RequestPart("file") MultipartFile multipartFile){
+        Integer eventID=postEventService.postEvent(title,description,eventDate,fileUploadService.storeImage(multipartFile,fileUploadProperty.getEventImage()));
+        CustomResponse customResponse=new CustomResponse(200,eventID);
+        return customResponse.httpResponse("event_id");
     }
 
     @Autowired
