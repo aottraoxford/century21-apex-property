@@ -7,8 +7,9 @@ import java.util.List;
 
 @Repository
 public interface EventsRepo {
-    @Select("SELECT title,description,banner " +
+    @Select("SELECT id,title,description,banner " +
             "FROM events " +
-            "WHERE enable IS true")
+            "WHERE enable IS true " +
+            "ORDER BY id DESC")
     List<Events> events();
 }

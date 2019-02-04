@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.ScheduledFuture;
 
 @EnableScheduling
@@ -32,23 +33,29 @@ public class PostEventServiceImpl implements PostEventService, SchedulingConfigu
     private ModifyEventStatusRepo modifyEventStatusRepo;
     private ScheduledTaskRegistrar scheduledTaskRegistrar;
 
+    private ScheduledFuture<?> job;
+
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
         this.scheduledTaskRegistrar=scheduledTaskRegistrar;
     }
     public void job(TaskScheduler scheduler,Timestamp timestamp,int id) {
-        scheduler.schedule(new Runnable() {
+        job=scheduler.schedule(new Runnable() {
             @Override
             public void run() {
                 modifyEventStatusRepo.updateStatus(id,false);
+                job.cancel(true);
             }
         }, new Trigger() {
             @Override
             public Date nextExecutionTime(TriggerContext triggerContext) {
                 Calendar calendar=Calendar.getInstance();
                 calendar.setTime(new Date(timestamp.getTime()));
-                String cronExp = "* * "+calendar.get(Calendar.DAY_OF_MONTH)+" "+calendar.get(Calendar.MONTH)+" * ?";
-                System.out.println(calendar);
+                int eventMonth = calendar.get(Calendar.MONTH)+1;
+                int eventDate = calendar.get(Calendar.DATE);
+                int eventMinute = calendar.get(Calendar.MINUTE);
+                int eventHour=calendar.get(Calendar.HOUR_OF_DAY);
+                String cronExp = "0 "+eventMinute+" "+eventHour+" "+eventDate+" "+eventMonth +" ?";
                 return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
             }
         });
@@ -60,7 +67,7 @@ public class PostEventServiceImpl implements PostEventService, SchedulingConfigu
         Timestamp date=null;
         if(eventDate!=null) {
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date parsedDate = dateFormat.parse(eventDate);
                 Timestamp timestamp = new Timestamp(parsedDate.getTime());
                 date = timestamp;

@@ -3,9 +3,18 @@ package com.century21.century21cambodia.repository.api_events;
 import com.century21.century21cambodia.util.Url;
 
 public class Events {
+    private int id;
     private String title;
     private String description;
     private String banner;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

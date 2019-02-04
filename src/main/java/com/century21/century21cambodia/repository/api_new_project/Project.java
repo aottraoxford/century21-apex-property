@@ -21,9 +21,9 @@ public class Project {
     private List<ProjectIntroduction> projectIntroductions;
     @JsonProperty("country_id")
     private Integer countryID;
-    @JsonProperty("address_#1")
+    @JsonProperty("address_1")
     private String addressOne;
-    @JsonProperty("address_#2")
+    @JsonProperty("address_2")
     private String addressTwo;
     private String status;
     private String city;

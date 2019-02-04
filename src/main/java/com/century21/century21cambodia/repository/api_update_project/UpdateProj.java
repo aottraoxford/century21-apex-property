@@ -10,9 +10,9 @@ public class UpdateProj {
     private int projectID;
     private String title;
     private String country;
-    @JsonProperty("address_#1")
+    @JsonProperty("address_1")
     private String addressOne;
-    @JsonProperty("address_#2")
+    @JsonProperty("address_2")
     private String addressTwo;
     @JsonProperty("start_price")
     private double minPrice;
