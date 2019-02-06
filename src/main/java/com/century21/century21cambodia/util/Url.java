@@ -21,4 +21,7 @@ public class Url {
     public static final String bannerUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/event/banner/")
             .toUriString();
+    public static final String sliderUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/api/slider/")
+            .toUriString();
 }

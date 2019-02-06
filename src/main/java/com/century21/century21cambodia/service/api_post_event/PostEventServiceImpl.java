@@ -26,54 +26,55 @@ import java.util.concurrent.ScheduledFuture;
 
 @EnableScheduling
 @Service
-public class PostEventServiceImpl implements PostEventService, SchedulingConfigurer {
+public class PostEventServiceImpl implements PostEventService/*, SchedulingConfigurer*/ {
     @Autowired
     private PostEventRepo postEventRepo;
-    @Autowired
-    private ModifyEventStatusRepo modifyEventStatusRepo;
-    private ScheduledTaskRegistrar scheduledTaskRegistrar;
+//    @Autowired
+//    private ModifyEventStatusRepo modifyEventStatusRepo;
+//    private ScheduledTaskRegistrar scheduledTaskRegistrar;
+//
+//    private ScheduledFuture<?> job;
 
-    private ScheduledFuture<?> job;
-
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
-        this.scheduledTaskRegistrar=scheduledTaskRegistrar;
-    }
-    public void job(TaskScheduler scheduler,Timestamp timestamp,int id) {
-        job=scheduler.schedule(new Runnable() {
-            @Override
-            public void run() {
-                modifyEventStatusRepo.updateStatus(id,false);
-                job.cancel(true);
-            }
-        }, new Trigger() {
-            @Override
-            public Date nextExecutionTime(TriggerContext triggerContext) {
-                Calendar calendar=Calendar.getInstance();
-                calendar.setTime(new Date(timestamp.getTime()));
-                int eventMonth = calendar.get(Calendar.MONTH)+1;
-                int eventDate = calendar.get(Calendar.DATE);
-                int eventMinute = calendar.get(Calendar.MINUTE);
-                int eventHour=calendar.get(Calendar.HOUR_OF_DAY);
-                String cronExp = "0 "+eventMinute+" "+eventHour+" "+eventDate+" "+eventMonth +" ?";
-                return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
-            }
-        });
-    }
+//    @Override
+//    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+//        this.scheduledTaskRegistrar=scheduledTaskRegistrar;
+//    }
+//    public void job(TaskScheduler scheduler,Timestamp timestamp,int id) {
+//        job=scheduler.schedule(new Runnable() {
+//            @Override
+//            public void run() {
+//                modifyEventStatusRepo.updateStatus(id,false);
+//                job.cancel(true);
+//            }
+//        }, new Trigger() {
+//            @Override
+//            public Date nextExecutionTime(TriggerContext triggerContext) {
+//                Calendar calendar=Calendar.getInstance();
+//                calendar.setTime(new Date(timestamp.getTime()));
+//                int eventMonth = calendar.get(Calendar.MONTH)+1;
+//                int eventDate = calendar.get(Calendar.DATE);
+//                int eventMinute = calendar.get(Calendar.MINUTE);
+//                int eventHour=calendar.get(Calendar.HOUR_OF_DAY);
+//                String cronExp = "0 "+eventMinute+" "+eventHour+" "+eventDate+" "+eventMonth +" ?";
+//                return new CronTrigger(cronExp).nextExecutionTime(triggerContext);
+//            }
+//        });
+//    }
 
     @Override
     public Integer postEvent(String title, String description,String eventDate, String banner) {
-
         Timestamp date=null;
-        if(eventDate!=null) {
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Date parsedDate = dateFormat.parse(eventDate);
-                Timestamp timestamp = new Timestamp(parsedDate.getTime());
-                date = timestamp;
-            } catch (Exception e) {
-                throw new CustomRuntimeException(400, e.getMessage());
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date currentDate = new Date();
+            Date parsedDate = dateFormat.parse(eventDate);
+            if(parsedDate.compareTo(currentDate)<1){
+                throw new CustomRuntimeException(400,"Input date must be greater than current date");
             }
+            Timestamp timestamp = new Timestamp(parsedDate.getTime());
+            date = timestamp;
+        } catch (Exception e) {
+            throw new CustomRuntimeException(400, e.getMessage());
         }
         Integer id=postEventRepo.postEvent(title,description,date,banner);
         if(id==null){
@@ -81,13 +82,13 @@ public class PostEventServiceImpl implements PostEventService, SchedulingConfigu
         }
 
         //job
-        if(date!=null){
-            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-            threadPoolTaskScheduler.setThreadNamePrefix("scheduler-thread");
-            threadPoolTaskScheduler.initialize();
-            job(threadPoolTaskScheduler, date, id);
-            scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
-        }
+//        if(date!=null){
+//            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+//            threadPoolTaskScheduler.setThreadNamePrefix("scheduler-thread");
+//            threadPoolTaskScheduler.initialize();
+//            job(threadPoolTaskScheduler, date, id);
+//            scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+//        }
 
         return id;
     }

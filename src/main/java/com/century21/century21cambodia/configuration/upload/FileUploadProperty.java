@@ -8,6 +8,15 @@ public class FileUploadProperty {
     private String projectThumbnail;
     private String projectGallery;
     private String eventImage;
+    private String slider;
+
+    public String getSlider() {
+        return slider;
+    }
+
+    public void setSlider(String slider) {
+        this.slider = slider;
+    }
 
     public String getUserImage() {
         return userImage;
@@ -48,6 +57,7 @@ public class FileUploadProperty {
                 ", projectThumbnail='" + projectThumbnail + '\'' +
                 ", projectGallery='" + projectGallery + '\'' +
                 ", eventImage='" + eventImage + '\'' +
+                ", slider='" + slider + '\'' +
                 '}';
     }
 }

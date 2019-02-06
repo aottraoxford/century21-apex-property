@@ -18,8 +18,8 @@ public interface SignUpRepo {
             "LIMIT 1")
     int isEmailVerify(@Param("email")String email);
 
-    @Insert("INSERT INTO users (first_name,last_name,gender,email,phone_number,password) " +
-            "VALUES (#{signUp.firstName},#{signUp.lastName},#{signUp.gender},#{signUp.email},#{signUp.phoneNumber},crypt(#{signUp.password},gen_salt('bf')))")
+    @Insert("INSERT INTO users (enable,first_name,last_name,gender,email,phone_number,password) " +
+            "VALUES (true,#{signUp.firstName},#{signUp.lastName},#{signUp.gender},#{signUp.email},#{signUp.phoneNumber},crypt(#{signUp.password},gen_salt('bf')))")
     int signUp(@Param("signUp")SignUp signUp);
 
 }

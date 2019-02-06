@@ -1,12 +1,17 @@
 package com.century21.century21cambodia.repository.api_events;
 
 import com.century21.century21cambodia.util.Url;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Date;
 
 public class Events {
     private int id;
     private String title;
     private String description;
     private String banner;
+    @JsonIgnore
+    private Date date;
 
     public int getId() {
         return id;
@@ -42,12 +47,22 @@ public class Events {
         this.banner = banner;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Events{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", banner='" + banner + '\'' +
+                ", date=" + date +
                 '}';
     }
 }

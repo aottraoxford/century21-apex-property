@@ -17,8 +17,6 @@ import java.util.Date;
 public class UIController {
     @RequestMapping({"/"})
     public String swagger(){
-        LocalDateTime dateTime = LocalDateTime.now();
-
         return "redirect:/swagger-ui.html";
     }
 }
