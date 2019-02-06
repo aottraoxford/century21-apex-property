@@ -1,7 +1,10 @@
 package com.century21.century21cambodia.repository.search;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ProjectType {
     private Integer id;
+    @JsonProperty("type")
     private String name;
 
     public Integer getId() {

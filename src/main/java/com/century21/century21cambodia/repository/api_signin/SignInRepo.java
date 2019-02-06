@@ -27,4 +27,5 @@ public interface SignInRepo {
             "FROM users " +
             "WHERE email = #{email} AND account_type='origin'")
     Boolean emailExist(@Param("email")String email);
+
 }
