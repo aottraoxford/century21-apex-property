@@ -1,8 +1,6 @@
 package com.century21.century21cambodia.util;
 
 import com.century21.century21cambodia.exception.CustomRuntimeException;
-import com.century21.century21cambodia.repository.api_log.LogRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.mail.*;
