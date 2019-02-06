@@ -28,7 +28,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@RestController("/apis/admin")
+@RestController
+@RequestMapping("/api/admin")
 public class BackendController {
 
     @Autowired
