@@ -204,6 +204,14 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
+    @Autowired
+    private EventsService eventsService;
+    @ApiOperation("get all event")
+    @GetMapping(value = "/events",produces = "application/json")
+    public ResponseEntity events(){
+        CustomResponse customResponse=new CustomResponse(200,eventsService.events());
+        return customResponse.httpResponse("result");
+    }
 
 }
 

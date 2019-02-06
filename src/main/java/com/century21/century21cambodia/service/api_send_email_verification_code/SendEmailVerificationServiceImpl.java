@@ -24,13 +24,6 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
         int countEmail = sendEmailVerificationRepo.countEmailByEmail(email);
         if(countEmail>0) throw new CustomRuntimeException(409,"Email already exists");
 
-      //  try {
-
-            //read file from mail_template.txt
-//            File file = ResourceUtils.getFile("classpath:static/mail_template.txt");
-//            InputStream in = new FileInputStream(file);
-//            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(in));
-//            int i;
             String mailTemplate="<html>\n" +
                     "\t<head>\n" +
                     "\t\t<style>\n" +
@@ -49,9 +42,6 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
                     "           using this email address.<h1></h1> To complete the registration process,\n" +
                     "           just copy this code below to verify your email:</p><h1></h1>\n" +
                     "\t\t<h1 class='code'>";
-//            while((i=bufferedReader.read())!=-1) {
-//                mailTemplate += (char) i + "";
-//            }
 
             //random number to verify email and save to database
             int code = (int)(Math.random()*8999)+1000;
@@ -72,10 +62,6 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
                     removeVerifyEmail(email,code);
                 }
             }, 120000, 1, TimeUnit.MILLISECONDS);
-
-//        } catch (IOException e) {
-//            throw new CustomRuntimeException(500,e.getMessage());
-//        }
     }
 
     @Override
