@@ -207,7 +207,7 @@ public class ProjectController {
     @Autowired
     private EventsService eventsService;
     @ApiOperation("get all event")
-    @GetMapping(value = "/events",produces = "application/json")
+    @GetMapping(value = "api/events",produces = "application/json")
     public ResponseEntity events(){
         CustomResponse customResponse=new CustomResponse(200,eventsService.events());
         return customResponse.httpResponse("result");
