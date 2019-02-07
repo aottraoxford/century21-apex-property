@@ -19,22 +19,22 @@ import java.util.Date;
 public class UIController {
     @RequestMapping({"/"})
     public String swagger(){
-        String inputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/slider/0e14afec-1711-4dbc-ad9a-6ead4483679fGA_EventCoverage_Postcard_Front.jpg";
-        String outputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/a.jpg";
-        try {
-            // resize to a fixed width (not proportional)
-            int scaledWidth = 1024;
-            int scaledHeight = 768;
-            ImageUtil.resize(inputImagePath, outputImagePath, scaledWidth, scaledHeight);
-
-            double percent = 0.5;
-            ImageUtil.resize(inputImagePath, outputImagePath,percent );
-
-
-        } catch (IOException ex) {
-            System.out.println("Error resizing the image.");
-            ex.printStackTrace();
-        }
+//        String inputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/slider/0e14afec-1711-4dbc-ad9a-6ead4483679fGA_EventCoverage_Postcard_Front.jpg";
+//        String outputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/a.jpg";
+//        try {
+//            // resize to a fixed width (not proportional)
+//            int scaledWidth = 1024;
+//            int scaledHeight = 768;
+//            ImageUtil.resize(inputImagePath, outputImagePath, scaledWidth, scaledHeight);
+//
+//            double percent = 0.5;
+//            ImageUtil.resize(inputImagePath, outputImagePath,percent );
+//
+//
+//        } catch (IOException ex) {
+//            System.out.println("Error resizing the image.");
+//            ex.printStackTrace();
+//        }
         return "redirect:/swagger-ui.html";
     }
 }

@@ -2,8 +2,10 @@ package com.century21.century21cambodia.controller;
 
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
+import com.century21.century21cambodia.model.request.SignIn;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.repository.api_new_project.Project;
+import com.century21.century21cambodia.repository.api_post_event.Event;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
@@ -16,6 +18,7 @@ import com.century21.century21cambodia.service.api_update_project.UpdateProjectS
 import com.century21.century21cambodia.service.api_upload_project_images.ProjectGalleryService;
 import com.century21.century21cambodia.service.api_visible_project.VisibleProjectService;
 import com.century21.century21cambodia.util.Url;
+import com.fasterxml.jackson.databind.node.TextNode;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -97,8 +100,8 @@ public class BackendController {
     private PostEventService postEventService;
     @ApiOperation("(BACK END)post event")
     @PostMapping(value = "/post-event",produces = "application/json")
-    public ResponseEntity postEvent(@RequestParam("title")String title, @RequestParam("description")String description, @RequestParam(value="eventDate",required = false)String eventDate, @RequestPart("file") MultipartFile multipartFile){
-        Integer eventID=postEventService.postEvent(title,description,eventDate,fileUploadService.storeImage(multipartFile,fileUploadProperty.getEventImage()));
+    public ResponseEntity postEvent(@RequestPart(value = "file") MultipartFile multipartFile, @ModelAttribute Event event){
+        Integer eventID=postEventService.postEvent(event.getTitle(),event.getDescription(),event.getEventDate(),fileUploadService.storeImage(multipartFile,fileUploadProperty.getEventImage()));
         CustomResponse customResponse=new CustomResponse(200,eventID);
         return customResponse.httpResponse("event_id");
     }

@@ -24,12 +24,21 @@ public class ProjectDetail {
     @JsonProperty("project_type")
     private String projectType;
     private String description;
+    private Double grr;
     @JsonProperty("introductions")
     private List<ProjectIntro> projectIntro;
     @JsonProperty("galleries")
     private List<ProjectGallery> projectGalleries;
     public String getTitle() {
         return title;
+    }
+
+    public Double getGrr() {
+        return grr;
+    }
+
+    public void setGrr(Double grr) {
+        this.grr = grr;
     }
 
     public void setTitle(String title) {
@@ -146,6 +155,7 @@ public class ProjectDetail {
                 ", downPayment='" + downPayment + '\'' +
                 ", projectType='" + projectType + '\'' +
                 ", description='" + description + '\'' +
+                ", grr=" + grr +
                 ", projectIntro=" + projectIntro +
                 ", projectGalleries=" + projectGalleries +
                 '}';
