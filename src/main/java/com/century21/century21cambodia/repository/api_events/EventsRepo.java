@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface EventsRepo {
-    @Select("SELECT id,title,description,banner,event_date " +
+    @Select("SELECT id,title,banner,event_date " +
             "FROM events " +
             "WHERE enable IS true AND type ILIKE 'event' " +
             "ORDER BY id DESC")

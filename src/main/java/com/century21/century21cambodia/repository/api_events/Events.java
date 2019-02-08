@@ -8,7 +8,6 @@ import java.util.Date;
 public class Events {
     private int id;
     private String title;
-    private String description;
     private String banner;
     @JsonIgnore
     private Date date;
@@ -29,13 +28,6 @@ public class Events {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getBanner() {
         if(banner!=null)
@@ -60,7 +52,6 @@ public class Events {
         return "Events{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
                 ", banner='" + banner + '\'' +
                 ", date=" + date +
                 '}';

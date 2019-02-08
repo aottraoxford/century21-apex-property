@@ -21,7 +21,8 @@ public interface ProjectDetailRepo {
             @Result(property = "country",column = "country_id",one = @One(select = "country")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType")),
             @Result(property = "projectIntro",column = "id",many = @Many(select = "projectIntro")),
-            @Result(property = "projectGalleries",column = "id",many = @Many(select = "projectGalleries"))
+            @Result(property = "projectGalleries",column = "id",many = @Many(select = "projectGalleries")),
+            @Result(property = "propertyTypes",column = "id",many = @Many(select = "propertyTypes"))
     })
     ProjectDetail projectDetail(@Param("projectID") int projectID);
 
@@ -47,4 +48,12 @@ public interface ProjectDetailRepo {
             @Result(property = "image",column = "url")
     })
     List<ProjectGallery> projectGalleries();
+
+    @Select("SELECT * " +
+            "FROM property_type " +
+            "WHERE project_id=#{id}")
+    @Results({
+            @Result(property = "type",column = "name")
+    })
+    List<PropertyType> propertyTypes();
 }

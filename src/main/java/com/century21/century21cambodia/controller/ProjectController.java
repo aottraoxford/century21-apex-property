@@ -13,6 +13,7 @@ import com.century21.century21cambodia.repository.api_save_noti.SaveNoti;
 import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.repository.search.SearchParam;
 import com.century21.century21cambodia.service.api_allcity.CityService;
+import com.century21.century21cambodia.service.api_event_detail.EventDetailService;
 import com.century21.century21cambodia.service.api_events.EventsService;
 import com.century21.century21cambodia.service.api_get_noti.GetNotiService;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
@@ -114,7 +115,6 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-
     @ApiIgnore
     @ApiOperation("view project thumbnail")
     @GetMapping("/api/project/thumbnail/{fileName:.+}")
@@ -212,6 +212,15 @@ public class ProjectController {
         CustomResponse customResponse=new CustomResponse(200,eventsService.events());
         return customResponse.httpResponse("result");
     }
+
+    @Autowired
+    private EventDetailService eventDetailService;
+    @GetMapping(value = "api/event/detail",produces = "application/json")
+    public ResponseEntity eventDetail(@RequestParam int eventID){
+        CustomResponse customResponse=new CustomResponse(200,eventDetailService.getEventDetail(eventID));
+        return customResponse.httpResponse("result");
+    }
+
 
 }
 

@@ -13,14 +13,14 @@ public class Project {
     private Date completedDate;
     @JsonProperty("project_type_id")
     private Integer projectTypeID;
-    private Double grr;
+    private double grr;
     @JsonProperty("down_payment")
     private String downPayment;
     private String description;
     @JsonProperty("introductions")
     private List<ProjectIntroduction> projectIntroductions;
     @JsonProperty("country_id")
-    private Integer countryID;
+    private int countryID;
     @JsonProperty("address_1")
     private String addressOne;
     @JsonProperty("address_2")
@@ -28,47 +28,15 @@ public class Project {
     private String status;
     private String city;
     @JsonProperty("min_price")
-    private Double minPrice;
+    private double minPrice;
     @JsonProperty("max_price")
-    private Double maxPrice;
+    private double maxPrice;
     @JsonProperty("property_types")
     private List<PropertyType> propertyTypes;
     @JsonProperty("avg_rent_from")
-    private Double avgRentFrom;
+    private double avgRentFrom;
     @JsonProperty("avg_rent_to")
-    private Double avgRentTo;
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Double getAvgRentFrom() {
-        return avgRentFrom;
-    }
-
-    public void setAvgRentFrom(Double avgRentFrom) {
-        this.avgRentFrom = avgRentFrom;
-    }
-
-    public Double getAvgRentTo() {
-        return avgRentTo;
-    }
-
-    public void setAvgRentTo(Double avgRentTo) {
-        this.avgRentTo = avgRentTo;
-    }
-
-    public Integer getProjectTypeID() {
-        return projectTypeID;
-    }
-
-    public void setProjectTypeID(Integer projectTypeID) {
-        this.projectTypeID = projectTypeID;
-    }
+    private double avgRentTo;
 
     public String getName() {
         return name;
@@ -94,11 +62,19 @@ public class Project {
         this.completedDate = completedDate;
     }
 
-    public Double getGrr() {
+    public Integer getProjectTypeID() {
+        return projectTypeID;
+    }
+
+    public void setProjectTypeID(Integer projectTypeID) {
+        this.projectTypeID = projectTypeID;
+    }
+
+    public double getGrr() {
         return grr;
     }
 
-    public void setGrr(Double grr) {
+    public void setGrr(double grr) {
         this.grr = grr;
     }
 
@@ -126,11 +102,11 @@ public class Project {
         this.projectIntroductions = projectIntroductions;
     }
 
-    public Integer getCountryID() {
+    public int getCountryID() {
         return countryID;
     }
 
-    public void setCountryID(Integer countryID) {
+    public void setCountryID(int countryID) {
         this.countryID = countryID;
     }
 
@@ -154,23 +130,31 @@ public class Project {
         return status;
     }
 
-    public void setStatus(String state) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Double getMinPrice() {
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public double getMinPrice() {
         return minPrice;
     }
 
-    public void setMinPrice(Double minPrice) {
+    public void setMinPrice(double minPrice) {
         this.minPrice = minPrice;
     }
 
-    public Double getMaxPrice() {
+    public double getMaxPrice() {
         return maxPrice;
     }
 
-    public void setMaxPrice(Double maxPrice) {
+    public void setMaxPrice(double maxPrice) {
         this.maxPrice = maxPrice;
     }
 
@@ -180,6 +164,22 @@ public class Project {
 
     public void setPropertyTypes(List<PropertyType> propertyTypes) {
         this.propertyTypes = propertyTypes;
+    }
+
+    public double getAvgRentFrom() {
+        return avgRentFrom;
+    }
+
+    public void setAvgRentFrom(double avgRentFrom) {
+        this.avgRentFrom = avgRentFrom;
+    }
+
+    public double getAvgRentTo() {
+        return avgRentTo;
+    }
+
+    public void setAvgRentTo(double avgRentTo) {
+        this.avgRentTo = avgRentTo;
     }
 
     @Override
@@ -197,6 +197,7 @@ public class Project {
                 ", addressOne='" + addressOne + '\'' +
                 ", addressTwo='" + addressTwo + '\'' +
                 ", status='" + status + '\'' +
+                ", city='" + city + '\'' +
                 ", minPrice=" + minPrice +
                 ", maxPrice=" + maxPrice +
                 ", propertyTypes=" + propertyTypes +

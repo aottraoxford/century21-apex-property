@@ -9,4 +9,6 @@ public interface RemoveProjectGalleryRepo {
     @Delete("DELETE FROM project_gallery " +
             "WHERE url = #{imageName}")
     int removeGallery(@Param("imageName")String imageName);
+
+    
 }

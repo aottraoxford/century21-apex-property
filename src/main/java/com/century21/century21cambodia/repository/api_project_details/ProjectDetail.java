@@ -29,6 +29,38 @@ public class ProjectDetail {
     private List<ProjectIntro> projectIntro;
     @JsonProperty("galleries")
     private List<ProjectGallery> projectGalleries;
+    @JsonProperty("property_type")
+    private List<PropertyType> propertyTypes;
+
+    @Override
+    public String toString() {
+        return "ProjectDetail{" +
+                "title='" + title + '\'' +
+                ", country='" + country + '\'' +
+                ", addressOne='" + addressOne + '\'' +
+                ", addressTwo='" + addressTwo + '\'' +
+                ", minPrice=" + minPrice +
+                ", maxPrice=" + maxPrice +
+                ", averageAnnualRentFrom=" + averageAnnualRentFrom +
+                ", averageAnnualRentTo=" + averageAnnualRentTo +
+                ", downPayment='" + downPayment + '\'' +
+                ", projectType='" + projectType + '\'' +
+                ", description='" + description + '\'' +
+                ", grr=" + grr +
+                ", projectIntro=" + projectIntro +
+                ", projectGalleries=" + projectGalleries +
+                ", propertyTypes=" + propertyTypes +
+                '}';
+    }
+
+    public List<PropertyType> getPropertyTypes() {
+        return propertyTypes;
+    }
+
+    public void setPropertyTypes(List<PropertyType> propertyTypes) {
+        this.propertyTypes = propertyTypes;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -141,23 +173,4 @@ public class ProjectDetail {
         this.projectGalleries = projectGalleries;
     }
 
-    @Override
-    public String toString() {
-        return "ProjectDetail{" +
-                "title='" + title + '\'' +
-                ", country='" + country + '\'' +
-                ", addressOne='" + addressOne + '\'' +
-                ", addressTwo='" + addressTwo + '\'' +
-                ", minPrice=" + minPrice +
-                ", maxPrice=" + maxPrice +
-                ", averageAnnualRentFrom=" + averageAnnualRentFrom +
-                ", averageAnnualRentTo=" + averageAnnualRentTo +
-                ", downPayment='" + downPayment + '\'' +
-                ", projectType='" + projectType + '\'' +
-                ", description='" + description + '\'' +
-                ", grr=" + grr +
-                ", projectIntro=" + projectIntro +
-                ", projectGalleries=" + projectGalleries +
-                '}';
-    }
 }
