@@ -10,5 +10,5 @@ public interface RemoveProjectGalleryRepo {
             "WHERE url = #{imageName}")
     int removeGallery(@Param("imageName")String imageName);
 
-    
+
 }

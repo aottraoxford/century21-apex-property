@@ -71,12 +71,12 @@ public class BackendController {
 
     @ApiOperation("(BACK END)delete image from project(working only postman)")
     @DeleteMapping(value = "/upload-project-images",produces = "application/json")
-    public ResponseEntity delteProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
-        List<String> name= new ArrayList<>();
-        for(int i=0;i<galleries.length;i++)
-            name.add(galleries[i].getOriginalFilename());
-        CustomResponse customResponse=new CustomResponse(200,projectID,thumbnail.getOriginalFilename(),name);
-        return customResponse.httpResponse("project_id","thumbnail","galleries");
+    public ResponseEntity deleteProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
+//        List<String> name= new ArrayList<>();
+//        for(int i=0;i<galleries.length;i++)
+//            name.add(galleries[i].getOriginalFilename());
+        CustomResponse customResponse=new CustomResponse(200/*,projectID,thumbnail.getOriginalFilename(),name*/);
+        return customResponse.httpResponse(/*"project_id","thumbnail","galleries"*/);
     }
 
     @Autowired
