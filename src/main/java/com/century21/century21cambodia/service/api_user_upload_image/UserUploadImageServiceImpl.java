@@ -2,6 +2,7 @@ package com.century21.century21cambodia.service.api_user_upload_image;
 
 import com.century21.century21cambodia.exception.CustomRuntimeException;
 import com.century21.century21cambodia.repository.api_user_upload_image.UserUploadImageRepo;
+import com.century21.century21cambodia.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

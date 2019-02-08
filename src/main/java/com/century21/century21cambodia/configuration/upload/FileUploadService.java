@@ -1,6 +1,7 @@
 package com.century21.century21cambodia.configuration.upload;
 
 import com.century21.century21cambodia.exception.CustomRuntimeException;
+import com.century21.century21cambodia.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,6 +28,8 @@ import java.util.UUID;
 public class FileUploadService {
 
     public String storeImage(MultipartFile file,String fileProperty){
+        if (!ImageUtil.imageValidate(file.getOriginalFilename())) throw new CustomRuntimeException(400, "IMAGE INVALID");
+
         Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
         File directory = new File(path.toString());
         if(!directory.exists()){
@@ -49,6 +52,7 @@ public class FileUploadService {
         }
         try {
             for (int i = 0; i < file.length; i++) {
+                if(!ImageUtil.imageValidate(file[i].getOriginalFilename())) throw new CustomRuntimeException(400,"IMAGE INVALID");
                 String fn = UUID.randomUUID()+file[i].getOriginalFilename();
                 fileName.add(fn);
                 Files.copy(file[i].getInputStream(), path.resolve(fn), StandardCopyOption.REPLACE_EXISTING);

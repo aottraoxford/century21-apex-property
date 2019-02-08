@@ -5,8 +5,23 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImageUtil {
+
+    public static boolean imageValidate(String fileName){
+        if(fileName==null || fileName.length()<5){
+            return false;
+        }
+        Pattern pattern;
+        Matcher matcher;
+        String imagePattern="([^\\s]+(\\.(?i)(/bmp|jpg|gif|png))$)";
+        pattern = Pattern.compile(imagePattern);
+        matcher = pattern.matcher(fileName);
+        return matcher.matches();
+    }
+
     public static void resize(String inputImagePath, String outputImagePath, int scaledWidth, int scaledHeight)
             throws IOException {
         // reads input image

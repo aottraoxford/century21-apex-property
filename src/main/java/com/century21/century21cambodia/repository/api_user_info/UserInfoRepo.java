@@ -15,4 +15,9 @@ public interface UserInfoRepo {
     })
     UserInfo userInfo(@Param("userID")int userID);
 
+    @Select("SELECT id " +
+            "FROM users " +
+            "WHERE email ILIKE #{email} ")
+    Integer getIDByEmail(String email);
+
 }

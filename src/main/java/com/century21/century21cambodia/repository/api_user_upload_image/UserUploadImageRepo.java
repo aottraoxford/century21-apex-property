@@ -14,6 +14,16 @@ public interface UserUploadImageRepo {
 
     @Update("UPDATE users SET image = #{filename} " +
             "WHERE id=#{userID}")
-    int saveUserImage(int userID,String filename);
+    Integer saveUserImage(int userID,String filename);
+
+    @Select("SELECT id " +
+            "FROM users " +
+            "WHERE email ILIKE #{email}")
+    Integer getIDByEmail(String email);
+
+    @Select("SELECT count(id) " +
+            "FROM users " +
+            "WHERE id=#{id}")
+    int checkUserID(int id);
 
 }

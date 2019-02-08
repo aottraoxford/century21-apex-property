@@ -4,6 +4,7 @@ import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
 import com.century21.century21cambodia.exception.CustomRuntimeException;
 import com.century21.century21cambodia.repository.api_slider_update.SliderUpdateRepo;
+import com.century21.century21cambodia.util.ImageUtil;
 import com.century21.century21cambodia.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.century21.century21cambodia.controller;
 
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
+import com.century21.century21cambodia.exception.CustomRuntimeException;
 import com.century21.century21cambodia.model.request.SignIn;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.repository.api_new_project.Project;
@@ -17,6 +18,7 @@ import com.century21.century21cambodia.service.api_slider_update.SliderUpdateSer
 import com.century21.century21cambodia.service.api_update_project.UpdateProjectService;
 import com.century21.century21cambodia.service.api_upload_project_images.ProjectGalleryService;
 import com.century21.century21cambodia.service.api_visible_project.VisibleProjectService;
+import com.century21.century21cambodia.util.ImageUtil;
 import com.century21.century21cambodia.util.Url;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.swagger.annotations.ApiOperation;
@@ -69,25 +71,22 @@ public class BackendController {
         return customResponse.httpResponse("result");
     }
 
+    @Autowired
+    private RemoveProjectGalleryService removeProjectGalleryService;
     @ApiOperation("(BACK END)delete image from project(working only postman)")
     @DeleteMapping(value = "/upload-project-images",produces = "application/json")
     public ResponseEntity deleteProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
-//        List<String> name= new ArrayList<>();
-//        for(int i=0;i<galleries.length;i++)
-//            name.add(galleries[i].getOriginalFilename());
-        CustomResponse customResponse=new CustomResponse(200/*,projectID,thumbnail.getOriginalFilename(),name*/);
-        return customResponse.httpResponse(/*"project_id","thumbnail","galleries"*/);
+        CustomResponse customResponse=new CustomResponse(200,removeProjectGalleryService.removeGallery(projectID,thumbnail,galleries));
+        return customResponse.httpResponse("result");
     }
 
-    @Autowired
-    private RemoveProjectGalleryService removeProjectGalleryService;
-    @ApiOperation("(BACK END)delete one image from project")
-    @DeleteMapping(value = "/remove-project-gallery",produces = "application/json")
-    public ResponseEntity removeProjectGallery(@RequestParam(value = "imageName")String imageName){
-        removeProjectGalleryService.removeGallery(imageName);
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
+//    @ApiOperation("(BACK END)delete one image from project")
+//    @DeleteMapping(value = "/remove-project-gallery",produces = "application/json")
+//    public ResponseEntity removeProjectGallery(@RequestParam(value = "imageName")String imageName){
+//        removeProjectGalleryService.removeGallery(imageName);
+//        CustomResponse customResponse=new CustomResponse(200);
+//        return customResponse.httpResponse();
+//    }
 
     @Autowired
     private UpdateProjectService updateProjectService;

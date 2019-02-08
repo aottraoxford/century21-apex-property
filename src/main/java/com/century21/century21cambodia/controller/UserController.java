@@ -11,6 +11,7 @@ import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.model.response.OAuth2;
 import com.century21.century21cambodia.repository.api_user_contact.UserContact;
 import com.century21.century21cambodia.repository.api_user_question.UserQuestion;
+import com.century21.century21cambodia.repository.api_user_upload_image.UserUploadImageRepo;
 import com.century21.century21cambodia.service.api_enable_email.EnableEmailService;
 import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
 import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
@@ -20,6 +21,7 @@ import com.century21.century21cambodia.service.api_social_signin.SocialSignInSer
 import com.century21.century21cambodia.service.api_user_contact.UserContactService;
 import com.century21.century21cambodia.service.api_user_info.UserInfoService;
 import com.century21.century21cambodia.service.api_user_question.UserQuestionService;
+import com.century21.century21cambodia.util.ImageUtil;
 import com.century21.century21cambodia.util.JwtUtil;
 import com.century21.century21cambodia.util.Url;
 
@@ -40,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.io.IOException;
+import java.security.Principal;
 
 @Api(value = "user management",description = "user management")
 @RestController
@@ -154,8 +157,8 @@ public class UserController {
 
     @ApiOperation("user information")
     @GetMapping("/api/user-info")
-    public ResponseEntity userInfo(@RequestParam(value = "id")int userID){
-        CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID));
+    public ResponseEntity userInfo(@RequestParam(value = "id",required = false)Integer userID, Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID,principal.getName()));
         return customResponse.httpResponse("result");
     }
 
@@ -186,12 +189,17 @@ public class UserController {
 
     @Autowired
     private UserUploadImageService userUploadImageService;
-
+    @Autowired
+    private UserUploadImageRepo userUploadImageRepo;
     @ApiOperation("user upload image")
     @PostMapping(value="/api/user-upload-image",produces = "application/json")
-    public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam("userID")int userID){
+    public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam(value = "userID",required = false)Integer userID,Principal principal){
+        if(userID==null){
+            userID=userUploadImageRepo.getIDByEmail(principal.getName());
+            if(userID==null) throw new CustomRuntimeException(404,"USER NOT EXIST");
+        }
+        if(userUploadImageRepo.checkUserID(userID)<1) throw new CustomRuntimeException(404,"USER NOT EXIST");
         String fileName = fileUploadService.storeImage(file, fileUploadProperty.getUserImage());
-
         String oldFile = userUploadImageService.findImageName(userID);
         if(oldFile!=null) {
             fileUploadService.removeImage(oldFile, fileUploadProperty.getUserImage());
@@ -199,7 +207,7 @@ public class UserController {
 
         userUploadImageService.saveUserImage(userID,fileName);
 
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
+        CustomResponse customResponse=new CustomResponse(200,Url.userImageUrl+fileName);
+        return customResponse.httpResponse("image");
     }
 }
