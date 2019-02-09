@@ -7,6 +7,7 @@ import java.util.List;
 public class ProjectDetail {
     private String title;
     private String country;
+    private String city;
     @JsonProperty("address_1")
     private String addressOne;
     @JsonProperty("address_2")
@@ -51,6 +52,14 @@ public class ProjectDetail {
                 ", projectGalleries=" + projectGalleries +
                 ", propertyTypes=" + propertyTypes +
                 '}';
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public List<PropertyType> getPropertyTypes() {

@@ -20,10 +20,14 @@ public class UpdateProjectServiceImpl implements UpdateProjectService {
         Integer countryID=updateProjectRepo.findCountryID(updateProj.getCountry());
         Integer projectTypeID=updateProjectRepo.findProjectTypeID(updateProj.getProjectType());
 
-        if(countryID==null || countryID<1 ) throw new CustomRuntimeException(404,"country not found.");
-        if(projectTypeID==null || projectTypeID<1) throw new CustomRuntimeException(404,"project type not found.");
+        if(countryID==null || countryID<1 ){
+            countryID=updateProjectRepo.insertCountry(updateProj.getCountry());
+        }
+        if(projectTypeID==null || projectTypeID<1){
+            projectTypeID=updateProjectRepo.insertProjectType(updateProj.getProjectType());
+        }
 
-        if(updateProjectRepo.updateProject(updateProj,countryID,projectTypeID)<1) throw new CustomRuntimeException(500,"can not update project");
+        if(updateProjectRepo.updateProject(updateProj,countryID,projectTypeID)==null) throw new CustomRuntimeException(400,"can not update project");
 
         if(updateProj.getProjectIntro()!=null) {
             for (int i = 0; i < updateProj.getProjectIntro().size(); i++) {

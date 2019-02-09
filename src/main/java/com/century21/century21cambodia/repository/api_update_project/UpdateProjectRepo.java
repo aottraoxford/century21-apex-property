@@ -22,10 +22,17 @@ public interface UpdateProjectRepo {
 
     @Update("UPDATE project_intro SET name = #{name},description = #{description} " +
             "WHERE project_id=#{projectID} AND id = #{inID}")
-    int updateIntroduction(@Param("inID")int introID,@Param("projectID") int projectID,@Param("name")String name,@Param("description")String description);
+    Integer updateIntroduction(@Param("inID")int introID,@Param("projectID") int projectID,@Param("name")String name,@Param("description")String description);
 
     @Select(value= "{CALL update_project(#{uPro.city},#{uPro.projectID},#{uPro.title},#{cid},#{uPro.description},#{uPro.addressOne},#{uPro.addressTwo},#{uPro.minPrice},#{uPro.maxPrice},#{uPro.averageAnnualRentFrom},#{uPro.averageAnnualRentTo},#{uPro.downPayment},#{pid},#{uPro.status})}")
     @Options(statementType = StatementType.CALLABLE)
-    int updateProject(@Param("uPro")UpdateProj updateProj,@Param("cid")int cid,@Param("pid")int pid);
+    Integer updateProject(@Param("uPro")UpdateProj updateProj,@Param("cid")int cid,@Param("pid")int pid);
 
+    @Select("INSERT INTO country(name) " +
+            "VALUES (#{name}) RETURNING id")
+    Integer insertCountry(String name);
+
+    @Select("INSERT INTO project_type(name) " +
+            "VALUES (#{name}) RETURNING id")
+    Integer insertProjectType(String name);
 }

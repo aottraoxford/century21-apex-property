@@ -17,7 +17,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> projects(int countryID, int projectTypeID,boolean status, Pagination pagination) {
         List<Project> projects = projectRepo.findProject(countryID,projectTypeID,status,pagination);
-        System.out.println(projects);
         if(projects==null || projects.size()<1){
             throw new CustomRuntimeException(404, "ZERO RESULT");
         }
