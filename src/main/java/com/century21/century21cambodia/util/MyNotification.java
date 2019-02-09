@@ -32,8 +32,11 @@ public class MyNotification {
                     +   "\"app_id\": \"6ed2f44c-9a7a-4a25-89b9-73c19b0ae705\","
                     +   "\"included_segments\": [\"All\"],"
                     +   "\"headings\":{\"en\" : \""+title+"\"},"
-                    +   "\"contents\": {\"en\": \""+message+"\"},"
-                    +   "\"big_picture\": \" "+imageUrl+"\""
+                    +   "\"contents\": {\"en\": \""+message+"\"},";
+            if(type.equalsIgnoreCase("project")) {
+                strJsonBody+="\"data\": {\"project_id\": \"" + refID + "\"},";
+            }
+             strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
                     + "}";
 
             byte[] sendBytes = strJsonBody.getBytes("UTF-8");

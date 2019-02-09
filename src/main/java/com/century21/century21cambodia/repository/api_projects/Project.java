@@ -11,7 +11,7 @@ public class Project {
     private double startPrice;
     @JsonProperty("end_price")
     private double endPrice;
-    private Double grr;
+    private double grr;
     private String country;
     @JsonProperty("project_type")
     private String projectType;
@@ -37,7 +37,7 @@ public class Project {
         return grr;
     }
 
-    public void setGrr(Double grr) {
+    public void setGrr(double grr) {
         this.grr = grr;
     }
 

@@ -72,7 +72,7 @@ public class ProjectController {
     @PostMapping(value="/api/projects",produces = "application/json")
     public ResponseEntity projects(@Valid @RequestBody ProjectsRequest project, @RequestParam(value = "page",defaultValue = "1") int page, @RequestParam(value = "limit",defaultValue = "10") int limit){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,projectService.projects(project.getCountryID(),project.getProjectTypeID(),pagination),pagination);
+        CustomResponse customResponse=new CustomResponse(200,projectService.projects(project.getCountryID(),project.getProjectTypeID(),project.isEnable(),pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
 

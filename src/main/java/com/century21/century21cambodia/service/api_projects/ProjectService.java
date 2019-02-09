@@ -7,6 +7,6 @@ import com.century21.century21cambodia.repository.api_projects.Project;
 import java.util.List;
 
 public interface ProjectService {
-    List<Project> projects(int countryID,int projectTypeID,Pagination pagination);
+    List<Project> projects(int countryID,int projectTypeID,boolean status,Pagination pagination);
     List<CountryForWeb> getProjectsFroWeb(int limit,int offset);
 }

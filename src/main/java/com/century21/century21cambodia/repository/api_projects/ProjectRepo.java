@@ -17,10 +17,10 @@ public interface ProjectRepo {
             @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
-    List<Project> findProject(@Param("cid")int cid,@Param("pid")int pid,@Param("paging")Pagination pagination);
+    List<Project> findProject(@Param("cid")int cid,@Param("pid")int pid,@Param("status")boolean status,@Param("paging")Pagination pagination);
 
     @SelectProvider(type = ProjectUtil.class,method = "countProject")
-    Integer countProject(@Param("cid")int cid,@Param("pid")int pid);
+    Integer countProject(@Param("cid")int cid,@Param("pid")int pid,@Param("status")boolean status);
 
     @Select("SELECT name " +
             "FROM country " +

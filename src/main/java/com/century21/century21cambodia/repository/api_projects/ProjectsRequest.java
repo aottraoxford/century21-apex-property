@@ -9,6 +9,8 @@ public class ProjectsRequest {
     private int countryID;
     @JsonProperty("project_type_id")
     private int projectTypeID;
+    @JsonProperty("is_enabled")
+    private boolean isEnable;
 
     public int getCountryID() {
         return countryID;
@@ -24,5 +26,13 @@ public class ProjectsRequest {
 
     public void setProjectTypeID(int projectTypeID) {
         this.projectTypeID = projectTypeID;
+    }
+
+    public boolean isEnable() {
+        return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
     }
 }

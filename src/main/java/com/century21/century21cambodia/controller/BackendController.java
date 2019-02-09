@@ -80,14 +80,6 @@ public class BackendController {
         return customResponse.httpResponse("result");
     }
 
-//    @ApiOperation("(BACK END)delete one image from project")
-//    @DeleteMapping(value = "/remove-project-gallery",produces = "application/json")
-//    public ResponseEntity removeProjectGallery(@RequestParam(value = "imageName")String imageName){
-//        removeProjectGalleryService.removeGallery(imageName);
-//        CustomResponse customResponse=new CustomResponse(200);
-//        return customResponse.httpResponse();
-//    }
-
     @Autowired
     private UpdateProjectService updateProjectService;
     @ApiOperation("(BACK END)update project")

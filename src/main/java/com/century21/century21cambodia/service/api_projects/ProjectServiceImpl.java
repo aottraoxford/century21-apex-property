@@ -15,13 +15,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepo projectRepo;
     @Override
-    public List<Project> projects(int countryID, int projectTypeID, Pagination pagination) {
-        projectRepo.findProject(countryID,projectTypeID,pagination);
-        List<Project> projects = projectRepo.findProject(countryID,projectTypeID,pagination);
-        if(projects==null || projects.size()<0){
+    public List<Project> projects(int countryID, int projectTypeID,boolean status, Pagination pagination) {
+        List<Project> projects = projectRepo.findProject(countryID,projectTypeID,status,pagination);
+        System.out.println(projects);
+        if(projects==null || projects.size()<1){
             throw new CustomRuntimeException(404, "ZERO RESULT");
         }
-        pagination.setTotalItem(projectRepo.countProject(countryID,projectTypeID));
+        pagination.setTotalItem(projectRepo.countProject(countryID,projectTypeID,status));
         return projects;
     }
 
