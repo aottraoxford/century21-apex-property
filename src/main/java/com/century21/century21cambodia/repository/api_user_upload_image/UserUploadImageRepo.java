@@ -18,7 +18,7 @@ public interface UserUploadImageRepo {
 
     @Select("SELECT id " +
             "FROM users " +
-            "WHERE email ILIKE #{email}")
+            "WHERE email ILIKE #{email} ")
     Integer getIDByEmail(String email);
 
     @Select("SELECT count(id) " +

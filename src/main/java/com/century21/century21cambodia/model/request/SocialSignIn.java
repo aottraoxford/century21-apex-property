@@ -1,5 +1,7 @@
 package com.century21.century21cambodia.model.request;
 
+import com.century21.century21cambodia.exception.CustomRuntimeException;
+import com.century21.century21cambodia.util.Url;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SocialSignIn {
@@ -15,6 +17,8 @@ public class SocialSignIn {
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
+    @JsonProperty("photo")
+    private String photo;
 
     public String getEmail() {
         return email;
@@ -25,6 +29,8 @@ public class SocialSignIn {
     }
 
     public String getSocialId() {
+        if(socialId==null)
+            throw new CustomRuntimeException(400,"social_id can not be empty or null");
         return socialId;
     }
 
@@ -57,6 +63,7 @@ public class SocialSignIn {
     }
 
     public String getFirstName() {
+
         return firstName;
     }
 
@@ -65,6 +72,7 @@ public class SocialSignIn {
     }
 
     public String getLastName() {
+
         return lastName;
     }
 
@@ -72,16 +80,26 @@ public class SocialSignIn {
         this.lastName = lastName;
     }
 
+    public String getPhoto() {
+
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "SocialSignIn{" +
                 "email='" + email + '\'' +
                 ", socialId='" + socialId + '\'' +
                 ", socialType='" + socialType + '\'' +
-                ", phoneNumber ='" + phoneNumber + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender='" + gender + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", photo='" + photo + '\'' +
                 '}';
     }
 }

@@ -6,7 +6,6 @@ public class SocialAccount {
     private String email;
     private String phoneNumber;
     private String socialId;
-    private String socialType;
     private List<Authority> authorities;
 
     public String getEmail() {
@@ -33,14 +32,6 @@ public class SocialAccount {
         this.socialId = socialId;
     }
 
-    public String getSocialType() {
-        return socialType;
-    }
-
-    public void setSocialType(String socialType) {
-        this.socialType = socialType;
-    }
-
     public List<Authority> getAuthorities() {
         return authorities;
     }
@@ -55,7 +46,6 @@ public class SocialAccount {
                 "email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", socialId='" + socialId + '\'' +
-                ", socialType='" + socialType + '\'' +
                 ", authorities=" + authorities +
                 '}';
     }
