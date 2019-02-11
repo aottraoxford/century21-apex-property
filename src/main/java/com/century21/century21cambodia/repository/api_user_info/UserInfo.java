@@ -3,6 +3,9 @@ package com.century21.century21cambodia.repository.api_user_info;
 import com.century21.century21cambodia.util.Url;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class UserInfo {
     @JsonProperty("first_name")
     private String firstName;
@@ -15,9 +18,15 @@ public class UserInfo {
     private String image;
 
     public String getImage() {
-        if(image!=null)
-            return Url.userImageUrl+image;
-        return image;
+        String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+        Pattern pattern;
+        Matcher matcher;
+        pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
+        matcher=pattern.matcher(email);
+        if(matcher.matches()) {
+            if (image != null)
+                return Url.userImageUrl + image;
+        }return image;
     }
 
     public void setImage(String image) {

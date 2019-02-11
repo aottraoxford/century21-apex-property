@@ -75,8 +75,8 @@ public class BackendController {
     private RemoveProjectGalleryService removeProjectGalleryService;
     @ApiOperation("(BACK END)delete image from project(working only postman)")
     @DeleteMapping(value = "/upload-project-images",produces = "application/json")
-    public ResponseEntity deleteProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
-        CustomResponse customResponse=new CustomResponse(200,removeProjectGalleryService.removeGallery(projectID,thumbnail,galleries));
+    public ResponseEntity deleteProjectImage(@RequestParam("projectID")int projectID,@RequestParam(value = "gallery",required = false)String gallery, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
+        CustomResponse customResponse=new CustomResponse(200,removeProjectGalleryService.removeGallery(projectID,gallery,thumbnail,galleries));
         return customResponse.httpResponse("result");
     }
 

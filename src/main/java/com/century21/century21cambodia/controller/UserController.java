@@ -15,6 +15,7 @@ import com.century21.century21cambodia.repository.api_user_upload_image.UserUplo
 import com.century21.century21cambodia.service.api_enable_email.EnableEmailService;
 import com.century21.century21cambodia.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
+import com.century21.century21cambodia.service.api_user_favorite.UserFavoriteService;
 import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
 import com.century21.century21cambodia.service.api_signin.SignInService;
 import com.century21.century21cambodia.service.api_signup.SignUpService;
@@ -220,9 +221,11 @@ public class UserController {
         return customResponse.httpResponse("favorite");
     }
 
+    @Autowired
+    private UserFavoriteService userFavoriteService;
     @GetMapping("api/user/favorite")
-    public ResponseEntity userFavorite(){
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
+    public ResponseEntity userFavorite(Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,userFavoriteService.favorite(principal));
+        return customResponse.httpResponse("result");
     }
 }

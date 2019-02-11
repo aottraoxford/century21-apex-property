@@ -26,7 +26,7 @@ public class RemoveProjectGalleryServiceImpl implements RemoveProjectGalleryServ
 
 
     @Override
-    public Gallery removeGallery(int projectID, MultipartFile thumbnail, MultipartFile[] galleries) {
+    public Gallery removeGallery(int projectID,String gal, MultipartFile thumbnail, MultipartFile[] galleries) {
         if(removeProjectGalleryRepo.checkID(projectID)<1){
             throw new CustomRuntimeException(404,"Project id NOT FOUND");
         }
@@ -38,11 +38,16 @@ public class RemoveProjectGalleryServiceImpl implements RemoveProjectGalleryServ
             gallery.setProjectID(projectID);
             gallery.setThumbnail(Url.projectThumbnailUrl+ fileName);
         }
-        if(galleries.length>0){
-            for(int i=0;i<galleries.length;i++){
-                fileUploadService.removeImage(galleries[i].getOriginalFilename(),fileUploadProperty.getProjectGallery());
-                removeProjectGalleryRepo.removeGallery(galleries[i].getOriginalFilename());
+        if(gal==null) {
+            if (galleries.length > 0) {
+                for (int i = 0; i < galleries.length; i++) {
+                    fileUploadService.removeImage(galleries[i].getOriginalFilename(), fileUploadProperty.getProjectGallery());
+                    removeProjectGalleryRepo.removeGallery(galleries[i].getOriginalFilename());
+                }
             }
+        }else {
+            fileUploadService.removeImage(gal, fileUploadProperty.getProjectGallery());
+            removeProjectGalleryRepo.removeGallery(gal);
         }
         List<String> g=removeProjectGalleryRepo.galleries(projectID);
         if(g!=null || g.size()>0){
