@@ -1,5 +1,7 @@
 package com.century21.century21cambodia.repository.api_event_detail;
 
+import com.century21.century21cambodia.util.Url;
+
 public class EventDetail {
     private int id;
     private String banner;
@@ -14,6 +16,7 @@ public class EventDetail {
     }
 
     public String getBanner() {
+        if(banner!=null) return Url.bannerUrl+banner;
         return banner;
     }
 

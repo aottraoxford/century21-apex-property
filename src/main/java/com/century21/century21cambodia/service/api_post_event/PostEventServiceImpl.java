@@ -67,12 +67,20 @@ public class PostEventServiceImpl implements PostEventService/*, SchedulingConfi
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date currentDate = new Date();
-            Date parsedDate = dateFormat.parse(eventDate);
-            if(parsedDate.compareTo(currentDate)<1){
-                throw new CustomRuntimeException(400,"Input date must be greater than current date");
+            if(eventDate!=null) {
+                Date parsedDate = dateFormat.parse(eventDate);
+                if(parsedDate.compareTo(currentDate)<1){
+                    throw new CustomRuntimeException(400,"Input date must be greater than current date");
+                }
+                Timestamp timestamp = new Timestamp(parsedDate.getTime());
+                date = timestamp;
+            }else {
+                Calendar calendar=Calendar.getInstance();
+                calendar.setTime(currentDate);
+                calendar.add(Calendar.DATE,5);
+                Timestamp timestamp=new Timestamp(calendar.getTimeInMillis());
+                date=timestamp;
             }
-            Timestamp timestamp = new Timestamp(parsedDate.getTime());
-            date = timestamp;
         } catch (Exception e) {
             throw new CustomRuntimeException(400, e.getMessage());
         }

@@ -22,8 +22,7 @@ public class Event {
     }
 
     public String getEventDate() {
-        //return eventDate;
-        return "2019-02-20 10:40";
+        return eventDate;
     }
 
     public void setEventDate(String eventDate) {
