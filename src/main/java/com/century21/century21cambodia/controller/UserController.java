@@ -3,6 +3,7 @@ package com.century21.century21cambodia.controller;
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
 import com.century21.century21cambodia.exception.CustomRuntimeException;
+import com.century21.century21cambodia.model.Pagination;
 import com.century21.century21cambodia.model.request.EnableEmail;
 import com.century21.century21cambodia.model.request.RefreshToken;
 import com.century21.century21cambodia.model.request.SignIn;
@@ -11,11 +12,13 @@ import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.model.response.OAuth2;
 import com.century21.century21cambodia.repository.api_user_contact.UserContact;
 import com.century21.century21cambodia.repository.api_user_question.UserQuestion;
+import com.century21.century21cambodia.repository.api_user_update.UpdateInfo;
 import com.century21.century21cambodia.repository.api_user_upload_image.UserUploadImageRepo;
 import com.century21.century21cambodia.service.api_enable_email.EnableEmailService;
 import com.century21.century21cambodia.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
 import com.century21.century21cambodia.service.api_user_favorite.UserFavoriteService;
+import com.century21.century21cambodia.service.api_user_update.UserUpdateService;
 import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
 import com.century21.century21cambodia.service.api_signin.SignInService;
 import com.century21.century21cambodia.service.api_signup.SignUpService;
@@ -224,8 +227,17 @@ public class UserController {
     @Autowired
     private UserFavoriteService userFavoriteService;
     @GetMapping("api/user/favorite")
-    public ResponseEntity userFavorite(Principal principal){
-        CustomResponse customResponse=new CustomResponse(200,userFavoriteService.favorite(principal));
+    public ResponseEntity userFavorite(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,userFavoriteService.favorite(principal,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
+
+    @Autowired
+    private UserUpdateService userUpdateService;
+    @PostMapping("api/user/update")
+    public ResponseEntity userUpdate(@RequestBody UpdateInfo updateInfo,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,userUpdateService.userUpdate(updateInfo,principal));
         return customResponse.httpResponse("result");
     }
 }
