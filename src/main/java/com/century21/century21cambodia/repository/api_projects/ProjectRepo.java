@@ -63,6 +63,10 @@ public interface ProjectRepo {
             "ORDER BY id DESC LIMIT 1")
     List<Project> getProjectForWeb();
 
+    @SelectProvider(type = ProjectUtil.class,method = "listAllProject")
+    List<Project> listAllProject(@Param("title")String title,@Param("status")Boolean status,@Param("limit")int limit,@Param("offset")int offset);
 
+    @SelectProvider(type = ProjectUtil.class,method = "countListAllProject")
+    int countListAllProject(@Param("title")String title,@Param("status")Boolean status);
 }
 

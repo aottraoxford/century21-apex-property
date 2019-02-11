@@ -44,4 +44,17 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return countryForWeb;
     }
+
+    @Override
+    public List<Project> listAllProject(String title, Boolean status, Pagination pagination) {
+        if(title!=null){
+            title=title.trim();
+            title=title.replaceAll(" ","%");
+            title="%"+title+"%";
+        }
+        List<Project> projects = projectRepo.listAllProject(title,status,pagination.getLimit(),pagination.getOffset());
+        if(projects==null || projects.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem( projectRepo.countListAllProject(title,status));
+        return projects;
+    }
 }

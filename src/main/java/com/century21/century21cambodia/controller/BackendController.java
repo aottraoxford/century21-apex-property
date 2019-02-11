@@ -3,6 +3,7 @@ package com.century21.century21cambodia.controller;
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
 import com.century21.century21cambodia.exception.CustomRuntimeException;
+import com.century21.century21cambodia.model.Pagination;
 import com.century21.century21cambodia.model.request.SignIn;
 import com.century21.century21cambodia.model.response.CustomResponse;
 import com.century21.century21cambodia.repository.api_new_project.Project;
@@ -11,6 +12,7 @@ import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
 import com.century21.century21cambodia.service.api_post_event.PostEventService;
+import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
 import com.century21.century21cambodia.service.api_slider.SliderService;
 import com.century21.century21cambodia.service.api_slider_add.AddSliderService;
@@ -142,5 +144,12 @@ public class BackendController {
         return customResponse.httpResponse("result");
     }
 
-
+    @Autowired
+    private ProjectService projectService;
+    @GetMapping("/project/all")
+    public ResponseEntity listAllProject(@RequestParam("title")String title,@RequestParam(value = "status",required = false)Boolean status ,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,projectService.listAllProject(title,status,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
 }

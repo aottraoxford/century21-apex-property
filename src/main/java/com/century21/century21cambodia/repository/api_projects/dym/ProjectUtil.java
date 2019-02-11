@@ -2,6 +2,7 @@ package com.century21.century21cambodia.repository.api_projects.dym;
 
 import com.century21.century21cambodia.model.Pagination;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.jdbc.SQL;
 
 public class ProjectUtil {
@@ -31,5 +32,34 @@ public class ProjectUtil {
                 WHERE("project_type_id=#{pid}");
             }
         }}.toString();
+    }
+
+    public String listAllProject(@Param("title")String title,@Param("status")Boolean status,@Param("limit")int limit,@Param("offset")int offset){
+        return new SQL(){
+            {
+                SELECT("id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail");
+                FROM("project");
+                if(status!=null) {
+                    if (status) WHERE("isdisplay IS true");
+                    else WHERE("isdisplay IS false");
+                }
+                if(title!=null) WHERE("name ILIKE #{title}");
+                ORDER_BY("id DESC LIMIT #{limit} OFFSET #{offset}");
+            }
+        }.toString();
+    }
+
+    public String countListAllProject(@Param("title")String title,@Param("status")Boolean status){
+        return new SQL(){
+            {
+                SELECT("count(id)");
+                FROM("project");
+                if(status!=null) {
+                    if (status) WHERE("isdisplay IS true");
+                    else WHERE("isdisplay IS false");
+                }
+                if(title!=null) WHERE("name ILIKE #{title}");
+            }
+        }.toString();
     }
 }
