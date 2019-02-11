@@ -26,7 +26,7 @@ public class SocialSignInServiceImpl implements SocialSignInService {
 
     @Override
     public ResponseEntity socialSignIn(String token) {
-        SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, "123", SocialSignIn.class);
+        SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, "12345678@Cenutry21CambodiaRealEstate", SocialSignIn.class);
         CustomResponse customResponse;
         if (socialSignIn.getEmail()==null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
             socialSignIn.setEmail(socialSignIn.getSocialId());
