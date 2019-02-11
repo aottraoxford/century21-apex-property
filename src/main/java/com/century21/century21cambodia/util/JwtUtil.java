@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 
 @Configuration
 public class JwtUtil<T> {
+    public static final String secret="12345678@Cenutry21CambodiaRealEstate";
     public T tokenToObject(String token,String secret,T t){
         if(token==null){
             throw new CustomRuntimeException(401,"UNAUTHORIZED");
