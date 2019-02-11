@@ -34,7 +34,9 @@ public class MyNotification {
                     +   "\"headings\":{\"en\" : \""+title+"\"},"
                     +   "\"contents\": {\"en\": \""+message+"\"},";
             if(type.equalsIgnoreCase("project")) {
-                strJsonBody+="\"data\": {\"project_id\": \"" + refID + "\"},";
+                strJsonBody+="\"data\": {" +
+                        "\"project_id\": \"" + refID + "\"," +
+                        "\"post\":\"new_project\"},";
             }
              strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
                     + "}";

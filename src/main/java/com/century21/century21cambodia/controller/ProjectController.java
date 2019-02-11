@@ -78,8 +78,8 @@ public class ProjectController {
 
     @ApiOperation("project details")
     @GetMapping(value="/api/project-details",produces = "application/json")
-    public ResponseEntity projectDetails(@RequestParam(value = "projectID")int projectID){
-        CustomResponse customResponse=new CustomResponse(200,projectDetailService.projectDetails(projectID));
+    public ResponseEntity projectDetails(@RequestParam(value = "projectID")int projectID,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,projectDetailService.projectDetails(projectID,principal));
         return customResponse.httpResponse("result");
     }
 

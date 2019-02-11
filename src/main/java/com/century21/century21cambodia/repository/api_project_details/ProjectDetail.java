@@ -1,6 +1,8 @@
 package com.century21.century21cambodia.repository.api_project_details;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 
@@ -32,26 +34,14 @@ public class ProjectDetail {
     private List<ProjectGallery> projectGalleries;
     @JsonProperty("property_type")
     private List<PropertyType> propertyTypes;
+    private boolean favorite;
 
-    @Override
-    public String toString() {
-        return "ProjectDetail{" +
-                "title='" + title + '\'' +
-                ", country='" + country + '\'' +
-                ", addressOne='" + addressOne + '\'' +
-                ", addressTwo='" + addressTwo + '\'' +
-                ", minPrice=" + minPrice +
-                ", maxPrice=" + maxPrice +
-                ", averageAnnualRentFrom=" + averageAnnualRentFrom +
-                ", averageAnnualRentTo=" + averageAnnualRentTo +
-                ", downPayment='" + downPayment + '\'' +
-                ", projectType='" + projectType + '\'' +
-                ", description='" + description + '\'' +
-                ", grr=" + grr +
-                ", projectIntro=" + projectIntro +
-                ", projectGalleries=" + projectGalleries +
-                ", propertyTypes=" + propertyTypes +
-                '}';
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public String getCity() {
@@ -182,4 +172,26 @@ public class ProjectDetail {
         this.projectGalleries = projectGalleries;
     }
 
+    @Override
+    public String toString() {
+        return "ProjectDetail{" +
+                "title='" + title + '\'' +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", addressOne='" + addressOne + '\'' +
+                ", addressTwo='" + addressTwo + '\'' +
+                ", minPrice=" + minPrice +
+                ", maxPrice=" + maxPrice +
+                ", averageAnnualRentFrom=" + averageAnnualRentFrom +
+                ", averageAnnualRentTo=" + averageAnnualRentTo +
+                ", downPayment='" + downPayment + '\'' +
+                ", projectType='" + projectType + '\'' +
+                ", description='" + description + '\'' +
+                ", grr=" + grr +
+                ", projectIntro=" + projectIntro +
+                ", projectGalleries=" + projectGalleries +
+                ", propertyTypes=" + propertyTypes +
+                ", favorite=" + favorite +
+                '}';
+    }
 }

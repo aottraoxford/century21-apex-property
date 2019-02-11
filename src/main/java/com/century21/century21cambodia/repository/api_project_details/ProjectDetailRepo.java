@@ -7,8 +7,8 @@ import java.util.List;
 
 @Repository
 public interface ProjectDetailRepo {
-    @Select("SELECT * FROM project " +
-            "WHERE id=#{projectID}")
+    @Select("SELECT project.* FROM project " +
+            "WHERE project.id=#{projectID}")
     @Results(value = {
             @Result(property = "title",column = "name"),
             @Result(property = "addressOne",column = "address_1"),
@@ -56,4 +56,15 @@ public interface ProjectDetailRepo {
             @Result(property = "type",column = "name")
     })
     List<PropertyType> propertyTypes();
+
+    @Select("SELECT id " +
+            "FROM favorite " +
+            "WHERE project_id=#{projectID} AND user_id=#{userID}")
+    Integer favorite(@Param("projectID")int projectID,@Param("userID")int userID);
+
+    @Select("SELECT id " +
+            "FROM users " +
+            "WHERE email = #{email}")
+    Integer getUserIDByEmail(String email);
+
 }

@@ -1,5 +1,6 @@
 package com.century21.century21cambodia.controller;
 
+import com.century21.century21cambodia.repository.api_project_userfavorite.ProjectFavoriteRepo;
 import com.century21.century21cambodia.repository.api_projects.ProjectRepo;
 import com.century21.century21cambodia.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import java.util.Date;
 @ApiIgnore
 @Controller
 public class UIController {
+
     @RequestMapping({"/"})
     public String swagger(){
+
 //        String inputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/slider/0e14afec-1711-4dbc-ad9a-6ead4483679fGA_EventCoverage_Postcard_Front.jpg";
 //        String outputImagePath = "D:/DEVELOP/SPRINGDev/century21cambodia/c21dir/a.jpg";
 //        try {

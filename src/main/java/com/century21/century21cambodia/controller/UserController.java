@@ -13,6 +13,7 @@ import com.century21.century21cambodia.repository.api_user_contact.UserContact;
 import com.century21.century21cambodia.repository.api_user_question.UserQuestion;
 import com.century21.century21cambodia.repository.api_user_upload_image.UserUploadImageRepo;
 import com.century21.century21cambodia.service.api_enable_email.EnableEmailService;
+import com.century21.century21cambodia.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
 import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
 import com.century21.century21cambodia.service.api_signin.SignInService;
@@ -209,5 +210,19 @@ public class UserController {
 
         CustomResponse customResponse=new CustomResponse(200,Url.userImageUrl+fileName);
         return customResponse.httpResponse("image");
+    }
+
+    @Autowired
+    private ProjectFavoriteService projectFavoriteService;
+    @PostMapping("api/project/favorite")
+    public ResponseEntity projectFavorite(int projectID,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,projectFavoriteService.favorite(projectID,principal));
+        return customResponse.httpResponse("favorite");
+    }
+
+    @GetMapping("api/user/favorite")
+    public ResponseEntity userFavorite(){
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
     }
 }

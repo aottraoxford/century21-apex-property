@@ -28,14 +28,16 @@ public class SocialSignInServiceImpl implements SocialSignInService {
     public ResponseEntity socialSignIn(String token) {
         SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, "123", SocialSignIn.class);
         CustomResponse customResponse;
-
-
         if (socialSignIn.getEmail()==null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
             socialSignIn.setEmail(socialSignIn.getSocialId());
         }else socialSignIn.setEmail(socialSignIn.getEmail()+"|"+UUID.randomUUID());
         if (socialSignInRepo.checkSocialAccount(socialSignIn.getSocialId()) < 1) {
             if (socialSignInRepo.saveSocialSignIn(socialSignIn) < 1) {
-                throw new CustomRuntimeException(500, "Insert Data fail.");
+                throw new CustomRuntimeException(500, "Insert fail.");
+            }
+        }else{
+            if(socialSignInRepo.updateSocialSignIn(socialSignIn)==null){
+                throw new CustomRuntimeException(500,"Update fail.");
             }
         }
         try {

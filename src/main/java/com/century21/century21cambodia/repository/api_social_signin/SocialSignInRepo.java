@@ -32,5 +32,15 @@ public interface SocialSignInRepo {
 
     @Insert("INSERT INTO users(image,email,password,first_name,last_name,phone_number,gender,account_type,appid,enable) " +
             "VALUES (#{socialSignIn.photo},#{socialSignIn.email},crypt(#{socialSignIn.socialId},gen_salt('bf')),#{socialSignIn.firstName},#{socialSignIn.lastName},#{socialSignIn.phoneNumber},#{socialSignIn.gender},#{socialSignIn.socialType},#{socialSignIn.socialId},true)")
-    int saveSocialSignIn(@Param("socialSignIn")SocialSignIn socialSignIn);
+    Integer saveSocialSignIn(@Param("socialSignIn")SocialSignIn socialSignIn);
+
+    @Update("UPDATE users " +
+            "SET " +
+            "email=#{socialSignIn.email}," +
+            "first_name=#{socialSignIn.firstName}" +
+            ",last_name=#{socialSignIn.lastName}," +
+            "phone_number=#{socialSignIn.phoneNumber}," +
+            "gender=#{socialSignIn.gender} " +
+            "WHERE appid=#{socialSignIn.socialId}")
+    Integer updateSocialSignIn(@Param("socialSignIn")SocialSignIn socialSignIn);
 }
