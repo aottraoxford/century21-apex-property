@@ -40,7 +40,8 @@ public interface SocialSignInRepo {
             "first_name=#{socialSignIn.firstName}" +
             ",last_name=#{socialSignIn.lastName}," +
             "phone_number=#{socialSignIn.phoneNumber}," +
-            "gender=#{socialSignIn.gender} " +
+            "gender=#{socialSignIn.gender}," +
+            "image=#{socialSignIn.photo} " +
             "WHERE appid=#{socialSignIn.socialId}")
     Integer updateSocialSignIn(@Param("socialSignIn")SocialSignIn socialSignIn);
 }

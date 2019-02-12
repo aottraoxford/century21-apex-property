@@ -15,6 +15,7 @@ public class UserInfo {
     private String email;
     @JsonProperty("phone_number")
     private String phoneNumber;
+    @JsonProperty("photo")
     private String image;
 
     public String getImage() {
