@@ -29,7 +29,7 @@ import java.util.Date;
 public class UIController {
     @RequestMapping({"/"})
     public String swagger(){
-        return "redirect:https://www.google.com/";
+        return "redirect:/swagger-ui.html";
     }
 
     @Autowired
