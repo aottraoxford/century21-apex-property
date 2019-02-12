@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 public interface UserResetPassRepo {
 
     @Update("UPDATE verification SET enable = true " +
-            "WHERE email = #{email} AND code = #{code}")
+            "WHERE name = #{email} AND code = #{code}")
     Integer enableByEmailAndCode(@Param("email")String email,@Param("code")int code);
 
     @Update("UPDATE users SET password = crypt(#{password},gen_salt('bf')) " +
