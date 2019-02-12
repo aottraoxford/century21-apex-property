@@ -14,7 +14,7 @@ public interface UserResetPassRepo {
             "WHERE email = #{email}")
     Integer updateUserPassword(@Param("email")String email,@Param("password")String password);
 
-    @Delete("DELECT FROM verification WHERE name = #{email}")
+    @Delete("DELETE FROM verification WHERE name = #{email}")
     Integer deleteVerification(String email);
 
 }
