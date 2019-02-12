@@ -17,17 +17,19 @@ public class UserInfo {
     private String phoneNumber;
     @JsonProperty("photo")
     private String image;
+    private String swapEmail;
 
     public String getImage() {
         String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
         Pattern pattern;
         Matcher matcher;
         pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-        matcher=pattern.matcher(email);
+        matcher=pattern.matcher(swapEmail);
         if(matcher.matches()) {
             if (image != null)
                 return Url.userImageUrl + image;
-        }return image;
+        }
+        return image;
     }
 
     public void setImage(String image) {
@@ -59,6 +61,7 @@ public class UserInfo {
     }
 
     public String getEmail() {
+        swapEmail=email;
         if(email.contains("|")) {
             String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
             Pattern pattern;
