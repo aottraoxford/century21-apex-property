@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 //detect device not use
-@Configuration
-@EnableWebMvc
+//@Configuration
+//@EnableWebMvc
 public class WebMVCConfig implements WebMvcConfigurer {
     @Bean
     public DeviceResolverHandlerInterceptor deviceResolverHandlerInterceptor() {

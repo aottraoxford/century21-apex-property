@@ -18,6 +18,8 @@ import com.century21.century21cambodia.service.api_enable_email.EnableEmailServi
 import com.century21.century21cambodia.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.century21cambodia.service.api_send_email_verification_code.SendEmailVerificationService;
 import com.century21.century21cambodia.service.api_user_favorite.UserFavoriteService;
+import com.century21.century21cambodia.service.api_user_reset_pass.UserResetPassService;
+import com.century21.century21cambodia.service.api_user_reset_verify.UserResetPassVerifyService;
 import com.century21.century21cambodia.service.api_user_update.UserUpdateService;
 import com.century21.century21cambodia.service.api_user_upload_image.UserUploadImageService;
 import com.century21.century21cambodia.service.api_signin.SignInService;
@@ -46,8 +48,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
+import java.util.Base64;
 
 @Api(value = "user management",description = "user management")
 @RestController
@@ -240,4 +245,22 @@ public class UserController {
         CustomResponse customResponse=new CustomResponse(200,userUpdateService.userUpdate(updateInfo,principal));
         return customResponse.httpResponse("result");
     }
+
+    @Autowired
+    private UserResetPassVerifyService userResetPassVerifyService;
+    @GetMapping("api/user/reset/verify")
+    public ResponseEntity resetVerify(@RequestParam String email,@RequestParam String pass){
+        userResetPassVerifyService.sendLinkToEmail(email,pass);
+        CustomResponse customResponse=new CustomResponse(200);
+        customResponse.setStatus("Email has been send.Please check your email.");
+        return customResponse.httpResponse();
+    }
+
+//    @Autowired
+//    private UserResetPassService userResetPassService;
+//    @GetMapping("api/user/reset/pass/{base64}")
+//    public ResponseEntity resetPass(@PathVariable("base64")String base64){
+//        userResetPassService.updateUserPassword(base64);
+//        return null;
+//    }
 }
