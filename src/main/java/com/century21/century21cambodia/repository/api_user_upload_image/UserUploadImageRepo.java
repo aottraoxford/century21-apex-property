@@ -3,6 +3,7 @@ package com.century21.century21cambodia.repository.api_user_upload_image;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 @Repository
 public interface UserUploadImageRepo {
@@ -26,4 +27,8 @@ public interface UserUploadImageRepo {
             "WHERE id=#{id}")
     int checkUserID(int id);
 
+    @Select("SELECT account_type " +
+            "FROM users " +
+            "WHERE id=#{userID}")
+    String getAccountType(int userID);
 }

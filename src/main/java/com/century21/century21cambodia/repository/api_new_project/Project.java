@@ -2,6 +2,7 @@ package com.century21.century21cambodia.repository.api_new_project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,11 @@ public class Project {
     private String addressOne;
     @JsonProperty("address_2")
     private String addressTwo;
+    @NotNull
+    @NotEmpty
     private String status;
+    @NotNull
+    @NotEmpty
     private String city;
     @NotNull
     @JsonProperty("min_price")

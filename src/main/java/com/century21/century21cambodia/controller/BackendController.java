@@ -130,9 +130,9 @@ public class BackendController {
     public ResponseEntity addSlider(@RequestParam("title")String name,@RequestPart MultipartFile file){
         String fileName= fileUploadService.storeImage(file,fileUploadProperty.getSlider());
         Integer id=addSliderService.addSlider(name,fileName);
-        fileName+= Url.sliderUrl;
+        fileName= Url.sliderUrl+fileName;
         CustomResponse customResponse=new CustomResponse(200,id,fileName);
-        return customResponse.httpResponse("slider_id","image_path");
+        return customResponse.httpResponse("slider_id","image");
     }
 
     @Autowired
