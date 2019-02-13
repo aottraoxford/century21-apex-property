@@ -64,6 +64,10 @@ public interface ProjectRepo {
     List<Project> getProjectForWeb();
 
     @SelectProvider(type = ProjectUtil.class,method = "listAllProject")
+    @Results({
+            @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
+            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+    })
     List<Project> listAllProject(@Param("title")String title,@Param("status")Boolean status,@Param("limit")int limit,@Param("offset")int offset);
 
     @SelectProvider(type = ProjectUtil.class,method = "countListAllProject")

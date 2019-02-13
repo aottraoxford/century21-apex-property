@@ -35,7 +35,7 @@ public class SignUp {
     @NotBlank
     @NotNull
     @NotEmpty
-    @Size(min = 9,max = 12 )
+    @Size(min = 9,max = 20 )
     @ApiModelProperty(position = 5)
     @JsonProperty("phone_number")
     private String phoneNumber;
