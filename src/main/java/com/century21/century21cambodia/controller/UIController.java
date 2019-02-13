@@ -32,8 +32,10 @@ public class UIController {
         return "redirect:/swagger-ui.html";
     }
 
+
     @Autowired
     private UserResetPassService userResetPassService;
+    @ApiIgnore
     @GetMapping("api/user/reset/pass/{base64}")
     public String resetPass(@PathVariable("base64")String base64){
         if(userResetPassService.updateUserPassword(base64)) return "redirect:https://www.google.com/";

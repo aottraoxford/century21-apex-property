@@ -147,7 +147,7 @@ public class BackendController {
     @Autowired
     private ProjectService projectService;
     @GetMapping("/project/all")
-    public ResponseEntity listAllProject(@RequestParam("title")String title,@RequestParam(value = "status",required = false)Boolean status ,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
+    public ResponseEntity listAllProject(@RequestParam(value = "title",required = false)String title,@RequestParam(value = "status",required = false)Boolean status ,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,projectService.listAllProject(title,status,pagination),pagination);
         return customResponse.httpResponse("result","paging");

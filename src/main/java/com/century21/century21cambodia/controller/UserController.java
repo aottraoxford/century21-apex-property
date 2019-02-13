@@ -256,11 +256,4 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-//    @Autowired
-//    private UserResetPassService userResetPassService;
-//    @GetMapping("api/user/reset/pass/{base64}")
-//    public ResponseEntity resetPass(@PathVariable("base64")String base64){
-//        userResetPassService.updateUserPassword(base64);
-//        return null;
-//    }
 }
