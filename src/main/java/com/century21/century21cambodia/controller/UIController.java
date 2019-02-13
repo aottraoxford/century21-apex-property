@@ -1,5 +1,6 @@
 package com.century21.century21cambodia.controller;
 
+import com.century21.century21cambodia.repository.api_project_statistic.ProjectStatisticRepo;
 import com.century21.century21cambodia.repository.api_project_userfavorite.ProjectFavoriteRepo;
 import com.century21.century21cambodia.repository.api_projects.ProjectRepo;
 import com.century21.century21cambodia.service.api_user_reset_pass.UserResetPassService;
@@ -27,8 +28,11 @@ import java.util.Date;
 @ApiIgnore
 @Controller
 public class UIController {
+    @Autowired
+    private ProjectStatisticRepo projectStatisticRepo;
     @RequestMapping({"/"})
-    public String swagger(){
+    public String swagger() {
+        System.out.println(projectStatisticRepo.countries());
         return "redirect:/swagger-ui.html";
     }
 

@@ -9,7 +9,7 @@ public class UpdateInfo {
     @JsonProperty("last_name")
     private String lastName;
     private String gender;
-    @JsonProperty("phone")
+    @JsonProperty("phone_number")
     private String phoneNumber;
 
     public String getFirstName() {
