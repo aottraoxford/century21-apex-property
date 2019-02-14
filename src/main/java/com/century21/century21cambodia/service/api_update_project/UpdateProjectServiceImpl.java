@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Service
 public class UpdateProjectServiceImpl implements UpdateProjectService {
 
@@ -17,6 +22,14 @@ public class UpdateProjectServiceImpl implements UpdateProjectService {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void updateProject(UpdateProj updateProj) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat.parse(updateProj.getBuiltDate());
+            dateFormat.parse(updateProj.getCompletedDate());
+        } catch(Exception e) {
+            throw new CustomRuntimeException(400,e.getMessage());
+        }
+
         Integer countryID=updateProjectRepo.findCountryID(updateProj.getCountry());
         Integer projectTypeID=updateProjectRepo.findProjectTypeID(updateProj.getProjectType());
 

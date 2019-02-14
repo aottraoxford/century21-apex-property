@@ -65,6 +65,8 @@ public interface ProjectRepo {
 
     @SelectProvider(type = ProjectUtil.class,method = "listAllProject")
     @Results({
+            @Result(property = "startPrice",column = "start_price"),
+            @Result(property = "endPrice",column = "end_price"),
             @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })

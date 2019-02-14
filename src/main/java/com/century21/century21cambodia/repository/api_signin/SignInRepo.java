@@ -23,9 +23,20 @@ public interface SignInRepo {
             "WHERE authorizations.users_id=#{id}")
     List<Authority> authorities();
 
+    @Select("SELECT authority.role " +
+            "FROM authority " +
+            "INNER JOIN authorizations ON authority.id=authorizations.authority_id " +
+            "WHERE authorizations.users_id=#{id}")
+    List<String> roles(int id);
+
     @Select("SELECT enable " +
             "FROM users " +
             "WHERE email = #{email} AND account_type='origin'")
     Boolean emailExist(@Param("email")String email);
+
+    @Select("SELECT id " +
+            "FROM users " +
+            "WHERE email = #{email}")
+    Integer findIdByEmail(String email);
 
 }

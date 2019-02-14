@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.models.auth.In;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProjectDetail {
+    private int id;
     private String title;
     private String country;
     private String city;
@@ -35,6 +37,34 @@ public class ProjectDetail {
     @JsonProperty("property_type")
     private List<PropertyType> propertyTypes;
     private boolean favorite;
+    @JsonProperty("built_date")
+    private Date builtDate;
+    @JsonProperty("completed_date")
+    private Date completedDate;
+
+    public Date getBuiltDate() {
+        return builtDate;
+    }
+
+    public void setBuiltDate(Date builtDate) {
+        this.builtDate = builtDate;
+    }
+
+    public Date getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isFavorite() {
         return favorite;

@@ -1,5 +1,7 @@
 package com.century21.century21cambodia.service.api_signin;
 
+import java.util.List;
+
 public interface SignInService {
-    void emailExist(String email);
+    List<String> emailExist(String email);
 }

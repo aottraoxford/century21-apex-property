@@ -36,7 +36,6 @@ public class UIController {
         return "redirect:/swagger-ui.html";
     }
 
-
     @Autowired
     private UserResetPassService userResetPassService;
     @ApiIgnore

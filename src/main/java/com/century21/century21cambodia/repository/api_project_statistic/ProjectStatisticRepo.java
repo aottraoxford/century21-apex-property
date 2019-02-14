@@ -8,10 +8,6 @@ import java.util.List;
 @Repository
 public interface ProjectStatisticRepo {
 
-    @Select("SELECT count(id) " +
-            "FROM project")
-    int totalProject();
-
     @Select("SELECT distinct(country_id) " +
             "FROM project")
     @Results({
@@ -31,12 +27,12 @@ public interface ProjectStatisticRepo {
             "WHERE id=#{country_id}")
     String countryName();
 
-    @Select("SELECT distinct(project_type_id) " +
+    @Select("SELECT distinct(project_type_id),country_id " +
             "FROM project " +
             "WHERE country_id=#{country_id}")
     @Results({
             @Result(property = "type",column = "project_type_id",many = @Many(select = "type")),
-            @Result(property = "total",column = "id",one = @One(select = "totalProjectTypes"))
+            @Result(property = "total",column = "{cid=country_id,pid=project_type_id}",one = @One(select = "totalProjectTypes"))
     })
     List<Type> projectTypes();
 
@@ -47,7 +43,7 @@ public interface ProjectStatisticRepo {
 
     @Select("SELECT count(id) " +
             "FROM project " +
-            "WHERE project_type_id=#{id}")
+            "WHERE project_type_id=#{pid} AND country_id=#{cid}")
     int totalProjectTypes();
 
 

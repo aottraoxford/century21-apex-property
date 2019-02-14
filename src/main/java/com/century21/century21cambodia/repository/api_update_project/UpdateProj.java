@@ -1,15 +1,22 @@
 package com.century21.century21cambodia.repository.api_update_project;
 
 import com.century21.century21cambodia.repository.api_project_details.ProjectIntro;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class UpdateProj {
     @NotNull
     @JsonProperty("project_id")
     private int projectID;
+    @JsonProperty("built_date")
+    private String builtDate;
+    @JsonProperty("completed_date")
+    private String completedDate;
     private String title;
     private String country;
     @JsonProperty("address_1")
@@ -34,17 +41,10 @@ public class UpdateProj {
     private String projectType;
     private String description;
     private String status;
+    private double grr;
     private String city;
     @JsonProperty("introductions")
     private List<ProjectIntro> projectIntro;
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public int getProjectID() {
         return projectID;
@@ -52,6 +52,22 @@ public class UpdateProj {
 
     public void setProjectID(int projectID) {
         this.projectID = projectID;
+    }
+
+    public String getBuiltDate() {
+        return builtDate;
+    }
+
+    public void setBuiltDate(String builtDate) {
+        this.builtDate = builtDate;
+    }
+
+    public String getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(String completedDate) {
+        this.completedDate = completedDate;
     }
 
     public String getTitle() {
@@ -150,6 +166,22 @@ public class UpdateProj {
         this.status = status;
     }
 
+    public double getGrr() {
+        return grr;
+    }
+
+    public void setGrr(double grr) {
+        this.grr = grr;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public List<ProjectIntro> getProjectIntro() {
         return projectIntro;
     }
@@ -162,6 +194,8 @@ public class UpdateProj {
     public String toString() {
         return "UpdateProj{" +
                 "projectID=" + projectID +
+                ", builtDate='" + builtDate + '\'' +
+                ", completedDate='" + completedDate + '\'' +
                 ", title='" + title + '\'' +
                 ", country='" + country + '\'' +
                 ", addressOne='" + addressOne + '\'' +
@@ -174,6 +208,7 @@ public class UpdateProj {
                 ", projectType='" + projectType + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
+                ", grr=" + grr +
                 ", city='" + city + '\'' +
                 ", projectIntro=" + projectIntro +
                 '}';

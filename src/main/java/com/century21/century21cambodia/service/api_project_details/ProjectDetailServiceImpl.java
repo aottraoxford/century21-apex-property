@@ -16,6 +16,7 @@ public class ProjectDetailServiceImpl implements ProjectDetailService {
     @Override
     public ProjectDetail projectDetails(int projectID, Principal principal) {
         ProjectDetail projectDetail=projectDetailRepo.projectDetail(projectID);
+        projectDetail.setId(projectID);
         if(projectDetail==null) throw new CustomRuntimeException(404,"PROJECT ID NOT FOUND");
 
 

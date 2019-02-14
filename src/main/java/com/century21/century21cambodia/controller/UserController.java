@@ -1,5 +1,6 @@
 package com.century21.century21cambodia.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
 import com.century21.century21cambodia.exception.CustomRuntimeException;
@@ -28,6 +29,7 @@ import com.century21.century21cambodia.service.api_social_signin.SocialSignInSer
 import com.century21.century21cambodia.service.api_user_contact.UserContactService;
 import com.century21.century21cambodia.service.api_user_info.UserInfoService;
 import com.century21.century21cambodia.service.api_user_question.UserQuestionService;
+import com.century21.century21cambodia.util.DecodeJWT;
 import com.century21.century21cambodia.util.ImageUtil;
 import com.century21.century21cambodia.util.JwtUtil;
 import com.century21.century21cambodia.util.Url;
@@ -53,6 +55,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Base64;
+import java.util.List;
 
 @Api(value = "user management",description = "user management")
 @RestController
@@ -119,7 +122,7 @@ public class UserController {
     @PostMapping(value="/api/sign-in",produces = "application/json")
     public ResponseEntity signIn(@Valid @RequestBody SignIn signIn){
 
-        signInService.emailExist(signIn.getEmail());
+        List<String> roles=signInService.emailExist(signIn.getEmail());
         CustomResponse customResponse;
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
@@ -130,6 +133,7 @@ public class UserController {
                     .queryString("password", signIn.getPassword())
                     .asObject(OAuth2.class);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
+            jsonResponse.getBody().setRole(roles);
         } catch (UnirestException e) {
             customResponse = new CustomResponse(401);
             customResponse.setStatus("Password not correct.");
@@ -148,6 +152,8 @@ public class UserController {
     @PostMapping(value = "/api/refresh-token",produces = "application/json")
     public ResponseEntity refreshToken(@RequestBody RefreshToken refreshToken){
         CustomResponse customResponse;
+        String email = DecodeJWT.getEmailFromJwt(refreshToken.getToken());
+        List<String> roles=signInService.emailExist(email);
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
                     .header("accept", "application/json")
@@ -156,6 +162,7 @@ public class UserController {
                     .queryString("client_id","c21c")
                     .queryString("refresh_token",refreshToken.getToken())
                     .asObject(OAuth2.class);
+            jsonResponse.getBody().setRole(roles);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
         } catch (UnirestException e) {
             customResponse = new CustomResponse(401);
@@ -211,7 +218,7 @@ public class UserController {
         if(userUploadImageRepo.checkUserID(userID)<1) throw new CustomRuntimeException(404,"USER NOT EXIST");
         String fileName = fileUploadService.storeImage(file, fileUploadProperty.getUserImage());
         String oldFile = userUploadImageService.findImageName(userID);
-        if(oldFile!=null) {
+        if(oldFile!=null && !oldFile.contains("/")) {
             fileUploadService.removeImage(oldFile, fileUploadProperty.getUserImage());
         }
 

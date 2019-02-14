@@ -3,6 +3,8 @@ package com.century21.century21cambodia.model.response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class OAuth2 {
     @JsonProperty("access_token")
     private String accessToken;
@@ -16,6 +18,15 @@ public class OAuth2 {
     private String scope;
     @JsonProperty("jti")
     private String jti;
+    private List<String> role;
+
+    public List<String> getRole() {
+        return role;
+    }
+
+    public void setRole(List<String> role) {
+        this.role = role;
+    }
 
     public String getAccessToken() {
         return accessToken;
