@@ -46,5 +46,13 @@ public interface ProjectStatisticRepo {
             "WHERE project_type_id=#{pid} AND country_id=#{cid}")
     int totalProjectTypes();
 
+    @Select("SELECT COUNT(id) " +
+            "FROM events " +
+            "WHERE enable IS true AND type = 'event'")
+    Event eventEnable();
 
+    @Select("SELECT COUNT(id) " +
+            "FROM events " +
+            "WHERE enable IS false AND type = 'event'")
+    Event eventDisable();
 }
