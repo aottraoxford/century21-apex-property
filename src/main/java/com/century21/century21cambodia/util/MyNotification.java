@@ -36,7 +36,11 @@ public class MyNotification {
             if(type.equalsIgnoreCase("project")) {
                 strJsonBody+="\"data\": {" +
                         "\"project_id\": \"" + refID + "\"," +
-                        "\"post\":\"new_project\"},";
+                        "\"post\":\"project\"},";
+            }else if(type.equalsIgnoreCase("event")){
+                strJsonBody+="\"data\": {" +
+                        "\"event_id\": \"" + refID + "\"," +
+                        "\"post\":\"event\"},";
             }
              strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
                     + "}";
