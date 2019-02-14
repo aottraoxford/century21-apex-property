@@ -20,8 +20,8 @@ public class UserUploadImageServiceImpl implements UserUploadImageService{
 
     @Override
     public void saveUserImage(int userID, String filename) {
-        if(userUploadImageRepo.getAccountType(userID)==null || userUploadImageRepo.getAccountType(userID)!="origin" )
-            //filename= Url.userImageUrl+filename;
+//        if(userUploadImageRepo.getAccountType(userID)==null || userUploadImageRepo.getAccountType(userID)!="origin" )
+//            filename= Url.userImageUrl+filename;
         if(userUploadImageRepo.saveUserImage(userID,filename)==null){
             throw new CustomRuntimeException(400,"user not exists");
         }

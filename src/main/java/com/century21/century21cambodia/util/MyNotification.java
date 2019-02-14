@@ -40,7 +40,6 @@ public class MyNotification {
             }
              strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
                     + "}";
-
             byte[] sendBytes = strJsonBody.getBytes("UTF-8");
             con.setFixedLengthStreamingMode(sendBytes.length);
 
@@ -48,6 +47,7 @@ public class MyNotification {
             outputStream.write(sendBytes);
 
             httpResponse = con.getResponseCode();
+
 
             if (  httpResponse >= HttpURLConnection.HTTP_OK
                     && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {

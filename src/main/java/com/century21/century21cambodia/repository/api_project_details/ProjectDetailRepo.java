@@ -11,7 +11,7 @@ public interface ProjectDetailRepo {
             "WHERE project.id=#{projectID}")
     @Results(value = {
             @Result(property = "builtDate",column = "built_date"),
-            @Result(property = "completed_date",column = "completed_date"),
+            @Result(property = "completedDate",column = "completed_date"),
             @Result(property = "title",column = "name"),
             @Result(property = "addressOne",column = "address_1"),
             @Result(property = "addressTwo",column = "address_2"),
