@@ -133,10 +133,14 @@ public class UIController {
     private PostEventRepo postEventRepo;
     @Autowired
     private ModifyEventStatusRepo modifyEventStatusRepo;
+    @Autowired
+    private AddSliderRepo addSliderRepo;
+    @Autowired
+    private SliderUpdateRepo sliderUpdateRepo;
     @ResponseBody
-    @GetMapping("/data/events")
-    public String dataEvents(@RequestParam(defaultValue = "5") int num){
-        for(int i=1;i<=num;i++){
+    @GetMapping("/data/events-slider")
+    public String dataEventsSlider(){
+        for(int i=1;i<=5;i++){
             String title="21st Century Cambodia Housing Group";
             String description = "After listening to the briefing session, is it also the site visit?\n" +
                     "\n" +
@@ -158,21 +162,13 @@ public class UIController {
                 System.out.println(e.getMessage());
             }
         }
-        return "GOOD";
-    }
-
-    @Autowired
-    private AddSliderRepo addSliderRepo;
-    @Autowired
-    private SliderUpdateRepo sliderUpdateRepo;
-    @GetMapping("/data/slider")
-    public String dataSlider(@RequestParam(defaultValue = "4") int num){
-        for(int i=1;i<=num;i++){
-            addSliderRepo.addSlider("Slide "+i,i+".jpg");
-            sliderUpdateRepo.sliderUpdate(true,i+".jpg",i);
+        for(int i=6;i<=9;i++){
+            addSliderRepo.addSlider("Slide "+(i-5),(i-5)+".jpg");
+            sliderUpdateRepo.sliderUpdate(true,(i-5)+".jpg",(i-5));
         }
         return "GOOD";
     }
+
 
     @Autowired
     private UserResetPassService userResetPassService;
