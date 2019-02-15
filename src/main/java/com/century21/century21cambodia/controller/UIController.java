@@ -35,7 +35,7 @@ import java.util.List;
 
 @Controller
 public class UIController {
-    @RequestMapping({"/"})
+    @GetMapping({"/"})
     public String swagger() {
         return "redirect:/swagger-ui.html";
     }
@@ -47,7 +47,7 @@ public class UIController {
     @Autowired
     private NewProjectService newProjectService;
     @ResponseBody
-    @RequestMapping("/data/projects")
+    @GetMapping("/data/projects")
     public String dataProjects(@RequestParam int num){
         for(int i=1;i<=num;i++){
             Project project=new Project();
@@ -109,7 +109,7 @@ public class UIController {
     }
 
     @ResponseBody
-    @RequestMapping("/data/image")
+    @GetMapping("/data/image")
     public String dataThumbnail(@RequestParam int num){
         for(int i=1;i<=num;i++){
             int th=((int)(Math.random()*8)+1);
@@ -122,7 +122,7 @@ public class UIController {
         return "GOOD";
     }
     @ResponseBody
-    @RequestMapping("/data/enable")
+    @GetMapping("/data/enable")
     public String dataGalleries(@RequestParam int num){
         for(int i=1;i<=num;i++)
             visibleProjectRepo.visibleProject(true,i);
@@ -134,7 +134,7 @@ public class UIController {
     @Autowired
     private ModifyEventStatusRepo modifyEventStatusRepo;
     @ResponseBody
-    @RequestMapping("/data/events")
+    @GetMapping("/data/events")
     public String dataEvents(@RequestParam int num){
         for(int i=1;i<=num;i++){
             String title="21st Century Cambodia Housing Group";
