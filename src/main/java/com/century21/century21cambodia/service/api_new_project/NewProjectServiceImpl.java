@@ -28,9 +28,13 @@ public class NewProjectServiceImpl implements NewProjectService {
                     newProjectRepo.saveProjectIntroduction(project.getProjectIntroductions().get(i), projectID);
                 }
             }
-            if(project.getPropertyTypes()!=null) {
-                for (int i = 0; i < project.getPropertyTypes().size(); i++) {
-                    newProjectRepo.savePropertyType(project.getPropertyTypes().get(i), projectID);
+            if(project.getProjectTypeID()==2){
+                newProjectRepo.saveTowerType(projectID);
+            }else{
+                if(project.getPropertyTypes()!=null) {
+                    for (int i = 0; i < project.getPropertyTypes().size(); i++) {
+                        newProjectRepo.savePropertyType(project.getPropertyTypes().get(i), projectID);
+                    }
                 }
             }
         }catch (Exception e){

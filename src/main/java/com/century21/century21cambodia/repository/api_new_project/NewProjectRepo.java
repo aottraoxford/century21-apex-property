@@ -24,4 +24,8 @@ public interface NewProjectRepo {
             "INNER JOIN project ON country.id = project.country_id " +
             "WHERE country.name ILIKE #{name} AND project.isdisplay IS TRUE")
     List<Country> countries(@Param("name")String name);
+
+    @Insert("INSERT INTO tower_type(project_id) " +
+            "VALUES(#{projectID})")
+    Integer saveTowerType(int projectID);
 }
