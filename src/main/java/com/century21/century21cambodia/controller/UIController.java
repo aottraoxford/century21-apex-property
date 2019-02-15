@@ -60,14 +60,14 @@ public class UIController {
             if(i%10==0) project.setStatus("rent,buy");
             project.setMinPrice((Math.random()*100000)+10000);
             project.setMaxPrice((Math.random()*1000000)+100000);
-            int cid=((int)(Math.random()*2)+1);
+            int cid=((int)(Math.random()*3)+1);
             project.setCountryID(cid);
             switch (cid){
                 case 1 : project.setCity("Phnom Penh"); break;
                 case 2 : project.setCity("Dubai") ;break;
                 case 3 : project.setCity("Kaula Lumpur"); break;
             }
-            int pid=((int)(Math.random()*3)+1);
+            int pid=((int)(Math.random()*4)+1);
             project.setProjectTypeID(pid);
             if(pid!=2){
                 List<PropertyType> propertyTypes=new ArrayList<>();
