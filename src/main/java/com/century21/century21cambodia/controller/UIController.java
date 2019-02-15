@@ -123,7 +123,7 @@ public class UIController {
     }
     @ResponseBody
     @GetMapping("/data/enable")
-    public String dataGalleries(@RequestParam int num){
+    public String dataEnableProject(@RequestParam int num){
         for(int i=1;i<=num;i++)
             visibleProjectRepo.visibleProject(true,i);
         return "GOOD";
@@ -135,7 +135,7 @@ public class UIController {
     private ModifyEventStatusRepo modifyEventStatusRepo;
     @ResponseBody
     @GetMapping("/data/events")
-    public String dataEvents(@RequestParam int num){
+    public String dataEvents(@RequestParam(defaultValue = "5") int num){
         for(int i=1;i<=num;i++){
             String title="21st Century Cambodia Housing Group";
             String description = "After listening to the briefing session, is it also the site visit?\n" +
@@ -153,7 +153,7 @@ public class UIController {
                 Date parsedDate = dateFormat.parse("2019-03-20");
                 Timestamp timestamp = new Timestamp(parsedDate.getTime());
                 postEventRepo.postEvent(title,description,timestamp,i+".jpg");
-                modifyEventStatusRepo.updateStatus(1,true);
+                modifyEventStatusRepo.updateStatus(i,true);
             } catch(Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -166,7 +166,7 @@ public class UIController {
     @Autowired
     private SliderUpdateRepo sliderUpdateRepo;
     @GetMapping("/data/slider")
-    public String dataSlider(@RequestParam int num){
+    public String dataSlider(@RequestParam(defaultValue = "4") int num){
         for(int i=1;i<=num;i++){
             addSliderRepo.addSlider("Slide "+i,i+".jpg");
             sliderUpdateRepo.sliderUpdate(true,i+".jpg",i);
