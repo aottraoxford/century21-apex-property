@@ -44,7 +44,7 @@ public class SocialSignInServiceImpl implements SocialSignInService {
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
                     .header("accept", "application/json")
-                    .header("Authorization", "Basic YzIxYzoxMjM=")
+                    .header("Authorization", "Basic YzIxYzoxMjM0NTY3OEBDZW51dHJ5MjFDYW1ib2RpYVJlYWxFc3RhdGU=")
                     .queryString("grant_type", "password")
                     .queryString("username", socialSignIn.getSocialId())
                     .queryString("password", socialSignIn.getSocialId())

@@ -96,7 +96,7 @@ public class UserController {
     public ResponseEntity enableEmail(@Valid @RequestBody EnableEmail enableEmail,HttpServletRequest httpServletRequest){
 
         JwtUtil jwt=new JwtUtil();
-        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),"123",String.class);
+        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),JwtUtil.secret,String.class);
 
         enableEmailService.enableEmail(enableEmail.getEmail(),enableEmail.getCode());
         CustomResponse customResponse=new CustomResponse(200);
@@ -120,7 +120,7 @@ public class UserController {
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
                     .header("accept", "application/json")
-                    .header("Authorization", "Basic YzIxYzoxMjM=")
+                    .header("Authorization", "Basic YzIxYzoxMjM0NTY3OEBDZW51dHJ5MjFDYW1ib2RpYVJlYWxFc3RhdGU=")
                     .queryString("grant_type", "password")
                     .queryString("username", signIn.getEmail())
                     .queryString("password", signIn.getPassword())
@@ -150,7 +150,7 @@ public class UserController {
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
                     .header("accept", "application/json")
-                    .header("Authorization", "Basic YzIxYzoxMjM=")
+                    .header("Authorization", "Basic YzIxYzoxMjM0NTY3OEBDZW51dHJ5MjFDYW1ib2RpYVJlYWxFc3RhdGU=")
                     .queryString("grant_type", "refresh_token")
                     .queryString("client_id","c21c")
                     .queryString("refresh_token",refreshToken.getToken())
