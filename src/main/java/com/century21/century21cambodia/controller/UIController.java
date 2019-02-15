@@ -1,11 +1,16 @@
 package com.century21.century21cambodia.controller;
 
+import com.century21.century21cambodia.repository.api_modify_event_status.ModifyEventStatusRepo;
 import com.century21.century21cambodia.repository.api_new_project.Project;
 import com.century21.century21cambodia.repository.api_new_project.ProjectIntroduction;
 import com.century21.century21cambodia.repository.api_new_project.PropertyType;
+import com.century21.century21cambodia.repository.api_post_event.PostEventRepo;
 import com.century21.century21cambodia.repository.api_project_statistic.ProjectStatisticRepo;
 import com.century21.century21cambodia.repository.api_project_userfavorite.ProjectFavoriteRepo;
 import com.century21.century21cambodia.repository.api_projects.ProjectRepo;
+import com.century21.century21cambodia.repository.api_silder_add.AddSliderRepo;
+import com.century21.century21cambodia.repository.api_slider.SliderRepo;
+import com.century21.century21cambodia.repository.api_slider_update.SliderUpdateRepo;
 import com.century21.century21cambodia.repository.api_upload_project_images.ProjectGalleryRepo;
 import com.century21.century21cambodia.repository.api_visible_project.VisibleProjectRepo;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
@@ -22,11 +27,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@ApiIgnore
 @Controller
 public class UIController {
     @RequestMapping({"/"})
@@ -106,10 +112,10 @@ public class UIController {
     @RequestMapping("/data/image")
     public String dataThumbnail(@RequestParam int num){
         for(int i=1;i<=num;i++){
-            int th=((int)(Math.random()*7)+1);
+            int th=((int)(Math.random()*8)+1);
             projectGalleryRepo.saveThumbnail(th+".jpg",i);
             for(int j=1;j<=6;j++){
-                int gr=((int)(Math.random()*7)+1);
+                int gr=((int)(Math.random()*8)+1);
                 projectGalleryRepo.saveGallery(gr+".jpg",i);
             }
         }
@@ -120,6 +126,51 @@ public class UIController {
     public String dataGalleries(@RequestParam int num){
         for(int i=1;i<=num;i++)
             visibleProjectRepo.visibleProject(true,i);
+        return "GOOD";
+    }
+
+    @Autowired
+    private PostEventRepo postEventRepo;
+    @Autowired
+    private ModifyEventStatusRepo modifyEventStatusRepo;
+    @ResponseBody
+    @RequestMapping("/data/events")
+    public String dataEvents(@RequestParam int num){
+        for(int i=1;i<=num;i++){
+            String title="21st Century Cambodia Housing Group";
+            String description = "After listening to the briefing session, is it also the site visit?\n" +
+                    "\n" +
+                    "In order to make our customers' safer investment, we regularly hold the \"21st Century Cambodian Housing Group\", which will be used by special passengers to inspect the development projects in the Phnom Penh area. Each time we will arrange 5 properties to provide detailed investment information and analysis of real estate market.\n" +
+                    "\n" +
+                    "This month's viewing group arrangement:\n" +
+                    "Saturday, September 29th, from 1:00 pm to 6:00 pm\n" +
+                    "Saturday, October 13th, from 1:00 pm to 6:00 pm\n" +
+                    "Saturday, October 27th, from 1:00 pm to 6:00 pm\n" +
+                    "\n" +
+                    "Meeting point: 21st Century Cambodia Real Estate Headquarters Downstairs Mao Zedong Avenue Opposite Chinese Embassy Park Cafe";
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsedDate = dateFormat.parse("2019-03-20");
+                Timestamp timestamp = new Timestamp(parsedDate.getTime());
+                postEventRepo.postEvent(title,description,timestamp,i+".jpg");
+                modifyEventStatusRepo.updateStatus(1,true);
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return "GOOD";
+    }
+
+    @Autowired
+    private AddSliderRepo addSliderRepo;
+    @Autowired
+    private SliderUpdateRepo sliderUpdateRepo;
+    @GetMapping("/data/slider")
+    public String dataSlider(@RequestParam int num){
+        for(int i=1;i<=num;i++){
+            addSliderRepo.addSlider("Slide "+i,i+".jpg");
+            sliderUpdateRepo.sliderUpdate(true,i+".jpg",i);
+        }
         return "GOOD";
     }
 
