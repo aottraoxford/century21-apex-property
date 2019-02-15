@@ -1,14 +1,17 @@
 package com.century21.century21cambodia.repository.api_project_statistic;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.util.List;
 
 public class ProjectStatistic {
+    @JsonProperty("total_project")
     private int totalProject;
     private List<Country> countries;
 
-    public int getTotalProject() {
-        return totalProject;
-    }
 
     public void setTotalProject(int totalProject) {
         this.totalProject = totalProject;

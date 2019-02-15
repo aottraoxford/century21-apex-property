@@ -7,6 +7,9 @@ import java.util.List;
 
 @Repository
 public interface ProjectStatisticRepo {
+    @Select("SELECT COUNT(id) " +
+            "FROM project ")
+    int totalProject();
 
     @Select("SELECT distinct(country_id) " +
             "FROM project")
@@ -49,10 +52,10 @@ public interface ProjectStatisticRepo {
     @Select("SELECT COUNT(id) " +
             "FROM events " +
             "WHERE enable IS true AND type = 'event'")
-    Event eventEnable();
+    int eventEnable();
 
     @Select("SELECT COUNT(id) " +
             "FROM events " +
             "WHERE enable IS false AND type = 'event'")
-    Event eventDisable();
+    int eventDisable();
 }

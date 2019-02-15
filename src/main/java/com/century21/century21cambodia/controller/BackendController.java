@@ -12,6 +12,7 @@ import com.century21.century21cambodia.repository.api_update_project.UpdateProj;
 import com.century21.century21cambodia.service.api_modify_event_status.ModifyEventStatusService;
 import com.century21.century21cambodia.service.api_new_project.NewProjectService;
 import com.century21.century21cambodia.service.api_post_event.PostEventService;
+import com.century21.century21cambodia.service.api_project_statistic.ProjectStatisticService;
 import com.century21.century21cambodia.service.api_projects.ProjectService;
 import com.century21.century21cambodia.service.api_remove_project_gallery.RemoveProjectGalleryService;
 import com.century21.century21cambodia.service.api_slider.SliderService;
@@ -151,5 +152,12 @@ public class BackendController {
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,projectService.listAllProject(title,status,pagination),pagination);
         return customResponse.httpResponse("result","paging");
+    }
+    @Autowired
+    private ProjectStatisticService projectStatisticService;
+    @GetMapping("/project/statistic")
+    public ResponseEntity projectStatistic(){
+        CustomResponse customResponse=new CustomResponse(200,projectStatisticService.statistic());
+        return customResponse.httpResponse("result");
     }
 }
