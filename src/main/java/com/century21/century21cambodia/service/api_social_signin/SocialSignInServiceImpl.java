@@ -51,6 +51,7 @@ public class SocialSignInServiceImpl implements SocialSignInService {
                     .asObject(OAuth2.class);
             List<String> roles=new ArrayList<>();
             roles.add("USER");
+            jsonResponse.getBody().setRoles(roles);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
         } catch (UnirestException e) {
             customResponse = new CustomResponse(500);

@@ -1,6 +1,5 @@
 package com.century21.century21cambodia.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.century21.century21cambodia.configuration.upload.FileUploadProperty;
 import com.century21.century21cambodia.configuration.upload.FileUploadService;
 import com.century21.century21cambodia.exception.CustomRuntimeException;
@@ -39,7 +38,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +45,9 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
 import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
 
 @Api(value = "user management",description = "user management")
@@ -87,7 +80,7 @@ public class UserController {
     public ResponseEntity emailVerification(@Email @RequestParam("email") String email, HttpServletRequest httpServletRequest){
 
         JwtUtil jwt=new JwtUtil();
-        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),"123",String.class);
+        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"),JwtUtil.secret,String.class);
 
         sendEmailVerificationService.saveEmailId(email);
         CustomResponse customResponse=new CustomResponse(200);
@@ -133,7 +126,7 @@ public class UserController {
                     .queryString("password", signIn.getPassword())
                     .asObject(OAuth2.class);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
-            jsonResponse.getBody().setRole(roles);
+            jsonResponse.getBody().setRoles(roles);
         } catch (UnirestException e) {
             customResponse = new CustomResponse(401);
             customResponse.setStatus("Password not correct.");
@@ -162,7 +155,7 @@ public class UserController {
                     .queryString("client_id","c21c")
                     .queryString("refresh_token",refreshToken.getToken())
                     .asObject(OAuth2.class);
-            jsonResponse.getBody().setRole(roles);
+            jsonResponse.getBody().setRoles(roles);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
         } catch (UnirestException e) {
             customResponse = new CustomResponse(401);

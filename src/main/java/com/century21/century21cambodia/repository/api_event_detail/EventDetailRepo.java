@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventDetailRepo {
-    @Select("SELECT id,banner,description " +
+    @Select("SELECT id,banner,title,description " +
             "FROM events " +
             "WHERE type ILIKE 'event' AND id = #{id}")
     EventDetail getEventDetail(int id);

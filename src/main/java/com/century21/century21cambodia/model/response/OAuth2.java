@@ -18,14 +18,14 @@ public class OAuth2 {
     private String scope;
     @JsonProperty("jti")
     private String jti;
-    private List<String> role;
+    private List<String> roles;
 
-    public List<String> getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(List<String> role) {
-        this.role = role;
+    public void setRoles(List<String> role) {
+        this.roles = role;
     }
 
     public String getAccessToken() {

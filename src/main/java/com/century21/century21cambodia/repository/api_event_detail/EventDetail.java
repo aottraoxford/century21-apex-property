@@ -4,8 +4,17 @@ import com.century21.century21cambodia.util.Url;
 
 public class EventDetail {
     private int id;
+    private String title;
     private String banner;
     private String description;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public int getId() {
         return id;
