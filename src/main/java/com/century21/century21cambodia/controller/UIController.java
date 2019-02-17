@@ -164,7 +164,7 @@ public class UIController {
         }
         for(int i=6;i<=9;i++){
             addSliderRepo.addSlider("Slide "+(i-5),(i-5)+".jpg");
-            sliderUpdateRepo.sliderUpdate(true,(i-5)+".jpg",(i-5));
+            sliderUpdateRepo.sliderUpdate(true,(i-5)+".jpg",i);
         }
         return "GOOD";
     }

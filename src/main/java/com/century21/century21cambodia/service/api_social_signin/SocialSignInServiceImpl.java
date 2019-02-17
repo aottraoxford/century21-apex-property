@@ -36,11 +36,11 @@ public class SocialSignInServiceImpl implements SocialSignInService {
             if (socialSignInRepo.saveSocialSignIn(socialSignIn) < 1) {
                 throw new CustomRuntimeException(500, "Insert fail.");
             }
-        }else{
-            if(socialSignInRepo.updateSocialSignIn(socialSignIn)==null){
-                throw new CustomRuntimeException(500,"Update fail.");
-            }
-        }
+        }//else{
+//            if(socialSignInRepo.updateSocialSignIn(socialSignIn)==null){
+//                throw new CustomRuntimeException(500,"Update fail.");
+//            }
+//        }
         try {
             HttpResponse<OAuth2> jsonResponse = Unirest.post(Url.oauthTokenUrl)
                     .header("accept", "application/json")
