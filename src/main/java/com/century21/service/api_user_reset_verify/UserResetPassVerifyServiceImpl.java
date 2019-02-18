@@ -18,10 +18,7 @@ public class UserResetPassVerifyServiceImpl implements UserResetPassVerifyServic
     @Override
     public void sendLinkToEmail(String email,String pass) {
         if(userResetVerifyRepo.checkEmail(email)<1) throw new CustomRuntimeException(400,"Your email not yet register");
-        int code = (int)(Math.random()*8999)+1000;
-        String codeString = email+"|"+pass+"|"+code;
-        String encodeString = Base64.getEncoder().encodeToString(codeString.getBytes());
-        userResetVerifyRepo.storeCode(email,code);
+        String uuid=userResetVerifyRepo.storeCode(pass,email);
         String message ="<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
@@ -99,7 +96,7 @@ public class UserResetPassVerifyServiceImpl implements UserResetPassVerifyServic
                 "\t\t\t\t\t\tWe got request to reset your CENTURY 21 password.\n" +
                 "\t\t\t\t\t</h3>\n" +
                 "\t\t\t\t\t<div class=\"link\"> \n" +
-                "\t\t\t\t\t\t<a href=\""+ Url.host+"api/user/reset/pass/"+encodeString+"\">Reset Password</a>\n" +
+                "\t\t\t\t\t\t<a href=\""+ Url.host+"api/user/reset/pass/"+uuid+"\">Reset Password</a>\n" +
                 "\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t<h3>\n" +
                 "\t\t\t\t\t\tIf you ignore this message, your password won't be changed.\n" +

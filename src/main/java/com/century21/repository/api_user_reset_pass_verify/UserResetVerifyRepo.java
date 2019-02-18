@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserResetVerifyRepo {
-    @Insert("INSERT INTO verification(name,code) " +
-            "VALUES (#{email},#{code})")
-    Integer storeCode(@Param("email") String email, @Param("code") int code);
+    @Select("INSERT INTO verification(password,name) " +
+            "VALUES (#{password},#{email}) " +
+            "RETURNING uuid")
+    String storeCode(@Param("password")String password,@Param("email") String email);
 
     @Select("SELECT count(id) " +
             "FROM users " +
