@@ -16,7 +16,7 @@ public interface UserResetPassRepo {
 
     @Select("SELECT name,password " +
             "FROM verification " +
-            "WHERE uuid=#{uuid} AND code IS NOT NULL")
+            "WHERE uuid=#{uuid} AND code IS NULL")
     @Results({
             @Result(property = "pass",column = "password"),
             @Result(property = "email",column = "name")

@@ -17,7 +17,7 @@ public class UserResetPassServiceImpl implements UserResetPassService {
         if(auth==null) return false;
         else {
             userResetPassRepo.updateUserPassword(auth.getEmail(),auth.getPass());
-            userResetPassRepo.deleteVerification(auth.getPass());
+            userResetPassRepo.deleteVerification(auth.getEmail());
             return true;
         }
     }

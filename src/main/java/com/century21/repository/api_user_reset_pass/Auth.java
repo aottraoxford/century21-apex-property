@@ -19,4 +19,12 @@ public class Auth {
     public void setPass(String pass) {
         this.pass = pass;
     }
+
+    @Override
+    public String toString() {
+        return "Auth{" +
+                "email='" + email + '\'' +
+                ", pass='" + pass + '\'' +
+                '}';
+    }
 }
