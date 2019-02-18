@@ -14,11 +14,11 @@ import java.io.IOException;
 @EnableConfigurationProperties({
         FileUploadProperty.class
 })
-public class Century21cambodiaApplication {
+public class Century21Application {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Century21cambodiaApplication.class, args);
+        SpringApplication.run(Century21Application.class, args);
 
         Unirest.setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
