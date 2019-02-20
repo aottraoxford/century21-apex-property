@@ -11,7 +11,8 @@ public class CustomResponse<T> {
     private String status;
     private int statusCode;
     private T[] t;
-    public CustomResponse(int statusCode,T ...t){
+    @SafeVarargs
+    public CustomResponse(int statusCode, T ...t){
         setT(t);
         setStatusCode(statusCode);
         setMessageAndCode(statusCode);

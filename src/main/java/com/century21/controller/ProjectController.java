@@ -9,8 +9,6 @@ import com.century21.repository.api_projects.ProjectsRequest;
 import com.century21.repository.api_save_noti.SaveNoti;
 import com.century21.repository.search.SearchParam;
 import com.century21.service.api_allcity.CityService;
-import com.century21.service.api_event_detail.EventDetailService;
-import com.century21.service.api_events.EventsService;
 import com.century21.service.api_get_noti.GetNotiService;
 import com.century21.service.api_new_project.NewProjectService;
 import com.century21.service.api_project_details.ProjectDetailService;
@@ -182,22 +180,6 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @Autowired
-    private EventsService eventsService;
-    @ApiOperation("get all event")
-    @GetMapping(value = "api/events",produces = "application/json")
-    public ResponseEntity events(){
-        CustomResponse customResponse=new CustomResponse(200,eventsService.events());
-        return customResponse.httpResponse("result");
-    }
-
-    @Autowired
-    private EventDetailService eventDetailService;
-    @GetMapping(value = "api/event/detail",produces = "application/json")
-    public ResponseEntity eventDetail(@RequestParam int eventID){
-        CustomResponse customResponse=new CustomResponse(200,eventDetailService.getEventDetail(eventID));
-        return customResponse.httpResponse("result");
-    }
 
 
 }

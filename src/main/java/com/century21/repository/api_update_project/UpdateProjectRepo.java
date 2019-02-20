@@ -35,4 +35,6 @@ public interface UpdateProjectRepo {
     @Select("INSERT INTO project_type(name) " +
             "VALUES (#{name}) RETURNING id")
     Integer insertProjectType(String name);
+
+
 }
