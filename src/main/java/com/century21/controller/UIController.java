@@ -56,8 +56,8 @@ public class UIController {
             if(i%2==0) project.setStatus("rent");
             else project.setStatus("buy");
             if(i%10==0) project.setStatus("rent,buy");
-            project.setMinPrice((Math.random()*100000)+10000);
-            project.setMaxPrice((Math.random()*1000000)+100000);
+            project.setMinPrice((int)(Math.random()*100000)+10000);
+            project.setMaxPrice((int)(Math.random()*1000000)+100000);
             int cid=((int)(Math.random()*3)+1);
             project.setCountryID(cid);
             switch (cid){
