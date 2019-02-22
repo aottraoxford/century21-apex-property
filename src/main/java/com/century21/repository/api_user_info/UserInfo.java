@@ -18,6 +18,23 @@ public class UserInfo {
     @JsonProperty("photo")
     private String image;
     private String swapEmail;
+    private String accountType;
+
+    public String getSwapEmail() {
+        return swapEmail;
+    }
+
+    public void setSwapEmail(String swapEmail) {
+        this.swapEmail = swapEmail;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
 
     public String getImage() {
         String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
@@ -25,7 +42,7 @@ public class UserInfo {
         Matcher matcher;
         pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
         matcher=pattern.matcher(swapEmail);
-        if(matcher.matches()) {
+        if(!matcher.matches()) {
             if (image != null)
                 return Url.userImageUrl + image;
         }
