@@ -42,9 +42,10 @@ public class UserInfo {
         Matcher matcher;
         pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
         matcher=pattern.matcher(swapEmail);
-        if(!matcher.matches()) {
-            if (image != null)
+        if(matcher.matches()) {
+            if (image != null && !image.contains("/")) {
                 return Url.userImageUrl + image;
+            }
         }
         return image;
     }
