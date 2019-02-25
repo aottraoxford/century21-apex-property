@@ -35,13 +35,10 @@ public class ProjectController {
     @Autowired
     private FileUploadProperty fileUploadProperty;
 
-
-
-    @ApiOperation("search project")
     @PostMapping(value="/api/search",produces = "application/json")
-    public ResponseEntity search(@RequestBody @Valid SearchParam searchParam, @RequestParam(value = "page",defaultValue = "1")int page, @RequestParam(value = "limit",defaultValue = "10")int limit){
+    public ResponseEntity search(@RequestBody ProjectRepo.FilterRequest filterRequest, @RequestParam(value = "page",defaultValue = "1")int page, @RequestParam(value = "limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,searchService.search(searchParam,pagination),pagination);
+        CustomResponse customResponse=new CustomResponse(200,projectService.filterProject(filterRequest,pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
 

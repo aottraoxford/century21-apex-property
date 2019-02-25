@@ -15,11 +15,13 @@ public interface ProjectService {
 
     ProjectRepo.Project projectDetail(int projectID, Principal principal);
 
-    List<ProjectRepo.ProjectListingReponse> projects(String title,int cid, int pid, String status, Pagination pagination);
+    List<ProjectRepo.ProjectListingResponse> projects(String title,int cid, int pid, String status, Pagination pagination);
 
     ProjectRepo.Project deleteImage(int projectID, String galleryName);
 
     List<ProjectRepo.CountryForWeb> projectsFroWeb(int page, int limit) ;
 
     ProjectRepo.Project updateProject(ProjectRepo.ProjectRequest projectRequest);
+
+    List<ProjectRepo.ProjectListingResponse> filterProject(ProjectRepo.FilterRequest filterRequest,Pagination pagination);
 }

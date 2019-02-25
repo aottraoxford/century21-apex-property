@@ -1,5 +1,6 @@
 package com.century21.controller;
 
+import com.century21.repository.ProjectRepo;
 import com.century21.service.api_user_reset_pass.UserResetPassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
 public class UIController {
+    @Autowired
+    private ProjectRepo projectRepo;
     @GetMapping({"/"})
     public String swagger() {
         return "redirect:/swagger-ui.html";

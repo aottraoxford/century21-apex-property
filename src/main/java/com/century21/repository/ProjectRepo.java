@@ -15,7 +15,15 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepo {
-
+    @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilterCount")
+    int findAllProjectByFilterCount(@Param("filter")FilterRequest filter);
+    @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilter")
+    @Results({
+            @Result(property = "status",column = "isdisplay"),
+            @Result(property = "country",column = "country_id",one = @One(select = "country")),
+            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+    })
+    List<ProjectListingResponse> findAllProjectByFilter(@Param("filter")FilterRequest filterRequest,@Param("limit")int limit,@Param("offset")int offset);
 
     @Select("SELECT id " +
             "FROM project_intro " +
@@ -64,7 +72,7 @@ public interface ProjectRepo {
     })
     List<ProjectTypeForWeb> getProjectTypeForWeb();
 
-    @Select("SELECT id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail " +
+    @Select("SELECT id,name,price,grr,country_id,project_type_id,thumbnail " +
             "FROM project " +
             "WHERE country_id=#{cid} AND project_type_id=#{pid} " +
             "ORDER BY id DESC LIMIT 1")
@@ -82,12 +90,10 @@ public interface ProjectRepo {
     @SelectProvider(type = ProjectUtil.class,method = "findAllProject")
     @Results({
             @Result(property = "status",column = "isdisplay"),
-            @Result(property = "startPrice",column = "start_price"),
-            @Result(property = "endPrice",column = "end_price"),
             @Result(property = "country",column = "country_id",one = @One(select = "country")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
-    List<ProjectListingReponse> findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset);
+    List<ProjectListingResponse> findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset);
 
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectCount")
     int findAllProjectCount(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status);
@@ -111,8 +117,6 @@ public interface ProjectRepo {
             @Result(property = "title", column = "name"),
             @Result(property = "addressOne", column = "address_1"),
             @Result(property = "addressTwo", column = "address_2"),
-            @Result(property = "minPrice", column = "start_price"),
-            @Result(property = "maxPrice", column = "end_price"),
             @Result(property = "averageAnnualRentFrom", column = "avg_rent_from"),
             @Result(property = "averageAnnualRentTo", column = "avg_rent_to"),
             @Result(property = "downPayment", column = "down_payment"),
@@ -208,11 +212,77 @@ public interface ProjectRepo {
     void removeTowerType(@Param("id")int id,@Param("proID")int projectID);
 
     class ProjectUtil {
+        public String findAllProjectByFilterCount(@Param("filter")FilterRequest filter){
+            return new SQL(){
+                {
+                    SELECT("count(project.id)");
+                    FROM("project");
+                    INNER_JOIN("country ON country.id=project.country_id");
+                    INNER_JOIN("project_type ON project_type.id=project.project_type_id");
+                    if(filter.getRoom()>0)
+                        INNER_JOIN("property_type on project.id=property_type.project_id");
+                    if(filter.getTitle()!=null )
+                        WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
+                    if(filter.getCity()!=null )
+                        WHERE("city ILIKE '%'||#{filter.city}||'%'");
+                    if(filter.getCountryID()>0)
+                        WHERE("project.country_id=#{filter.countryID}");
+                    if(filter.getProjectTypeID()>0)
+                        WHERE("project.project_type_id=#{filter.projectTypeID}");
+                    if(filter.getRoom()>0)
+                        WHERE("bedroom = #{filter.room}");
+                    if(filter.getPrice()>0)
+                        WHERE("price = #{filter.price}");
+                    if(filter.getRentOrBuy()!=null)
+                        WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
+                }
+            }.toString();
+        }
+        public String findAllProjectByFilter(@Param("filter")FilterRequest filter,@Param("limit")int limit,@Param("offset")int offset){
+            return new SQL(){
+                {
+                    SELECT("project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
+                    FROM("project");
+                    INNER_JOIN("country ON country.id=project.country_id");
+                    INNER_JOIN("project_type ON project_type.id=project.project_type_id");
+                    if(filter.getRoom()>0)
+                        INNER_JOIN("property_type on project.id=property_type.project_id");
+                    if(filter.getTitle()!=null )
+                        WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
+                    if(filter.getCity()!=null )
+                        WHERE("city ILIKE '%'||#{filter.city}||'%'");
+                    if(filter.getCountryID()>0)
+                        WHERE("project.country_id=#{filter.countryID}");
+                    if(filter.getProjectTypeID()>0)
+                        WHERE("project.project_type_id=#{filter.projectTypeID}");
+                    if(filter.getRoom()>0)
+                        WHERE("bedroom = #{filter.room}");
+                    if(filter.getPrice()>0)
+                        WHERE("price = #{filter.price}");
+                    if(filter.getRentOrBuy()!=null)
+                        WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
+                    if(filter.getSortType()!=null ){
+                        if(filter.getSortType().equalsIgnoreCase("grr"))
+                            ORDER_BY("grr limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("grr-desc"))
+                            ORDER_BY("grr DESC limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("price"))
+                            ORDER_BY("price limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("price-desc"))
+                            ORDER_BY("price DESC limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("title"))
+                            ORDER_BY("name limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("title-desc"))
+                            ORDER_BY("name DESC limit #{limit} offset #{offset}");
+                    }else ORDER_BY("project.id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
         public String updateProject(@Param("pro")ProjectRequest projectRequest){
             return new SQL(){
                 {
                     UPDATE("project");
-                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},start_price=#{pro.minPrice},end_price=#{pro.maxPrice},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
+                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{price},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
                     WHERE("id=#{pro.id}");
                 }
             }.toString();
@@ -220,7 +290,7 @@ public interface ProjectRepo {
         public String findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("id,name,start_price,end_price,grr,country_id,project_type_id,thumbnail,isdisplay");
+                    SELECT("id,name,price,grr,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
                     WHERE("country_id=#{cid}");
                     if(title!=null) {
@@ -284,7 +354,7 @@ public interface ProjectRepo {
             return new SQL() {
                 {
                     INSERT_INTO("project");
-                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,start_price,end_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.minPrice},#{project.maxPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
+                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.price},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
                 }
             }.toString();
         }
@@ -311,6 +381,89 @@ public interface ProjectRepo {
                     VALUES("type,project_id", "#{type},#{proID}");
                 }
             }.toString();
+        }
+    }
+
+    class FilterRequest{
+        private String title;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
+        @JsonProperty("sort_type")
+        private String sortType;
+        private String city;
+        @JsonProperty("project_type_id")
+        private int projectTypeID;
+        @JsonProperty("country_id")
+        private int countryID;
+        private int room;
+        private double price;
+
+        public String getTitle() {
+            if(title!=null)
+                setTitle(title.trim().replaceAll(" ","%"));
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
+
+        public String getSortType() {
+            return sortType;
+        }
+
+        public void setSortType(String sortType) {
+            this.sortType = sortType;
+        }
+
+        public String getCity() {
+            if(city!=null)
+                setCity(city.trim().replaceAll(" ","%"));
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public int getProjectTypeID() {
+            return projectTypeID;
+        }
+
+        public void setProjectTypeID(int projectTypeID) {
+            this.projectTypeID = projectTypeID;
+        }
+
+        public int getCountryID() {
+            return countryID;
+        }
+
+        public void setCountryID(int countryID) {
+            this.countryID = countryID;
+        }
+
+        public int getRoom() {
+            return room;
+        }
+
+        public void setRoom(int room) {
+            this.room = room;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
         }
     }
 
@@ -388,13 +541,10 @@ public interface ProjectRepo {
         }
     }
 
-    class ProjectListingReponse{
+    class ProjectListingResponse{
         private int id;
         private String name;
-        @JsonProperty("start_price")
-        private double startPrice;
-        @JsonProperty("end_price")
-        private double endPrice;
+        private double price;
         private double grr;
         private String country;
         @JsonProperty("project_type")
@@ -426,20 +576,12 @@ public interface ProjectRepo {
             this.name = name;
         }
 
-        public double getStartPrice() {
-            return startPrice;
+        public double getPrice() {
+            return price;
         }
 
-        public void setStartPrice(double startPrice) {
-            this.startPrice = startPrice;
-        }
-
-        public double getEndPrice() {
-            return endPrice;
-        }
-
-        public void setEndPrice(double endPrice) {
-            this.endPrice = endPrice;
+        public void setPrice(double price) {
+            this.price = price;
         }
 
         public double getGrr() {
@@ -473,6 +615,7 @@ public interface ProjectRepo {
         public void setThumbnail(String thumbnail) {
             this.thumbnail = thumbnail;
         }
+
     }
 
     class ProjectListingRequest{
@@ -519,10 +662,7 @@ public interface ProjectRepo {
         private String addressOne;
         @JsonProperty("address_2")
         private String addressTwo;
-        @JsonProperty("start_price")
-        private double minPrice;
-        @JsonProperty("end_price")
-        private double maxPrice;
+        private double price;
         @JsonProperty("avg_annual_rent_from")
         private double averageAnnualRentFrom;
         @JsonProperty("avg_annual_rent_to")
@@ -619,20 +759,12 @@ public interface ProjectRepo {
             this.addressTwo = addressTwo;
         }
 
-        public double getMinPrice() {
-            return minPrice;
+        public double getPrice() {
+            return price;
         }
 
-        public void setMinPrice(double minPrice) {
-            this.minPrice = minPrice;
-        }
-
-        public double getMaxPrice() {
-            return maxPrice;
-        }
-
-        public void setMaxPrice(double maxPrice) {
-            this.maxPrice = maxPrice;
+        public void setPrice(double price) {
+            this.price = price;
         }
 
         public double getAverageAnnualRentFrom() {

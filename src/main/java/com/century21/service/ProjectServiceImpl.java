@@ -151,11 +151,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectRepo.ProjectListingReponse> projects(String title, int cid, int pid, String status, Pagination pagination) {
+    public List<ProjectRepo.ProjectListingResponse> projects(String title, int cid, int pid, String status, Pagination pagination) {
         if (title != null) {
             title = title.trim().replaceAll(" ", "%");
         }
-        List<ProjectRepo.ProjectListingReponse> projects = projectRepo.findAllProject(title, cid, pid, status, pagination.getLimit(), pagination.getOffset());
+        List<ProjectRepo.ProjectListingResponse> projects = projectRepo.findAllProject(title, cid, pid, status, pagination.getLimit(), pagination.getOffset());
         if (projects == null || projects.size() < 1) throw new CustomRuntimeException(404, "ZERO_RESULT");
         pagination.setTotalItem(projectRepo.findAllProjectCount(title, cid, pid, status));
         return projects;
@@ -203,5 +203,13 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return countryForWeb;
 
+    }
+
+    @Override
+    public List<ProjectRepo.ProjectListingResponse> filterProject(ProjectRepo.FilterRequest filterRequest, Pagination pagination) {
+        List<ProjectRepo.ProjectListingResponse> projects= projectRepo.findAllProjectByFilter(filterRequest,pagination.getLimit(),pagination.getOffset());
+        if(projects==null || projects.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem(projectRepo.findAllProjectByFilterCount(filterRequest));
+        return projects;
     }
 }
