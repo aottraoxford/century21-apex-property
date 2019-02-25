@@ -609,6 +609,7 @@ public interface ProjectRepo {
         }
 
         public String getThumbnail() {
+            if(thumbnail!=null) return Url.projectThumbnailUrl+thumbnail;
             return thumbnail;
         }
 
