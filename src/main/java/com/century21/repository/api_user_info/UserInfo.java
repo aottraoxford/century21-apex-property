@@ -1,6 +1,7 @@
 package com.century21.repository.api_user_info;
 
 import com.century21.util.Url;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.regex.Matcher;
@@ -17,18 +18,38 @@ public class UserInfo {
     private String phoneNumber;
     @JsonProperty("photo")
     private String image;
+    @JsonIgnore
     private String swapEmail;
+    @JsonProperty("account_type")
+    private String accountType;
+
+    public String getSwapEmail() {
+        return swapEmail;
+    }
+
+    public void setSwapEmail(String swapEmail) {
+        this.swapEmail = swapEmail;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
 
     public String getImage() {
-        String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
-        Pattern pattern;
-        Matcher matcher;
-        pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-        matcher=pattern.matcher(swapEmail);
-        if(matcher.matches()) {
-            if (image != null)
+//        String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+//        Pattern pattern;
+//        Matcher matcher;
+//        pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
+//        matcher=pattern.matcher(swapEmail);
+//        if(matcher.matches()) {
+            if (image != null && !image.contains("/")) {
                 return Url.userImageUrl + image;
-        }
+            }
+//        }
         return image;
     }
 

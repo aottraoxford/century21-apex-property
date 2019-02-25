@@ -116,7 +116,8 @@ public interface ProjectRepo {
             @Result(property = "averageAnnualRentFrom", column = "avg_rent_from"),
             @Result(property = "averageAnnualRentTo", column = "avg_rent_to"),
             @Result(property = "downPayment", column = "down_payment"),
-            @Result(property = "status",column = "rent_or_buy"),
+            @Result(property = "status",column = "isdisplay"),
+            @Result(property = "rentOrBuy",column = "rent_or_buy"),
             @Result(property = "country", column = "country_id", one = @One(select = "country")),
             @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType")),
             @Result(property = "projectIntro", column = "id", many = @Many(select = "projectIntro")),
@@ -283,7 +284,7 @@ public interface ProjectRepo {
             return new SQL() {
                 {
                     INSERT_INTO("project");
-                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,start_price,end_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2,rent_or_buy", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.minPrice},#{project.maxPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.status},#{project.addressOne},#{project.addressTwo},#{project.status}");
+                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,start_price,end_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.minPrice},#{project.maxPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
                 }
             }.toString();
         }
@@ -508,8 +509,10 @@ public interface ProjectRepo {
 
     class Project {
         private int id;
-        private String status;
+        private boolean status;
         private String title;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
         private String country;
         private String city;
         @JsonProperty("address_1")
@@ -544,11 +547,19 @@ public interface ProjectRepo {
         @JsonProperty("completed_date")
         private Date completedDate;
 
-        public String getStatus() {
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
+
+        public boolean isStatus() {
             return status;
         }
 
-        public void setStatus(String status) {
+        public void setStatus(boolean status) {
             this.status = status;
         }
 
@@ -915,6 +926,8 @@ public interface ProjectRepo {
         @NotNull
         @JsonProperty("avg_annual_rent_from")
         private double avgRentFrom;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
         @NotNull
         @JsonProperty("avg_annual_rent_to")
         private double avgRentTo;
@@ -924,6 +937,14 @@ public interface ProjectRepo {
         private List<PropertyType> propertyTypes;
         @JsonProperty("tower_types")
         private List<TowerType> towerTypes;
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
 
         public int getId() {
             return id;

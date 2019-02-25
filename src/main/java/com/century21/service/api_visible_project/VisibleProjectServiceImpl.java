@@ -22,7 +22,7 @@ public class VisibleProjectServiceImpl implements VisibleProjectService {
             if(thumbnail==null)
                 thumbnail="";
             else thumbnail= Url.projectThumbnailUrl+thumbnail;
-            myNotification.sendToAllSubscriber("title", "message",thumbnail,token,"project",projectID );
+            myNotification.sendToAllSubscriber("New Project Available", "Calculation includes only common costs associated with home ownership. Estimates based on local averages and assumptions that may not apply to you and are provided for informational purposes only.",thumbnail,token,"project",projectID );
         }
     }
 }
