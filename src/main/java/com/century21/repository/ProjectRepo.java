@@ -337,7 +337,7 @@ public interface ProjectRepo {
             return new SQL(){
                 {
                     INSERT_INTO("project_gallery");
-                    VALUES("url,type,project_id","#{gall},'image',#{pid}");
+                    VALUES("url,type,project_id","#{gall},'image',#{proID}");
                 }
             }.toString();
         }

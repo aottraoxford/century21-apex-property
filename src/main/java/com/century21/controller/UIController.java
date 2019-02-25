@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import springfox.documentation.annotations.ApiIgnore;
 
 
+@ApiIgnore
 @Controller
 public class UIController {
     @Autowired
