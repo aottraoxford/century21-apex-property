@@ -51,8 +51,8 @@ public interface EventRepo {
     @SelectProvider(type = EventUtil.class, method = "changeEventStatus")
     void changeEventStatus(@Param("eventID") int eventID, @Param("status") boolean status);
 
-    @SelectProvider(type = EventUtil.class,method = "countEventRow")
-    int countEventRow(@Param("title")String title,@Param("status")String status);
+    @SelectProvider(type = EventUtil.class,method = "findAllEventCount")
+    int findAllEventCount(@Param("title")String title,@Param("status")String status);
 
     class EventUtil {
         public String insertEvent(@Param("id") ID id, @Param("en")EventRequest en, @Param("banner")String banner, @Param("date")Timestamp date){
@@ -82,7 +82,7 @@ public interface EventRepo {
             }.toString();
         }
 
-        public String countEventRow(@Param("title")String title,@Param("status") String status){
+        public String findAllEventCount(@Param("title")String title,@Param("status") String status){
             return new SQL(){
                 {
                     SELECT("COUNT(id)");

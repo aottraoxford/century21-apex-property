@@ -1,6 +1,6 @@
 package com.century21.repository.api_user_favorite;
 
-import com.century21.repository.api_projects.Project;
+import com.century21.repository.api_project_related.Project;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,7 @@ package com.century21.service.api_user_favorite;
 
 import com.century21.exception.CustomRuntimeException;
 import com.century21.model.Pagination;
-import com.century21.repository.api_projects.Project;
+import com.century21.repository.api_project_related.Project;
 import com.century21.repository.api_user_favorite.UserFavoriteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
