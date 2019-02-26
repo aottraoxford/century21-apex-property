@@ -49,7 +49,7 @@ public class SwaggerConfig {
     public SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()
                 .clientId("c21c")
-                .clientSecret("123")
+                .clientSecret("12345678@Cenutry21CambodiaRealEstate")
                 .scopeSeparator(" ")
                 .useBasicAuthenticationWithAccessCodeGrant(true)
                 .build();

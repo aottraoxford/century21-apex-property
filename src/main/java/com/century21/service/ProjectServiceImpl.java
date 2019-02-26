@@ -142,10 +142,12 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRepo.Project projectDetail(int projectID, Principal principal) {
         ProjectRepo.Project project = projectRepo.findOneProject(projectID);
         if (project == null) throw new CustomRuntimeException(404, "ZERO RESULT");
-        Integer userID = userRepo.findUserIDByEmail(principal.getName());
-        if (userID != null) {
-            Integer favID = projectRepo.favorite(projectID, userID);
-            if (favID != null) project.setFavorite(true);
+        if(principal!=null && principal.getName()!=null) {
+            Integer userID = userRepo.findUserIDByEmail(principal.getName());
+            if (userID != null) {
+                Integer favID = projectRepo.favorite(projectID, userID);
+                if (favID != null) project.setFavorite(true);
+            }
         }
         return project;
     }
