@@ -282,7 +282,7 @@ public interface ProjectRepo {
             return new SQL(){
                 {
                     UPDATE("project");
-                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{price},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
+                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
                     WHERE("id=#{pro.id}");
                 }
             }.toString();
@@ -1051,11 +1051,7 @@ public interface ProjectRepo {
         @NotEmpty
         private String city;
         @NotNull
-        @JsonProperty("min_price")
-        private double minPrice;
-        @NotNull
-        @JsonProperty("max_price")
-        private double maxPrice;
+        private double price;
         @NotNull
         @JsonProperty("avg_annual_rent_from")
         private double avgRentFrom;
@@ -1199,20 +1195,12 @@ public interface ProjectRepo {
             this.city = city;
         }
 
-        public double getMinPrice() {
-            return minPrice;
+        public double getPrice() {
+            return price;
         }
 
-        public void setMinPrice(double minPrice) {
-            this.minPrice = minPrice;
-        }
-
-        public double getMaxPrice() {
-            return maxPrice;
-        }
-
-        public void setMaxPrice(double maxPrice) {
-            this.maxPrice = maxPrice;
+        public void setPrice(double price) {
+            this.price = price;
         }
 
         public double getAvgRentFrom() {

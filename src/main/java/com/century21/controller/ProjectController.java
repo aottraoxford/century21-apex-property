@@ -15,8 +15,12 @@ import com.century21.service.api_save_noti.SaveNotiService;
 import com.century21.service.api_slider.SliderService;
 import com.century21.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.service.search.SearchService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +29,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.sql.Array;
+import java.util.List;
 
 @RestController
 public class ProjectController {
@@ -145,8 +151,9 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @PostMapping(value = "/api/project/image/upload",produces = "application/json")
-    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail, @RequestPart(value = "galleries",required = false)MultipartFile[] galleries){
+    @PostMapping(value = "/api/project/image/upload",produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,@ApiParam(name="galleries",allowMultiple = true) @RequestPart("galleries") MultipartFile[] galleries){
+        System.out.println(galleries.length);
         CustomResponse customResponse=new CustomResponse(200,projectService.uploadProjectImage(thumbnail,galleries,projectID));
         return customResponse.httpResponse("result");
     }
@@ -163,7 +170,7 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @GetMapping("/api/project/listing")
+    @PostMapping("/api/project/listing")
     public ResponseEntity projectListing(@RequestParam(required = false) String title,@RequestBody ProjectRepo.ProjectListingRequest projectListingRequest,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,projectService.projects(title,projectListingRequest.getCountryID(),projectListingRequest.getProjectTypID(),projectListingRequest.getStatus(),pagination),pagination);
