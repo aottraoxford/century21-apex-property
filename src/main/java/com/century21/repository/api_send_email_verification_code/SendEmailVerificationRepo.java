@@ -19,6 +19,6 @@ public interface SendEmailVerificationRepo {
 
     @Delete("DELETE " +
             "FROM verification " +
-            "WHERE name = #{email} AND code = #{code}")
+            "WHERE name = #{email} AND code = #{code} AND enable IS FALSE")
     int removeVerifyEmail(@Param("email") String email, @Param("code") int code);
 }
