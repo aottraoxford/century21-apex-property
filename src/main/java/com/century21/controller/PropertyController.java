@@ -44,4 +44,10 @@ public class PropertyController {
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs));
         return customResponse.httpResponse("result");
     }
+
+    @GetMapping("/api/property/detail/{id}")
+    public ResponseEntity propertyDetail(@PathVariable(name = "id")int id){
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findOneProperty(id));
+        return customResponse.httpResponse("result");
+    }
 }

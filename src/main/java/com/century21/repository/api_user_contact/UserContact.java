@@ -8,7 +8,6 @@ public class UserContact {
     @JsonProperty("project_id")
     private int projectID;
     private String name;
-    @Min(9)
     private String phone;
     private String email;
 

@@ -50,4 +50,9 @@ public class PropertyServiceImpl implements PropertyService{
         files.put("docs",documents);
         return files;
     }
+
+    @Override
+    public PropertyRepo.Property findOneProperty(int proID) {
+        return propertyRepo.findOneProperty(proID);
+    }
 }

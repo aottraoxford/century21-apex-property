@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 
 public class UserQuestion {
     private String name;
-    @Min(9)
     private String phone;
     @NotBlank
     @NotNull
