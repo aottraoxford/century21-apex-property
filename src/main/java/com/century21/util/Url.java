@@ -24,4 +24,10 @@ public class Url {
     public static final String sliderUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/slider/")
             .toUriString();
+    public static final String propertyGalleryUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/api/property/gallery/")
+            .toUriString();
+    public static final String propertyDocsUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/api/property/docs/")
+            .toUriString();
 }

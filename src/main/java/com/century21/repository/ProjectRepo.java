@@ -401,9 +401,10 @@ public interface ProjectRepo {
         private double toPrice;
 
         public String getTitle() {
-            if(title.equals("")) setTitle(null);
-            if(title!=null)
-                setTitle(title.trim().replaceAll(" ","%"));
+            if(title!=null) {
+                if (title.equals("")) setTitle(null);
+                else setTitle(title.trim().replaceAll(" ", "%"));
+            }
             return title;
         }
 
@@ -412,7 +413,8 @@ public interface ProjectRepo {
         }
 
         public String getRentOrBuy() {
-            if(rentOrBuy.equals("")) setRentOrBuy(null);
+            if(rentOrBuy!=null)
+                if(rentOrBuy.equals("")) setRentOrBuy(null);
             return rentOrBuy;
         }
 
@@ -421,7 +423,8 @@ public interface ProjectRepo {
         }
 
         public String getSortType() {
-            if(sortType.equals("")) setSortType(null);
+            if(sortType!=null)
+                if(sortType.equals("")) setSortType(null);
             return sortType;
         }
 
@@ -430,9 +433,9 @@ public interface ProjectRepo {
         }
 
         public String getCity() {
-            if(city.equals("")) setCity(null);
             if(city!=null)
-                setCity(city.trim().replaceAll(" ","%"));
+                if(city.equals("")) setCity(null);
+                else setCity(city.trim().replaceAll(" ","%"));
             return city;
         }
 

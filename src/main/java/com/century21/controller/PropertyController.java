@@ -1,5 +1,7 @@
 package com.century21.controller;
 
+import com.century21.configuration.upload.FileUploadProperty;
+import com.century21.configuration.upload.FileUploadService;
 import com.century21.model.response.CustomResponse;
 import com.century21.repository.PropertyRepo;
 import com.century21.service.PropertyService;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class PropertyController {
+
     @Autowired
     private PropertyService propertyService;
     @PostMapping("/api/property/insert")
@@ -19,7 +22,7 @@ public class PropertyController {
     }
 
     @PostMapping("/api/property/file_uploads")
-    public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] doc){
+    public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs){
         return null;
     }
 }
