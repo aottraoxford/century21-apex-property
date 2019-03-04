@@ -28,6 +28,6 @@ public class Url {
             .path("/api/property/gallery/")
             .toUriString();
     public static final String propertyDocsUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/api/property/docs/")
+            .path("/api/property/doc/")
             .toUriString();
 }

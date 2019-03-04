@@ -20,8 +20,6 @@ import com.century21.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.service.api_visible_project.VisibleProjectService;
 import com.century21.service.search.SearchService;
 import com.century21.util.Url;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.Principal;
-import java.sql.Array;
-import java.util.Collection;
-import java.util.List;
 
 @RestController
 public class ProjectController {

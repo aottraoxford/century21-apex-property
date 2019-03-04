@@ -29,7 +29,7 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public void fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] docs) {
+    public Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] docs) {
         List<String> gall=fileUploadService.storeImages(galleries,fileUploadProperty.getPropertyGallery());
         List<String> documents;
         if(docs!=null){
@@ -37,13 +37,17 @@ public class PropertyServiceImpl implements PropertyService{
         }else documents=null;
         Map<String,List<String>> files = new HashMap<>();
         for(int i=0;i<gall.size();i++){
+            propertyRepo.insertFiles(gall.get(i),"image",propertyID);
             gall.set(i, Url.propertyGalleryUrl+gall.get(i));
         }
         if(documents!=null){
-            for(int i=0;i<documents.size();i++)
-                documents.set(i,Url.propertyDocsUrl+documents.get(i));
+            for(int i=0;i<documents.size();i++) {
+                propertyRepo.insertFiles(documents.get(i),"doc",propertyID);
+                documents.set(i, Url.propertyDocsUrl + documents.get(i));
+            }
         }
         files.put("galleries",gall);
         files.put("docs",documents);
+        return files;
     }
 }

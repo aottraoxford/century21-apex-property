@@ -2,6 +2,7 @@ package com.century21.repository;
 
 import com.century21.model.ID;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PropertyRepo {
+    @Insert("INSERT into property_files(name,type,property_id) " +
+            "VALUES(#{name},#{type},#{proID}) ")
+    Integer insertFiles(@Param("name")String name,@Param("type")String type,@Param("proID")int proID);
+
     @InsertProvider(type = PropertyUtil.class,method = "insertProperty")
     @SelectKey(statement = "select nextval('property_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest);
@@ -248,7 +253,7 @@ public interface PropertyRepo {
     class PropertyRequest{
         private int id;
         @JsonProperty("project_id")
-        private Integer projectID=null;
+        private Integer projectID;
         private int bedroom;
         private int bathroom;
         @JsonProperty("living_room")
@@ -314,6 +319,7 @@ public interface PropertyRepo {
         }
 
         public Integer getProjectID() {
+            if(projectID==0) return null;
             return projectID;
         }
 

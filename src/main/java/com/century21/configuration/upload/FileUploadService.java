@@ -4,6 +4,7 @@ import com.century21.exception.CustomRuntimeException;
 import com.century21.util.ImageUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ import java.util.UUID;
 public class FileUploadService {
 
     public String storeImage(MultipartFile file,String fileProperty){
-        if (!ImageUtil.imageValidate(file.getOriginalFilename())) throw new CustomRuntimeException(400, "IMAGE INVALID");
+        if(!fileProperty.contains("doc"))
+            if (!ImageUtil.imageValidate(file.getOriginalFilename())) throw new CustomRuntimeException(400, "IMAGE INVALID");
 
         Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
         File directory = new File(path.toString());
@@ -49,7 +51,8 @@ public class FileUploadService {
         }
         try {
             for (int i = 0; i < file.length; i++) {
-                if(!ImageUtil.imageValidate(file[i].getOriginalFilename())) throw new CustomRuntimeException(400,"IMAGE INVALID");
+                if(!fileProperty.contains("doc"))
+                    if(!ImageUtil.imageValidate(file[i].getOriginalFilename())) throw new CustomRuntimeException(400,"IMAGE INVALID");
                 String fn = UUID.randomUUID()+file[i].getOriginalFilename();
                 fileName.add(fn);
                 Files.copy(file[i].getInputStream(), path.resolve(fn), StandardCopyOption.REPLACE_EXISTING);
@@ -82,6 +85,29 @@ public class FileUploadService {
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        } catch (MalformedURLException e) {
+            throw new CustomRuntimeException(500,e.getMessage());
+        }catch (IOException e) {
+            throw new CustomRuntimeException(404,"File not found.");
+        }
+    }
+
+    public ResponseEntity<Resource> downloadFile(String fileName, String fileProperty, HttpServletRequest request){
+        try {
+            Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
+            Path filePath = path.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            resource.contentLength();
+
+            String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+            if(contentType==null){
+                throw new CustomRuntimeException(500,"Invalid file type.");
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
         } catch (MalformedURLException e) {
             throw new CustomRuntimeException(500,e.getMessage());
