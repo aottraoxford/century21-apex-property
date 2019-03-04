@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepo {
+
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilterCount")
     int findAllProjectByFilterCount(@Param("filter")FilterRequest filter);
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilter")
@@ -231,8 +232,8 @@ public interface ProjectRepo {
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
                     if(filter.getRoom()>0)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getPrice()>0)
-                        WHERE("price = #{filter.price}");
+                    if(filter.getToPrice()>0)
+                        WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
                     if(filter.getRentOrBuy()!=null)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
                 }
@@ -247,7 +248,7 @@ public interface ProjectRepo {
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
                     if(filter.getRoom()>0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
-                    if(filter.getTitle()!=null )
+                    if(filter.getTitle()!=null)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
                     if(filter.getCity()!=null )
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
@@ -257,8 +258,8 @@ public interface ProjectRepo {
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
                     if(filter.getRoom()>0)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getPrice()>0)
-                        WHERE("price = #{filter.price}");
+                    if(filter.getToPrice()>0)
+                        WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
                     if(filter.getRentOrBuy()!=null)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
                     if(filter.getSortType()!=null ){
@@ -350,7 +351,7 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String insertProject(@Param("project") ProjectRequest project) {
+        public String insertProject(@Param("id") ID id,@Param("project") ProjectRequest project) {
             return new SQL() {
                 {
                     INSERT_INTO("project");
@@ -396,9 +397,11 @@ public interface ProjectRepo {
         @JsonProperty("country_id")
         private int countryID;
         private int room;
-        private double price;
+        private double fromPrice;
+        private double toPrice;
 
         public String getTitle() {
+            if(title.equals("")) setTitle(null);
             if(title!=null)
                 setTitle(title.trim().replaceAll(" ","%"));
             return title;
@@ -409,6 +412,7 @@ public interface ProjectRepo {
         }
 
         public String getRentOrBuy() {
+            if(rentOrBuy.equals("")) setRentOrBuy(null);
             return rentOrBuy;
         }
 
@@ -417,6 +421,7 @@ public interface ProjectRepo {
         }
 
         public String getSortType() {
+            if(sortType.equals("")) setSortType(null);
             return sortType;
         }
 
@@ -425,6 +430,7 @@ public interface ProjectRepo {
         }
 
         public String getCity() {
+            if(city.equals("")) setCity(null);
             if(city!=null)
                 setCity(city.trim().replaceAll(" ","%"));
             return city;
@@ -458,12 +464,20 @@ public interface ProjectRepo {
             this.room = room;
         }
 
-        public double getPrice() {
-            return price;
+        public double getFromPrice() {
+            return fromPrice;
         }
 
-        public void setPrice(double price) {
-            this.price = price;
+        public void setFromPrice(double fromPrice) {
+            this.fromPrice = fromPrice;
+        }
+
+        public double getToPrice() {
+            return toPrice;
+        }
+
+        public void setToPrice(double toPrice) {
+            this.toPrice = toPrice;
         }
     }
 

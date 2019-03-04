@@ -9,6 +9,24 @@ public class FileUploadProperty {
     private String projectGallery;
     private String eventImage;
     private String slider;
+    private String propertyGallery;
+    private String propertyDoc;
+
+    public String getPropertyGallery() {
+        return propertyGallery;
+    }
+
+    public void setPropertyGallery(String propertyGallery) {
+        this.propertyGallery = propertyGallery;
+    }
+
+    public String getPropertyDoc() {
+        return propertyDoc;
+    }
+
+    public void setPropertyDoc(String propertyDoc) {
+        this.propertyDoc = propertyDoc;
+    }
 
     public String getSlider() {
         return slider;
@@ -48,16 +66,5 @@ public class FileUploadProperty {
 
     public void setEventImage(String eventImage) {
         this.eventImage = eventImage;
-    }
-
-    @Override
-    public String toString() {
-        return "FileUploadProperty{" +
-                "userImage='" + userImage + '\'' +
-                ", projectThumbnail='" + projectThumbnail + '\'' +
-                ", projectGallery='" + projectGallery + '\'' +
-                ", eventImage='" + eventImage + '\'' +
-                ", slider='" + slider + '\'' +
-                '}';
     }
 }
