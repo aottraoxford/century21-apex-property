@@ -2,6 +2,7 @@ package com.century21.service;
 
 import com.century21.configuration.upload.FileUploadProperty;
 import com.century21.configuration.upload.FileUploadService;
+import com.century21.exception.CustomRuntimeException;
 import com.century21.model.ID;
 import com.century21.repository.PropertyRepo;
 import com.century21.util.Url;
@@ -53,6 +54,8 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public PropertyRepo.Property findOneProperty(int proID) {
-        return propertyRepo.findOneProperty(proID);
+        PropertyRepo.Property property=propertyRepo.findOneProperty(proID);
+        if(property==null)  throw new CustomRuntimeException(404,"ZERO RESULT");
+        return property;
     }
 }

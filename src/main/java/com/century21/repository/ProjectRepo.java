@@ -397,7 +397,9 @@ public interface ProjectRepo {
         @JsonProperty("country_id")
         private int countryID;
         private int room;
+        @JsonProperty("from_price")
         private double fromPrice;
+        @JsonProperty("to_price")
         private double toPrice;
 
         public String getTitle() {

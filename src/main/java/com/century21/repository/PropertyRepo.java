@@ -22,6 +22,23 @@ public interface PropertyRepo {
 
     @SelectProvider(type = PropertyUtil.class,method = "findOneProperty")
     @Results({
+            @Result(property = "projectID",column = "project_id"),
+            @Result(property = "livingRoom",column = "living_room"),
+            @Result(property = "dinningRoom",column = "dinning_room"),
+            @Result(property = "airConditioner",column = "air_conditioner"),
+            @Result(property = "mezzanineFloor",column = "mezzanine_floor"),
+            @Result(property = "rentOrSell",column = "rent_or_sell"),
+            @Result(property = "houseNo",column = "house_no"),
+            @Result(property = "streetNo",column = "street_no"),
+            @Result(property = "privateArea",column = "private_area"),
+            @Result(property = "commonArea",column = "common_area"),
+            @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "totalLandArea",column = "total_land_area"),
+            @Result(property = "landWidth",column = "land_width"),
+            @Result(property = "landLength",column = "land_length"),
+            @Result(property = "totalArea",column = "total_area"),
+            @Result(property = "showMap",column = "show_map"),
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "docs",column = "id",many = @Many(select = "findDocs"))
     })
