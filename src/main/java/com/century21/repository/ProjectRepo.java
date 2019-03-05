@@ -18,6 +18,7 @@ public interface ProjectRepo {
 
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilterCount")
     int findAllProjectByFilterCount(@Param("filter")FilterRequest filter);
+
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilter")
     @Results({
             @Result(property = "status",column = "isdisplay"),
@@ -283,7 +284,7 @@ public interface ProjectRepo {
             return new SQL(){
                 {
                     UPDATE("project");
-                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
+                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},sqm_price=#{pro.sqmPrice},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
                     WHERE("id=#{pro.id}");
                 }
             }.toString();
@@ -291,7 +292,7 @@ public interface ProjectRepo {
         public String findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("id,name,price,grr,country_id,project_type_id,thumbnail,isdisplay");
+                    SELECT("id,name,price,sqm_price,grr,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
                     WHERE("country_id=#{cid}");
                     if(title!=null) {
@@ -355,7 +356,7 @@ public interface ProjectRepo {
             return new SQL() {
                 {
                     INSERT_INTO("project");
-                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.price},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
+                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,price,sqm_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.price},#{project.sqmPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
                 }
             }.toString();
         }
@@ -1079,12 +1080,22 @@ public interface ProjectRepo {
         @NotNull
         @JsonProperty("avg_annual_rent_to")
         private double avgRentTo;
+        @JsonProperty("sqm_price")
+        private double sqmPrice;
         @JsonProperty("introductions")
         private List<ProjectIntroduction> projectIntroductions;
         @JsonProperty("property_types")
         private List<PropertyType> propertyTypes;
         @JsonProperty("tower_types")
         private List<TowerType> towerTypes;
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
 
         public String getRentOrBuy() {
             return rentOrBuy;

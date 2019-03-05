@@ -53,6 +53,7 @@ public interface PropertyRepo {
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest);
 
     class PropertyUtil{
+
         public String findOneProperty(@Param("proID")int proID){
             return new SQL(){
                 {

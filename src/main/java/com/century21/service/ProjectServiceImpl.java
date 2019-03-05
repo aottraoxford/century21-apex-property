@@ -189,6 +189,12 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectRepo.CountryForWeb> projectsFroWeb(int page, int limit) {
         List<ProjectRepo.CountryForWeb> countryForWeb = projectRepo.getCountryForWeb();
         for (int i = 0; i < countryForWeb.size(); i++) {
+            if(countryForWeb.get(i).getCountryID()==1){
+                ProjectRepo.ProjectTypeForWeb projectTypeForWeb=new ProjectRepo.ProjectTypeForWeb();
+                projectTypeForWeb.setId(999);
+                projectTypeForWeb.setType("General");
+                countryForWeb.get(i).getProjectTypeForWebList().add(countryForWeb.get(i).getProjectTypeForWebList().size(),projectTypeForWeb);
+            }
             for (int j = 0; j < countryForWeb.get(i).getProjectTypeForWebList().size(); j++) {
                 countryForWeb.get(i).getProjectTypeForWebList().get(j).setProjectList(new ArrayList<>());
                 countryForWeb.get(i).getProjectTypeForWebList().get(j).setPagination(new Pagination(1, 10));

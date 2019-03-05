@@ -5,11 +5,14 @@ import com.century21.configuration.upload.FileUploadService;
 import com.century21.exception.CustomRuntimeException;
 import com.century21.model.ID;
 import com.century21.repository.PropertyRepo;
+import com.century21.repository.UserLogRepo;
+import com.century21.repository.UserRepo;
 import com.century21.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +25,22 @@ public class PropertyServiceImpl implements PropertyService{
     private FileUploadProperty fileUploadProperty;
     @Autowired
     private PropertyRepo propertyRepo;
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private UserLogRepo userLogRepo;
     @Override
-    public int insertProperty(PropertyRepo.PropertyRequest propertyRequest) {
+    public int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal) {
         ID id = new ID();
         propertyRepo.insertProperty(id,propertyRequest);
-        return id.getId();
+        int propertyID=id.getId();
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        userLogRepo.insertUserLog("insert property id = "+propertyID,userID);
+        return propertyID;
     }
 
     @Override
-    public Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] docs) {
+    public Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] docs,Principal principal) {
         List<String> gall=fileUploadService.storeImages(galleries,fileUploadProperty.getPropertyGallery());
         List<String> documents;
         if(docs!=null){
@@ -49,6 +59,8 @@ public class PropertyServiceImpl implements PropertyService{
         }
         files.put("galleries",gall);
         files.put("docs",documents);
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        userLogRepo.insertUserLog("upload file to property id= "+propertyID,userID);
         return files;
     }
 
