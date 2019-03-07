@@ -123,6 +123,7 @@ public interface ProjectRepo {
             @Result(property = "averageAnnualRentTo", column = "avg_rent_to"),
             @Result(property = "downPayment", column = "down_payment"),
             @Result(property = "status",column = "isdisplay"),
+            @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "rentOrBuy",column = "rent_or_buy"),
             @Result(property = "country", column = "country_id", one = @One(select = "country")),
             @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType")),
@@ -684,6 +685,8 @@ public interface ProjectRepo {
         @JsonProperty("address_2")
         private String addressTwo;
         private double price;
+        @JsonProperty("sqm_price")
+        private double sqmPrice;
         @JsonProperty("avg_annual_rent_from")
         private double averageAnnualRentFrom;
         @JsonProperty("avg_annual_rent_to")
@@ -707,6 +710,14 @@ public interface ProjectRepo {
         private Date builtDate;
         @JsonProperty("completed_date")
         private Date completedDate;
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
 
         public String getRentOrBuy() {
             return rentOrBuy;
