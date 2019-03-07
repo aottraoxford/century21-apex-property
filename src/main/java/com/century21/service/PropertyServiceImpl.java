@@ -70,4 +70,23 @@ public class PropertyServiceImpl implements PropertyService{
         if(property==null)  throw new CustomRuntimeException(404,"ZERO RESULT");
         return property;
     }
+
+    @Override
+    public List<PropertyRepo.Properties> findAllProperty() {
+        List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty();
+        if(properties==null || properties.size()<1) throw new CustomRuntimeException(404,"ZERO_RESULT");
+        return properties;
+    }
+
+    @Override
+    public void removeFile(int propertyID, String gallName, String docName) {
+        if(gallName!=null) {
+            fileUploadService.removeImage(gallName, fileUploadProperty.getPropertyGallery());
+            propertyRepo.removeFile(propertyID,gallName);
+        }
+        if(docName!=null) {
+            fileUploadService.removeImage(docName, fileUploadProperty.getPropertyDoc());
+            propertyRepo.removeFile(propertyID,docName);
+        }
+    }
 }

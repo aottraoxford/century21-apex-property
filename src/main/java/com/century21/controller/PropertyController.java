@@ -5,6 +5,7 @@ import com.century21.configuration.upload.FileUploadService;
 import com.century21.model.response.CustomResponse;
 import com.century21.repository.PropertyRepo;
 import com.century21.service.PropertyService;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,14 +44,26 @@ public class PropertyController {
     }
 
     @PostMapping("/api/property/file_uploads")
-    public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
+    public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
+    }
+
+    @DeleteMapping("/api/property/file_uploads")
+    public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName){
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
     }
 
     @GetMapping("/api/property/detail/{id}")
     public ResponseEntity propertyDetail(@PathVariable(name = "id")int id){
         CustomResponse customResponse=new CustomResponse(200,propertyService.findOneProperty(id));
+        return customResponse.httpResponse("result");
+    }
+
+    @PostMapping("/api/property/listing")
+    public ResponseEntity properties(){
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty());
         return customResponse.httpResponse("result");
     }
 }

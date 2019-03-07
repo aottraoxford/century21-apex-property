@@ -11,6 +11,15 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+    @Delete("DELETE FROM property_file WHERE property_id=#{proID} AND name = #{name}")
+    void removeFile(@Param("proID")int proID,@Param("name")String name);
+
+    @SelectProvider(type = PropertyUtil.class,method = "findAllProperty")
+    @Results({
+            @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "sqmPrice",column = "sqm_price")
+    })
+    List<Properties> findAllProperty();
 
     @Select("SELECT * FROM property_files " +
             "WHERE property_id=#{id} AND type = 'image'")
@@ -53,6 +62,15 @@ public interface PropertyRepo {
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest);
 
     class PropertyUtil{
+        public String findAllProperty(){
+            return new SQL(){
+                {
+                    SELECT("id,title,unit_price,sqm_price,country,type,status");
+                    FROM("property");
+                    ORDER_BY("id DESC");
+                }
+            }.toString();
+        }
 
         public String findOneProperty(@Param("proID")int proID){
             return new SQL(){
@@ -71,6 +89,73 @@ public interface PropertyRepo {
                             "#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
                 }
             }.toString();
+        }
+    }
+    class Properties{
+       private int id;
+       private String title;
+       private String country;
+       private String type;
+       @JsonProperty("unit_price")
+       private double unitPrice;
+       @JsonProperty("sqm_price")
+       private double sqmPrice;
+       private boolean status;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public double getUnitPrice() {
+            return unitPrice;
+        }
+
+        public void setUnitPrice(double unitPrice) {
+            this.unitPrice = unitPrice;
+        }
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
+
+        public boolean isStatus() {
+            return status;
+        }
+
+        public void setStatus(boolean status) {
+            this.status = status;
         }
     }
     class Property{

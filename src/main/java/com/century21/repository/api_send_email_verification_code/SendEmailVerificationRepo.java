@@ -16,9 +16,4 @@ public interface SendEmailVerificationRepo {
             "FROM users " +
             "WHERE email = #{email} AND account_type = 'origin'")
     int countEmailByEmail(@Param("email") String email);
-
-    @Delete("DELETE " +
-            "FROM verification " +
-            "WHERE name = #{email} AND code = #{code} AND enable IS FALSE")
-    int removeVerifyEmail(@Param("email") String email, @Param("code") int code);
 }

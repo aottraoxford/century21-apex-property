@@ -191,7 +191,7 @@ public class ProjectServiceImpl implements ProjectService {
         for (int i = 0; i < countryForWeb.size(); i++) {
             if(countryForWeb.get(i).getCountryID()==1){
                 ProjectRepo.ProjectTypeForWeb projectTypeForWeb=new ProjectRepo.ProjectTypeForWeb();
-                projectTypeForWeb.setId(999);
+                projectTypeForWeb.setId(-1);
                 projectTypeForWeb.setType("General");
                 countryForWeb.get(i).getProjectTypeForWebList().add(countryForWeb.get(i).getProjectTypeForWebList().size(),projectTypeForWeb);
             }
@@ -210,7 +210,6 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
         return countryForWeb;
-
     }
 
     @Override

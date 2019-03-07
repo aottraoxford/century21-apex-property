@@ -42,7 +42,7 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
                     "\t\t<h1 class='code'>";
 
             //random number to verify email and save to database
-            int code = (int)(Math.random()*8999)+1000;
+            int code = (int)(Math.random()*89999)+10000;
 
             //send mail to email
             mailTemplate+=code+"</h1><h6>NOTE: This CODE will be invalid after 2 minutes then u require to request code again.</h6><p>If you don't register for user account with CENTURY 21 CAMBODIA,simply ignore this email. No action will be taken.<h1></h1> Take care.<h1></h1>CENTURY 21 CAMBODIA</p></body></html>";
@@ -51,21 +51,5 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
             if(sendEmailVerificationRepo.saveEmailId(email,code)<1){
                 throw new CustomRuntimeException(500,"ERROR CODE");
             }
-            //wait to minute to remove email verify code
-            ScheduledExecutorService scheduledExecutorService= Executors.newSingleThreadScheduledExecutor();
-            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    scheduledExecutorService.shutdown();
-                    removeVerifyEmail(email,code);
-                }
-            }, 120000, 1, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void removeVerifyEmail(String email, int code) {
-        if(sendEmailVerificationRepo.removeVerifyEmail(email,code)<1){
-            throw new CustomRuntimeException(500,"CANT NOT REMOVE VERIFY CODE");
-        }
     }
 }

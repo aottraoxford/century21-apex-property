@@ -10,10 +10,12 @@ import com.century21.model.request.SignIn;
 import com.century21.model.request.SignUp;
 import com.century21.model.response.CustomResponse;
 import com.century21.model.response.OAuth2;
+import com.century21.repository.UserRepo;
 import com.century21.repository.api_user_contact.UserContact;
 import com.century21.repository.api_user_question.UserQuestion;
 import com.century21.repository.api_user_update.UpdateInfo;
 import com.century21.repository.api_user_upload_image.UserUploadImageRepo;
+import com.century21.service.UserService;
 import com.century21.service.api_enable_email.EnableEmailService;
 import com.century21.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.service.api_send_email_verification_code.SendEmailVerificationService;
@@ -245,13 +247,18 @@ public class UserController {
     }
 
     @Autowired
-    private UserResetPassVerifyService userResetPassVerifyService;
-    @GetMapping("api/user/reset/verify")
-    public ResponseEntity resetVerify(@RequestParam String email,@RequestParam String pass){
-        userResetPassVerifyService.sendLinkToEmail(email,pass);
+    private UserService userService;
+    @GetMapping("api/user/forgotpass/sendmail")
+    public ResponseEntity resetVerify(@RequestParam String email){
+        userService.sendMail(email);
         CustomResponse customResponse=new CustomResponse(200);
-        customResponse.setStatus("Email has been send.Please check your email.");
         return customResponse.httpResponse();
     }
 
+    @GetMapping("api/user/changepass")
+    public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
+        userService.changePassword(changePassword);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
 }
