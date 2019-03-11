@@ -29,7 +29,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest projectRequest) {
         if (projectRequest.getProjectTypeID() == 2) {
-            if (projectRequest.getProjectIntroductions() != null || projectRequest.getProjectIntroductions().size() > 0)
+            if (projectRequest.getProjectType() != null || projectRequest.getPropertyTypes().size() > 0)
                 throw new CustomRuntimeException(400, "Condo project can be only TOWER_TYPE");
         }
 

@@ -14,10 +14,20 @@ public interface PropertyRepo {
     @Delete("DELETE FROM property_file WHERE property_id=#{proID} AND name = #{name}")
     void removeFile(@Param("proID")int proID,@Param("name")String name);
 
+    @Select("SELECT id,name " +
+            "FROM property_files " +
+            "WHERE type = 'image' AND property_id=#{id}")
+    @Results({
+            @Result(property = "gallery",column = "name")
+    })
+    List<Gallery> gallery();
+
     @SelectProvider(type = PropertyUtil.class,method = "findAllProperty")
     @Results({
+            @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
-            @Result(property = "sqmPrice",column = "sqm_price")
+            @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "gallery",column = "id",many = @Many(select = "gallery"))
     })
     List<Properties> findAllProperty();
 
@@ -67,6 +77,7 @@ public interface PropertyRepo {
                 {
                     SELECT("id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
+                    WHERE("status IS TRUE");
                     ORDER_BY("id DESC");
                 }
             }.toString();
@@ -91,6 +102,29 @@ public interface PropertyRepo {
             }.toString();
         }
     }
+
+    class Gallery{
+        private int id;
+        private String gallery;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getGalleries() {
+            if(gallery!=null) return Url.propertyGalleryUrl+gallery;
+            return gallery;
+        }
+
+        public void setGalleries(String gallery) {
+            this.gallery = gallery;
+        }
+    }
+
     class Properties{
        private int id;
        private String title;
@@ -101,6 +135,15 @@ public interface PropertyRepo {
        @JsonProperty("sqm_price")
        private double sqmPrice;
        private boolean status;
+       private List<Gallery> gallery;
+
+        public List<Gallery> getGallery() {
+            return gallery;
+        }
+
+        public void setGallery(List<Gallery> gallery) {
+            this.gallery = gallery;
+        }
 
         public int getId() {
             return id;
