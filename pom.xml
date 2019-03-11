@@ -31,13 +31,6 @@
             <artifactId>spring-boot-starter-mobile</artifactId>
             <version>1.5.19.RELEASE</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
