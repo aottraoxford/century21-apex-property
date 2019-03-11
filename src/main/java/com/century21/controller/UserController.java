@@ -246,19 +246,19 @@ public class UserController {
         return customResponse.httpResponse("result");
     }
 
-    @Autowired
-    private UserService userService;
-    @GetMapping("api/user/forgotpass/sendmail")
-    public ResponseEntity resetVerify(@RequestParam String email){
-        userService.sendMail(email);
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
-
-    @GetMapping("api/user/changepass")
-    public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
-        userService.changePassword(changePassword);
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
+//    @Autowired
+//    private UserService userService;
+//    @GetMapping("api/user/forgotpass/sendmail")
+//    public ResponseEntity resetVerify(@RequestParam String email){
+//        userService.sendMail(email);
+//        CustomResponse customResponse=new CustomResponse(200);
+//        return customResponse.httpResponse();
+//    }
+//
+//    @GetMapping("api/user/changepass")
+//    public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
+//        userService.changePassword(changePassword);
+//        CustomResponse customResponse=new CustomResponse(200);
+//        return customResponse.httpResponse();
+//    }
 }
