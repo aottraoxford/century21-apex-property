@@ -246,8 +246,8 @@ public class UserController {
         return customResponse.httpResponse("result");
     }
 
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    private UserService userService;
 //    @GetMapping("api/user/forgotpass/sendmail")
 //    public ResponseEntity resetVerify(@RequestParam String email){
 //        userService.sendMail(email);
