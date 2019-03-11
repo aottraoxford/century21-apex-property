@@ -254,11 +254,11 @@ public class UserController {
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
-//
-//    @GetMapping("api/user/changepass")
-//    public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
-//        userService.changePassword(changePassword);
-//        CustomResponse customResponse=new CustomResponse(200);
-//        return customResponse.httpResponse();
-//    }
+
+    @GetMapping("api/user/changepass")
+    public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
+        userService.changePassword(changePassword);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
 }
