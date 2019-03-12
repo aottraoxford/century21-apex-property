@@ -2,6 +2,7 @@ package com.century21.controller;
 
 import com.century21.configuration.upload.FileUploadProperty;
 import com.century21.configuration.upload.FileUploadService;
+import com.century21.model.Pagination;
 import com.century21.model.response.CustomResponse;
 import com.century21.repository.PropertyRepo;
 import com.century21.service.PropertyService;
@@ -59,8 +60,9 @@ public class PropertyController {
     }
 
     @PostMapping("/api/property/listing")
-    public ResponseEntity properties(){
-        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty());
-        return customResponse.httpResponse("result");
+    public ResponseEntity properties(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty(pagination),pagination);
+        return customResponse.httpResponse("result","paging");
     }
 }

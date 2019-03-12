@@ -1,5 +1,6 @@
 package com.century21.service;
 
+import com.century21.model.Pagination;
 import com.century21.repository.PropertyRepo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,6 @@ public interface PropertyService {
     int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal);
     Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] doc,Principal principal);
     PropertyRepo.Property findOneProperty(int proID);
-    List<PropertyRepo.Properties> findAllProperty();
+    List<PropertyRepo.Properties> findAllProperty(Pagination pagination);
     void removeFile(int propertyID,String gallName,String docName);
 }

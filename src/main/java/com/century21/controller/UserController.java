@@ -255,7 +255,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @GetMapping("api/user/forgotpass/verification")
+    @PatchMapping("api/user/forgotpass/verification")
     public ResponseEntity codeVerification(@RequestParam int code){
         userService.verification(code);
         CustomResponse customResponse=new CustomResponse(200);

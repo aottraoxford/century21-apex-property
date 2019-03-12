@@ -22,6 +22,9 @@ public interface PropertyRepo {
     })
     List<Gallery> gallery();
 
+    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyCount")
+    int findAllPropertyCount();
+
     @SelectProvider(type = PropertyUtil.class,method = "findAllProperty")
     @Results({
             @Result(property = "id",column = "id"),
@@ -29,7 +32,7 @@ public interface PropertyRepo {
             @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "gallery",column = "id",many = @Many(select = "gallery"))
     })
-    List<Properties> findAllProperty();
+    List<Properties> findAllProperty(@Param("limit")int limit,@Param("offset")int offset);
 
     @Select("SELECT * FROM property_files " +
             "WHERE property_id=#{id} AND type = 'image'")
@@ -72,13 +75,23 @@ public interface PropertyRepo {
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest);
 
     class PropertyUtil{
-        public String findAllProperty(){
+        public String findAllPropertyCount(){
+            return new SQL(){
+                {
+                    SELECT("count(id)");
+                    FROM("property");
+                    WHERE("status IS TRUE");
+                }
+            }.toString();
+        }
+
+        public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
                     SELECT("id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
                     WHERE("status IS TRUE");
-                    ORDER_BY("id DESC");
+                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();
         }

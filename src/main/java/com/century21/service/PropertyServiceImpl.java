@@ -4,6 +4,7 @@ import com.century21.configuration.upload.FileUploadProperty;
 import com.century21.configuration.upload.FileUploadService;
 import com.century21.exception.CustomRuntimeException;
 import com.century21.model.ID;
+import com.century21.model.Pagination;
 import com.century21.repository.PropertyRepo;
 import com.century21.repository.UserLogRepo;
 import com.century21.repository.UserRepo;
@@ -72,9 +73,10 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public List<PropertyRepo.Properties> findAllProperty() {
-        List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty();
+    public List<PropertyRepo.Properties> findAllProperty(Pagination pagination) {
+        List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty(pagination.getLimit(),pagination.getOffset());
         if(properties==null || properties.size()<1) throw new CustomRuntimeException(404,"ZERO_RESULT");
+        pagination.setTotalItem(propertyRepo.findAllPropertyCount());
         return properties;
     }
 
