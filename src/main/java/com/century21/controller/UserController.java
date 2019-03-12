@@ -255,7 +255,14 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @GetMapping("api/user/changepass")
+    @GetMapping("api/user/forgotpass/verification")
+    public ResponseEntity codeVerification(@RequestParam int code){
+        userService.verification(code);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
+    @PostMapping("api/user/forgotpass/changepass")
     public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
         userService.changePassword(changePassword);
         CustomResponse customResponse=new CustomResponse(200);

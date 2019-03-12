@@ -12,9 +12,17 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
     @Autowired
     private MailService mailService;
+
+    @Override
+    public void verification(int code) {
+        if(userRepo.updateEnable(code)<1){
+            throw new CustomRuntimeException(401,"VERIFY CODE NOT MATCH.");
+        }
+    }
+
     @Override
     public void sendMail(String email) {
-        if(userRepo.findUserIDByEmail(email)==null) throw new CustomRuntimeException(404,"EMAIL NOT EXIST.");
+        if(userRepo.findUserIDByEmail(email)==null) throw new CustomRuntimeException(404,"EMAIL NOT YET REGISTER.");
         String mailTemplate="<html>\n" +
                 "\t<head>\n" +
                 "\t\t<style>\n" +
@@ -47,7 +55,10 @@ public class UserServiceImpl implements UserService {
     public void changePassword(UserRepo.ChangePassword changePassword) {
         if(userRepo.findUserIDByEmail(changePassword.getEmail())==null) throw new CustomRuntimeException(404,"EMAIL NOT EXIST.");
         userRepo.removeCode();
-        if(userRepo.checkCode(changePassword.getEmail(),changePassword.getCode())==0) throw new CustomRuntimeException(401,"CODE NOT MATCH");
+        if(userRepo.checkAccount(changePassword.getEmail())<1){
+            throw new CustomRuntimeException(404,"Email not yet verify.");
+        }
+        userRepo.removeEmail(changePassword.getEmail());
         userRepo.updatePassword(changePassword);
     }
 }

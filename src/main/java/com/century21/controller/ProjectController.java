@@ -167,7 +167,6 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-
     @ApiIgnore
     @GetMapping("/api/slider/{fileName:.+}")
     public ResponseEntity viewSlider(@PathVariable("fileName")String fileName, HttpServletRequest request){

@@ -1084,12 +1084,12 @@ public interface ProjectRepo {
         @NotNull
         private double price;
         @NotNull
-        @JsonProperty("avg_annual_rent_from")
+        @JsonProperty("avg_rent_from")
         private double avgRentFrom;
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
         @NotNull
-        @JsonProperty("avg_annual_rent_to")
+        @JsonProperty("avg_rent_to")
         private double avgRentTo;
         @JsonProperty("sqm_price")
         private double sqmPrice;
