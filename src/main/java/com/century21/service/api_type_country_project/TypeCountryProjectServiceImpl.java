@@ -20,7 +20,7 @@ public class TypeCountryProjectServiceImpl implements TypeCountryProjectService 
         for(int i=0;i<typeCountryProjects.size();i++){
             if(typeCountryProjects.get(i).getCountryID()==1){
                 ProjectType projectType=new ProjectType();
-                projectType.setProjectID(-1);
+                projectType.setProjectID(99);
                 projectType.setTypeName("General");
                 typeCountryProjects.get(i).getTypes().add(typeCountryProjects.get(i).getTypes().size(), projectType);
                 break;
