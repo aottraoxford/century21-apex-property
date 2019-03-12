@@ -3,6 +3,7 @@ package com.century21.repository;
 import com.century21.model.ID;
 import com.century21.model.Pagination;
 import com.century21.util.Url;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
@@ -898,7 +899,7 @@ public interface ProjectRepo {
 
     class TowerType{
         private int id;
-        @JsonProperty("project_id")
+        @JsonIgnore
         private int projectID;
         private String type;
 

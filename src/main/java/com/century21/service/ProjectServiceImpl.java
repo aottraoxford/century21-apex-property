@@ -28,26 +28,23 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest projectRequest) {
-        if (projectRequest.getProjectTypeID() == 2) {
-            if (projectRequest.getPropertyTypes() != null)
-                throw new CustomRuntimeException(400, "Condo project can be only TOWER_TYPE");
-        }
 
         ID id = new ID();
         projectRepo.insertProject(id, projectRequest);
         int projectID = id.getId();
 
-        if (projectRequest.getProjectTypeID() == 2) {
+        if(projectRequest.getTowerTypes()!=null) {
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {
                 projectRepo.insertTowerType(projectRequest.getTowerTypes().get(i).getType(), projectID);
             }
-        } else {
-            if (projectRequest.getPropertyTypes() != null) {
-                for (int i = 0; i < projectRequest.getPropertyTypes().size(); i++) {
-                    projectRepo.insertPropertyType(projectRequest.getPropertyTypes().get(i), projectID);
-                }
+        }
+
+        if (projectRequest.getPropertyTypes() != null) {
+            for (int i = 0; i < projectRequest.getPropertyTypes().size(); i++) {
+                projectRepo.insertPropertyType(projectRequest.getPropertyTypes().get(i), projectID);
             }
         }
+
         if (projectRequest.getProjectIntroductions() != null) {
             for (int i = 0; i < projectRequest.getProjectIntroductions().size(); i++)
                 projectRepo.insertProjectIntro(projectRequest.getProjectIntroductions().get(i), projectID);
@@ -71,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectRepo.updateProject(projectRequest);
 
-        if(projectRequest.getProjectIntroductions()!=null || projectRequest.getProjectIntroductions().size()>0){
+        if(projectRequest.getProjectIntroductions()!=null){
             idFromDB=projectRepo.findAllProjectIntroID(projectRequest.getId());
             for(int i=0;i<projectRequest.getProjectIntroductions().size();i++){
                 ProjectRepo.ProjectIntroduction projectIntroduction=projectRequest.getProjectIntroductions().get(i);
@@ -85,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
                 projectRepo.removeProjectIntro(((List<Integer>) idFromDB).get(i),projectRequest.getId());
         }
 
-        if (projectRequest.getProjectTypeID() == 2 && projectRequest.getTowerTypes() != null) {
+        if (projectRequest.getTowerTypes() != null) {
             idFromDB = projectRepo.findAllTowerTypeID(projectRequest.getId());
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {
                 ProjectRepo.TowerType towerType = projectRequest.getTowerTypes().get(i);
@@ -97,22 +94,23 @@ public class ProjectServiceImpl implements ProjectService {
             idFromDB.removeAll(idFromRequest);
             for (int i = 0; i < idFromDB.size(); i++)
                 projectRepo.removeTowerType(((List<Integer>) idFromDB).get(i),projectRequest.getId());
-        } else {
-            if (projectRequest.getPropertyTypes() != null) {
-                idFromDB = projectRepo.findAllPropertyTypeID(projectRequest.getId());
-                for (int i = 0; i < projectRequest.getPropertyTypes().size(); i++) {
-                    ProjectRepo.PropertyType propertyType = projectRequest.getPropertyTypes().get(i);
-                    if (projectRepo.updatePropertyType(propertyType,projectRequest.getId()) < 1) {
-                        projectRepo.insertPropertyType(propertyType, projectRequest.getId());
-                    }
-                    idFromRequest.add(propertyType.getId());
-                }
-                idFromDB.addAll(idFromRequest);
-                idFromDB.removeAll(idFromRequest);
-                for(int i=0;i<idFromDB.size();i++)
-                    projectRepo.removePropertyType(((List<Integer>) idFromDB).get(i),projectRequest.getId());
-            }
         }
+
+        if (projectRequest.getPropertyTypes() != null) {
+            idFromDB = projectRepo.findAllPropertyTypeID(projectRequest.getId());
+            for (int i = 0; i < projectRequest.getPropertyTypes().size(); i++) {
+                ProjectRepo.PropertyType propertyType = projectRequest.getPropertyTypes().get(i);
+                if (projectRepo.updatePropertyType(propertyType,projectRequest.getId()) < 1) {
+                    projectRepo.insertPropertyType(propertyType, projectRequest.getId());
+                }
+                idFromRequest.add(propertyType.getId());
+            }
+            idFromDB.addAll(idFromRequest);
+            idFromDB.removeAll(idFromRequest);
+            for(int i=0;i<idFromDB.size();i++)
+                projectRepo.removePropertyType(((List<Integer>) idFromDB).get(i),projectRequest.getId());
+        }
+
         return projectRepo.findOneProject(projectRequest.getId());
     }
 
