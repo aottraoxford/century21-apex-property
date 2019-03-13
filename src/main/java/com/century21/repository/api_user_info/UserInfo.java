@@ -40,16 +40,9 @@ public class UserInfo {
     }
 
     public String getImage() {
-//        String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
-//        Pattern pattern;
-//        Matcher matcher;
-//        pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-//        matcher=pattern.matcher(swapEmail);
-//        if(matcher.matches()) {
-            if (image != null && !image.contains("/")) {
-                return Url.userImageUrl + image;
-            }
-//        }
+        if (image != null && !image.contains("/")) {
+            return Url.userImageUrl + image;
+        }
         return image;
     }
 

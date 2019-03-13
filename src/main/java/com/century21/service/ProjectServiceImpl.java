@@ -217,4 +217,7 @@ public class ProjectServiceImpl implements ProjectService {
         pagination.setTotalItem(projectRepo.findAllProjectByFilterCount(filterRequest));
         return projects;
     }
+
+    public static class FavoriteServiceImpl {
+    }
 }

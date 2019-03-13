@@ -6,6 +6,9 @@ import com.century21.util.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -60,5 +63,26 @@ public class UserServiceImpl implements UserService {
         }
         userRepo.removeEmail(changePassword.getEmail());
         userRepo.updatePassword(changePassword);
+    }
+
+    @Override
+    public void assignRole(int userID, String roleType) {
+        Integer roleID=userRepo.roleID(roleType);
+        if(roleID==null) throw new CustomRuntimeException(404,"AVAILABLE ROLE( ADMIN, AGENT ,USER)");
+        if(userRepo.updateRole(userID,roleID)<1) throw new CustomRuntimeException(404,"USER account does not exist.");
+    }
+
+    @Override
+    public void addAgent(int userID, Principal principal) {
+        Integer adminID=userRepo.findUserIDByEmail(principal.getName());
+        if(userRepo.setChild(adminID,userID)==0) throw new CustomRuntimeException(404,"USER account not exist.");
+    }
+
+    @Override
+    public List<UserRepo.User> agents(Principal principal) {
+        Integer parentID=userRepo.findUserIDByEmail(principal.getName());
+        List<UserRepo.User> agents=userRepo.agents(parentID);
+        if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
+        return agents;
     }
 }

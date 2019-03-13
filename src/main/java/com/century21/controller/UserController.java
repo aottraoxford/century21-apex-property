@@ -10,11 +10,14 @@ import com.century21.model.request.SignIn;
 import com.century21.model.request.SignUp;
 import com.century21.model.response.CustomResponse;
 import com.century21.model.response.OAuth2;
+import com.century21.repository.FavoriteRepo;
 import com.century21.repository.UserRepo;
+import com.century21.repository.api_project_userfavorite.ProjectFavoriteRepo;
 import com.century21.repository.api_user_contact.UserContact;
 import com.century21.repository.api_user_question.UserQuestion;
 import com.century21.repository.api_user_update.UpdateInfo;
 import com.century21.repository.api_user_upload_image.UserUploadImageRepo;
+import com.century21.service.FavoriteService;
 import com.century21.service.UserService;
 import com.century21.service.api_enable_email.EnableEmailService;
 import com.century21.service.api_project_favorite.ProjectFavoriteService;
@@ -39,6 +42,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -222,16 +226,16 @@ public class UserController {
     }
 
     @Autowired
-    private ProjectFavoriteService projectFavoriteService;
-    @PostMapping("api/project/favorite")
-    public ResponseEntity projectFavorite(int projectID,Principal principal){
-        CustomResponse customResponse=new CustomResponse(200,projectFavoriteService.favorite(projectID,principal));
+    private FavoriteService favoriteService;
+    @PostMapping("/api/project/favorite")
+    public ResponseEntity projectFavorite(@RequestBody FavoriteRepo.FavoriteOn favoriteOn, Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,favoriteService.favorite(favoriteOn.getProjectID(),favoriteOn.getPropertyID(),principal));
         return customResponse.httpResponse("favorite");
     }
 
     @Autowired
     private UserFavoriteService userFavoriteService;
-    @GetMapping("api/user/favorite")
+    @GetMapping("/api/user/favorite")
     public ResponseEntity userFavorite(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userFavoriteService.favorite(principal,pagination),pagination);
@@ -240,7 +244,7 @@ public class UserController {
 
     @Autowired
     private UserUpdateService userUpdateService;
-    @PostMapping("api/user/update")
+    @PostMapping("/api/user/update")
     public ResponseEntity userUpdate(@RequestBody UpdateInfo updateInfo, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,userUpdateService.userUpdate(updateInfo,principal));
         return customResponse.httpResponse("result");
@@ -248,24 +252,47 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @GetMapping("api/user/forgotpass/sendmail")
+    @GetMapping("/api/user/forgotpass/sendmail")
     public ResponseEntity resetVerify(@RequestParam String email){
         userService.sendMail(email);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
-    @PatchMapping("api/user/forgotpass/verification")
+    @PatchMapping("/api/user/forgotpass/verification")
     public ResponseEntity codeVerification(@RequestParam int code){
         userService.verification(code);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
-    @PostMapping("api/user/forgotpass/changepass")
+    @PostMapping("/api/user/forgotpass/changepass")
     public ResponseEntity changePass(@RequestBody UserRepo.ChangePassword changePassword){
         userService.changePassword(changePassword);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/apis/admin/role/assign")
+    public ResponseEntity assignRole(@RequestBody UserRepo.AssignRoleRequest roleRequest){
+        userService.assignRole(roleRequest.getUserID(),roleRequest.getRole());
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/apis/admin/agent/add")
+    public ResponseEntity addAgent(int userID,Principal principal){
+        userService.addAgent(userID,principal);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/apis/agents")
+    public ResponseEntity agents(Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,userService.agents(principal));
+        return customResponse.httpResponse("result");
     }
 }

@@ -1,7 +1,7 @@
-package com.century21.service.api_project_favorite;
+package com.century21.service;
 
 import java.security.Principal;
 
-public interface ProjectFavoriteService {
+public interface FavoriteService {
     boolean favorite(int projectID,int propertyID, Principal principal);
 }

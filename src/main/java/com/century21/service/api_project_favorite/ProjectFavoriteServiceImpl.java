@@ -12,16 +12,17 @@ public class ProjectFavoriteServiceImpl implements ProjectFavoriteService {
     @Autowired
     private ProjectFavoriteRepo projectFavoriteRepo;
     @Override
-    public boolean favorite(int projectID, Principal principal) {
+    public boolean favorite(int projectID,int propertyID, Principal principal) {
+        if((projectID==0 && propertyID==0) || (projectID!=0 && propertyID!=0)) throw new CustomRuntimeException(400,"projectID or propertyID ,one of must be = 0.");
         Integer userID=projectFavoriteRepo.getUserIDByEmail(principal.getName());
         if(userID==null) throw new CustomRuntimeException(404,"USER INVALID");
-        Integer isfavorite= projectFavoriteRepo.isFavorite(projectID,userID);
-        if(isfavorite==null) {
-            projectFavoriteRepo.startFavorite(projectID, userID);
+        int isFavorite= projectFavoriteRepo.isFavorite(projectID,propertyID,userID);
+        if(isFavorite==0) {
+            projectFavoriteRepo.startFavorite(projectID,propertyID, userID);
             return true;
         }
         else {
-            projectFavoriteRepo.endFavorite(projectID, userID);
+            projectFavoriteRepo.endFavorite(projectID,propertyID, userID);
             return false;
         }
     }
