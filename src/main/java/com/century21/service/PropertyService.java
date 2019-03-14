@@ -11,7 +11,7 @@ import java.util.Map;
 public interface PropertyService {
     int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal);
     Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] doc,Principal principal);
-    PropertyRepo.Property findOneProperty(int proID);
+    PropertyRepo.Property findOneProperty(int proID,Principal principal);
     List<PropertyRepo.Properties> findAllProperty(Pagination pagination);
     void removeFile(int propertyID,String gallName,String docName);
 }

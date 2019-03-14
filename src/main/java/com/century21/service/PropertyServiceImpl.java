@@ -5,6 +5,7 @@ import com.century21.configuration.upload.FileUploadService;
 import com.century21.exception.CustomRuntimeException;
 import com.century21.model.ID;
 import com.century21.model.Pagination;
+import com.century21.repository.FavoriteRepo;
 import com.century21.repository.PropertyRepo;
 import com.century21.repository.UserLogRepo;
 import com.century21.repository.UserRepo;
@@ -30,6 +31,8 @@ public class PropertyServiceImpl implements PropertyService{
     private UserRepo userRepo;
     @Autowired
     private UserLogRepo userLogRepo;
+    @Autowired
+    private FavoriteRepo favoriteRepo;
     @Override
     public int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal) {
         ID id = new ID();
@@ -66,9 +69,14 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public PropertyRepo.Property findOneProperty(int proID) {
+    public PropertyRepo.Property findOneProperty(int proID,Principal principal) {
         PropertyRepo.Property property=propertyRepo.findOneProperty(proID);
         if(property==null)  throw new CustomRuntimeException(404,"ZERO RESULT");
+        if(principal!=null) {
+            Integer userID = userRepo.findUserIDByEmail(principal.getName());
+            if (favoriteRepo.isFavorite(0, proID, userID) > 0) property.setFavorite(true);
+            else property.setFavorite(false);
+        }
         return property;
     }
 

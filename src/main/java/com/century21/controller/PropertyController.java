@@ -54,8 +54,8 @@ public class PropertyController {
     }
 
     @GetMapping("/api/property/detail/{id}")
-    public ResponseEntity propertyDetail(@PathVariable(name = "id")int id){
-        CustomResponse customResponse=new CustomResponse(200,propertyService.findOneProperty(id));
+    public ResponseEntity propertyDetail(@PathVariable(name = "id")int id,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findOneProperty(id,principal));
         return customResponse.httpResponse("result");
     }
 

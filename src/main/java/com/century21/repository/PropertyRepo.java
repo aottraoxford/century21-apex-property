@@ -44,6 +44,7 @@ public interface PropertyRepo {
 
     @SelectProvider(type = PropertyUtil.class,method = "findOneProperty")
     @Results({
+            @Result(property = "id",column = "id"), 
             @Result(property = "projectID",column = "project_id"),
             @Result(property = "livingRoom",column = "living_room"),
             @Result(property = "dinningRoom",column = "dinning_room"),
@@ -269,8 +270,17 @@ public interface PropertyRepo {
         private boolean status;
         @JsonProperty("show_map")
         private boolean showMap;
+        private boolean isFavorite;
         List<PropertyFile> galleries;
         List<PropertyFile> docs;
+
+        public boolean isFavorite() {
+            return isFavorite;
+        }
+
+        public void setFavorite(boolean favorite) {
+            isFavorite = favorite;
+        }
 
         public int getId() {
             return id;
