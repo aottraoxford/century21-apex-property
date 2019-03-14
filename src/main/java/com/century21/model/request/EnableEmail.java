@@ -11,7 +11,7 @@ public class EnableEmail {
     @NotNull
     @ApiModelProperty(position = 1)
     private String email;
-    
+
     @ApiModelProperty(position = 2)
     private int code;
 
