@@ -12,7 +12,6 @@ import com.century21.model.response.CustomResponse;
 import com.century21.model.response.OAuth2;
 import com.century21.repository.FavoriteRepo;
 import com.century21.repository.UserRepo;
-import com.century21.repository.api_project_userfavorite.ProjectFavoriteRepo;
 import com.century21.repository.api_user_contact.UserContact;
 import com.century21.repository.api_user_question.UserQuestion;
 import com.century21.repository.api_user_update.UpdateInfo;
@@ -20,7 +19,6 @@ import com.century21.repository.api_user_upload_image.UserUploadImageRepo;
 import com.century21.service.FavoriteService;
 import com.century21.service.UserService;
 import com.century21.service.api_enable_email.EnableEmailService;
-import com.century21.service.api_project_favorite.ProjectFavoriteService;
 import com.century21.service.api_send_email_verification_code.SendEmailVerificationService;
 import com.century21.service.api_signin.SignInService;
 import com.century21.service.api_signup.SignUpService;
@@ -29,7 +27,6 @@ import com.century21.service.api_user_contact.UserContactService;
 import com.century21.service.api_user_favorite.UserFavoriteService;
 import com.century21.service.api_user_info.UserInfoService;
 import com.century21.service.api_user_question.UserQuestionService;
-import com.century21.service.api_user_reset_verify.UserResetPassVerifyService;
 import com.century21.service.api_user_update.UserUpdateService;
 import com.century21.service.api_user_upload_image.UserUploadImageService;
 import com.century21.util.DecodeJWT;
@@ -227,19 +224,23 @@ public class UserController {
 
     @Autowired
     private FavoriteService favoriteService;
-    @PostMapping("/api/project/favorite")
+    @PostMapping("/api/favorite_on")
     public ResponseEntity projectFavorite(@RequestBody FavoriteRepo.FavoriteOn favoriteOn, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,favoriteService.favorite(favoriteOn.getProjectID(),favoriteOn.getPropertyID(),principal));
         return customResponse.httpResponse("favorite");
     }
 
-    @Autowired
-    private UserFavoriteService userFavoriteService;
-    @GetMapping("/api/user/favorite")
-    public ResponseEntity userFavorite(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
+
+    @GetMapping("/api/user/favorite/{type}")
+    public ResponseEntity userFavorite(@PathVariable String type,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,userFavoriteService.favorite(principal,pagination),pagination);
-        return customResponse.httpResponse("result","paging");
+        if(type.equalsIgnoreCase("property")) {
+            CustomResponse customResponse = new CustomResponse(200, favoriteService.propertyFavorite(principal, pagination), pagination);
+            return customResponse.httpResponse("result", "paging");
+        }else{
+            CustomResponse customResponse = new CustomResponse(200, favoriteService.projectFavorite(principal, pagination), pagination);
+            return customResponse.httpResponse("result", "paging");
+        }
     }
 
     @Autowired

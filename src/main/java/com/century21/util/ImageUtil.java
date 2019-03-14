@@ -54,5 +54,5 @@ public class ImageUtil {
         int scaledHeight = (int) (inputImage.getHeight() * percent);
         resize(inputImagePath, outputImagePath, scaledWidth, scaledHeight);
     }
-    
+
 }

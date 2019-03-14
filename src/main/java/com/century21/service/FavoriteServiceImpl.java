@@ -1,14 +1,24 @@
 package com.century21.service;
 
 import com.century21.exception.CustomRuntimeException;
+
+import com.century21.model.Pagination;
 import com.century21.repository.FavoriteRepo;
+
+import com.century21.repository.ProjectRepo;
+import com.century21.repository.PropertyRepo;
+import com.century21.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
+
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService{
+    @Autowired
+    private UserRepo userRepo;
     @Autowired
     private FavoriteRepo favoriteRepo;
     @Override
@@ -25,5 +35,19 @@ public class FavoriteServiceImpl implements FavoriteService{
             favoriteRepo.endFavorite(projectID,propertyID, userID);
             return false;
         }
+    }
+
+    @Override
+    public List<PropertyRepo.Properties> propertyFavorite(Principal principal, Pagination pagination) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        if(userID==null) throw new CustomRuntimeException(404,"ACCOUNT NOT EXIST");
+        return favoriteRepo.propertyFavorite(userID,pagination.getLimit(),pagination.getOffset());
+    }
+
+    @Override
+    public List<ProjectRepo.ProjectListingResponse> projectFavorite(Principal principal, Pagination pagination) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        if(userID==null) throw new CustomRuntimeException(404,"ACCOUNT NOT EXIST");
+        return favoriteRepo.projectFavorite(userID,pagination.getLimit(),pagination.getOffset());
     }
 }
