@@ -11,9 +11,7 @@ public class EnableEmail {
     @NotNull
     @ApiModelProperty(position = 1)
     private String email;
-
-    @Max(value = 9999)
-    @Min(value = 1000)
+    
     @ApiModelProperty(position = 2)
     private int code;
 
