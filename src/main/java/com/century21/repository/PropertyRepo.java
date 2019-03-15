@@ -11,6 +11,19 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilter")
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+    })
+    List<Properties> findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset);
+
+    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilterCount")
+    int findAllPropertyByFilterCount(@Param("filter")PropertyFilter filter);
+
     @Delete("DELETE FROM property_file WHERE property_id=#{proID} AND name = #{name}")
     void removeFile(@Param("proID")int proID,@Param("name")String name);
 
@@ -89,7 +102,177 @@ public interface PropertyRepo {
     @SelectKey(statement = "select nextval('property_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID);
 
+    class PropertyFilter{
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
+
+        public String getSortType() {
+            return sortType;
+        }
+
+        public void setSortType(String sortType) {
+            this.sortType = sortType;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getDistrict() {
+            return district;
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
+        }
+
+        public String getCommune() {
+            return commune;
+        }
+
+        public void setCommune(String commune) {
+            this.commune = commune;
+        }
+
+        public int getBedroom() {
+            return bedroom;
+        }
+
+        public void setBedroom(int bedroom) {
+            this.bedroom = bedroom;
+        }
+
+        public int getBathroom() {
+            return bathroom;
+        }
+
+        public void setBathroom(int bathroom) {
+            this.bathroom = bathroom;
+        }
+
+        public double getFromPrice() {
+            return fromPrice;
+        }
+
+        public void setFromPrice(double fromPrice) {
+            this.fromPrice = fromPrice;
+        }
+
+        public double getToPrice() {
+            return toPrice;
+        }
+
+        public void setToPrice(double toPrice) {
+            this.toPrice = toPrice;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        private String title;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
+        @JsonProperty("sort_type")
+        private String sortType;
+        private String city;
+        private String type;
+        private String district;
+        private String commune;
+        private String status;
+        private int bedroom;
+        private int bathroom;
+        @JsonProperty("from_price")
+        private double fromPrice;
+        @JsonProperty("to_price")
+        private double toPrice;
+    }
     class PropertyUtil{
+        public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
+            return new SQL(){
+                {
+                    SELECT("property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
+                    FROM("property");
+                    LEFT_OUTER_JOIN("project ON project.id=property.project_id");
+                    if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
+                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0) WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
+                    if(filter.getCity()!=null && filter.getCity().length()>0) WHERE("property.city ilike #{filter.city}");
+                    if(filter.getDistrict()!=null && filter.getDistrict().length()>0) WHERE("property.district ilike #{filter.district}");
+                    if(filter.getCommune()!=null && filter.getCommune().length()>0) WHERE("property.commune ilike #{filter.commune}");
+                    if(filter.getType()!=null && filter.getType().length()>0) WHERE("property.type ilike #{filter.type}");
+                    if(filter.getStatus()!=null && filter.getStatus().length()>0) {
+                        if(filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
+                        else WHERE("property.status IS FALSE");
+                    }
+                    if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
+                    if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
+                    if(filter.getToPrice()>0) WHERE("property.price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
+                        if(filter.getSortType().equalsIgnoreCase("price"))
+                            ORDER_BY("price limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("price-desc"))
+                            ORDER_BY("price DESC limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("title"))
+                            ORDER_BY("name limit #{limit} offset #{offset}");
+                        else if(filter.getSortType().equalsIgnoreCase("title-desc"))
+                            ORDER_BY("name DESC limit #{limit} offset #{offset}");
+                    }else ORDER_BY("property.id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
+
+        public String findAllPropertyByFilterCount(@Param("filter")PropertyFilter filter){
+            return new SQL(){
+                {
+                    SELECT("count(property.id)");
+                    FROM("property");
+                    LEFT_OUTER_JOIN("project ON project.id=property.project_id");
+                    if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
+                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0) WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
+                    if(filter.getCity()!=null && filter.getCity().length()>0) WHERE("property.city ilike #{filter.city}");
+                    if(filter.getDistrict()!=null && filter.getDistrict().length()>0) WHERE("property.district ilike #{filter.district}");
+                    if(filter.getCommune()!=null && filter.getCommune().length()>0) WHERE("property.commune ilike #{filter.commune}");
+                    if(filter.getType()!=null && filter.getType().length()>0) WHERE("property.type ilike #{filter.type}");
+                    if(filter.getStatus()!=null && filter.getStatus().length()>0) {
+                        if(filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
+                        else WHERE("property.status IS FALSE");
+                    }
+                    if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
+                    if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
+                    if(filter.getToPrice()>0) WHERE("property.price between #{filter.fromPrice} AND #{filter.toPrice}");
+                }
+            }.toString();
+        }
+
         public String findAllPropertyCount(){
             return new SQL(){
                 {

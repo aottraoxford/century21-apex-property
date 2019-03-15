@@ -14,4 +14,5 @@ public interface PropertyService {
     PropertyRepo.Property findOneProperty(int proID,Principal principal);
     List<PropertyRepo.Properties> findAllProperty(Pagination pagination);
     void removeFile(int propertyID,String gallName,String docName,Principal principal);
+    List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter,Pagination pagination);
 }

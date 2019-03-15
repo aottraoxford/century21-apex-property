@@ -66,4 +66,11 @@ public class PropertyController {
         CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty(pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
+
+    @PostMapping("/api/property/filter")
+    public ResponseEntity propertiesFilter(@RequestBody PropertyRepo.PropertyFilter filter,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllPropertyByFilter(filter,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
 }

@@ -102,4 +102,12 @@ public class PropertyServiceImpl implements PropertyService{
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
         userLogRepo.insertUserLog("remove file from property id ="+propertyID,userID);
     }
+
+    @Override
+    public List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter, Pagination pagination) {
+        List<PropertyRepo.Properties> properties = propertyRepo.findAllPropertyByFilter(filter,pagination.getLimit(),pagination.getOffset());
+        if(properties.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem(propertyRepo.findAllPropertyCount());
+        return properties;
+    }
 }
