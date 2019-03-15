@@ -30,7 +30,8 @@ public interface PropertyRepo {
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
             @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "gallery",column = "id",many = @Many(select = "gallery"))
+            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     List<Properties> findAllProperty(@Param("limit")int limit,@Param("offset")int offset);
 
@@ -44,7 +45,7 @@ public interface PropertyRepo {
 
     @SelectProvider(type = PropertyUtil.class,method = "findOneProperty")
     @Results({
-            @Result(property = "id",column = "id"), 
+            @Result(property = "id",column = "id"),
             @Result(property = "projectID",column = "project_id"),
             @Result(property = "livingRoom",column = "living_room"),
             @Result(property = "dinningRoom",column = "dinning_room"),
@@ -63,9 +64,22 @@ public interface PropertyRepo {
             @Result(property = "totalArea",column = "total_area"),
             @Result(property = "showMap",column = "show_map"),
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
-            @Result(property = "docs",column = "id",many = @Many(select = "findDocs"))
+            @Result(property = "docs",column = "id",many = @Many(select = "findDocs")),
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     Property findOneProperty(@Param("proID")int proID);
+
+    @Select("SELECT id,first_name,last_name,email,gender,phone_number,image,account_type " +
+            "FROM users " +
+            "WHERE id=#{user_id}")
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "firstName",column = "first_name"),
+            @Result(property = "lastName",column = "last_name"),
+            @Result(property = "phoneNumber",column = "phone_number"),
+            @Result(property = "accountType",column = "account_type")
+    })
+    UserRepo.User findOneUser();
 
     @Insert("INSERT into property_files(name,type,property_id) " +
             "VALUES(#{name},#{type},#{proID}) ")
@@ -73,7 +87,7 @@ public interface PropertyRepo {
 
     @InsertProvider(type = PropertyUtil.class,method = "insertProperty")
     @SelectKey(statement = "select nextval('property_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
-    Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest);
+    Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID);
 
     class PropertyUtil{
         public String findAllPropertyCount(){
@@ -89,7 +103,7 @@ public interface PropertyRepo {
         public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("id,title,unit_price,sqm_price,country,type,status");
+                    SELECT("id,user_id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
                     WHERE("status IS TRUE");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
@@ -106,12 +120,12 @@ public interface PropertyRepo {
                 }
             }.toString();
         }
-        public String insertProperty(@Param("id") ID id, @Param("ppt")PropertyRequest propertyRequest){
+        public String insertProperty(@Param("id") ID id, @Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID){
             return new SQL(){
                 {
                     INSERT_INTO("property");
-                    VALUES("id,project_id,bedroom,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
-                            "#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
+                    VALUES("user_id,id,project_id,bedroom,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
+                            "#{userID},#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
                 }
             }.toString();
         }
@@ -138,7 +152,6 @@ public interface PropertyRepo {
             this.gallery = gallery;
         }
     }
-
     class Properties{
        private int id;
        private String title;
@@ -149,7 +162,16 @@ public interface PropertyRepo {
        @JsonProperty("sqm_price")
        private double sqmPrice;
        private boolean status;
+       private UserRepo.User user;
        private List<Gallery> gallery;
+
+        public UserRepo.User getUser() {
+            return user;
+        }
+
+        public void setUser(UserRepo.User user) {
+            this.user = user;
+        }
 
         public List<Gallery> getGallery() {
             return gallery;
@@ -271,8 +293,17 @@ public interface PropertyRepo {
         @JsonProperty("show_map")
         private boolean showMap;
         private boolean isFavorite;
+        private UserRepo.User user;
         List<PropertyFile> galleries;
         List<PropertyFile> docs;
+
+        public UserRepo.User getUser() {
+            return user;
+        }
+
+        public void setUser(UserRepo.User user) {
+            this.user = user;
+        }
 
         public boolean isFavorite() {
             return isFavorite;

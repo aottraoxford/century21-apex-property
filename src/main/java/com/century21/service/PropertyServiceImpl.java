@@ -33,12 +33,13 @@ public class PropertyServiceImpl implements PropertyService{
     private UserLogRepo userLogRepo;
     @Autowired
     private FavoriteRepo favoriteRepo;
+
     @Override
     public int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal) {
-        ID id = new ID();
-        propertyRepo.insertProperty(id,propertyRequest);
-        int propertyID=id.getId();
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        ID id = new ID();
+        propertyRepo.insertProperty(id,propertyRequest,userID);
+        int propertyID=id.getId();
         userLogRepo.insertUserLog("insert property id = "+propertyID,userID);
         return propertyID;
     }
@@ -89,7 +90,7 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public void removeFile(int propertyID, String gallName, String docName) {
+    public void removeFile(int propertyID, String gallName, String docName,Principal principal) {
         if(gallName!=null) {
             fileUploadService.removeImage(gallName, fileUploadProperty.getPropertyGallery());
             propertyRepo.removeFile(propertyID,gallName);
@@ -98,5 +99,7 @@ public class PropertyServiceImpl implements PropertyService{
             fileUploadService.removeImage(docName, fileUploadProperty.getPropertyDoc());
             propertyRepo.removeFile(propertyID,docName);
         }
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        userLogRepo.insertUserLog("remove file from property id ="+propertyID,userID);
     }
 }

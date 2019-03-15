@@ -42,13 +42,14 @@ public class PropertyController {
     }
 
     @PostMapping("/api/property/file_uploads")
-    public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
+    public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
     }
 
     @DeleteMapping("/api/property/file_uploads")
-    public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName){
+    public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName,Principal principal){
+        propertyService.removeFile(propertyID,gallName,docName,principal);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
