@@ -2,9 +2,7 @@ package com.century21.repository;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +11,22 @@ import java.util.List;
 @Repository
 public interface FavoriteRepo {
     @SelectProvider(type = FavoriteUtil.class,method = "projectFavorite")
+    @Results({
+            @Result(property = "status",column = "isdisplay"),
+            @Result(property = "country",column = "country_id",one = @One(select = "country")),
+            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+    })
     List<ProjectRepo.ProjectListingResponse> projectFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset);
 
+    @Select("SELECT name " +
+            "FROM country " +
+            "WHERE id=#{country_id}")
+    String country();
+
+    @Select("SELECT name " +
+            "FROM project_type " +
+            "WHERE id=#{project_type_id}")
+    String projectType();
 
     @SelectProvider(type = FavoriteUtil.class,method = "propertyFavorite")
     List<PropertyRepo.Properties> propertyFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset);
@@ -39,7 +51,7 @@ public interface FavoriteRepo {
         public String projectFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset){
             return new SQL(){
                 {
-                    SELECT("project.id,grr,project.name,start_price,end_price,country_id,project_type_id,thumbnail");
+                    SELECT("project.id,grr,project.name,start_price,end_price,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
                     INNER_JOIN("favorite ON project.id=favorite.project_id");
                     WHERE("favorite.user_id=#{userID}");
