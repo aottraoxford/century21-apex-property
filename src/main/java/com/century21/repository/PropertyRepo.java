@@ -175,12 +175,11 @@ public interface PropertyRepo {
             }.toString();
         }
 
-        public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
+        public String findAllProperty(Integer userID,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
                     SELECT("lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
-
                     WHERE("status IS TRUE");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
                 }

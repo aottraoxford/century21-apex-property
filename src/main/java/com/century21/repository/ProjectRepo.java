@@ -266,8 +266,10 @@ public interface ProjectRepo {
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
                     if(filter.getRoom()>0)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getToPrice()>0)
+                    if(filter.getToPrice()>0 && filter.getFromPrice()>0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if(filter.getToPrice()>0) WHERE("price < #{filter.toPrice}");
+                    else if(filter.getFromPrice()>0) WHERE("price <")
                     if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
                     if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
