@@ -73,4 +73,11 @@ public class PropertyController {
         CustomResponse customResponse=new CustomResponse(200,propertyService.findAllPropertyByFilter(filter,pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
+
+    @GetMapping("/api/property/{projectID}")
+    public ResponseEntity updateStatus(@PathVariable(name = "projectID") int projectID, @RequestParam boolean status,Principal principal){
+        propertyService.updateStatus(projectID,status,principal);
+        CustomResponse customResponse=new CustomResponse(200);
+        return customResponse.httpResponse();
+    }
 }

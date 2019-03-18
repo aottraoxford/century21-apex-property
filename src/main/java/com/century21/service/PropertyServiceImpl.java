@@ -82,7 +82,7 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public List<PropertyRepo.Properties> findAllProperty(Pagination pagination) {
+    public List<PropertyRepo.Properties> findAllProperty(Pagination pagination,Principal principal) {
         List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty(pagination.getLimit(),pagination.getOffset());
         if(properties==null || properties.size()<1) throw new CustomRuntimeException(404,"ZERO_RESULT");
         pagination.setTotalItem(propertyRepo.findAllPropertyCount());
@@ -109,5 +109,11 @@ public class PropertyServiceImpl implements PropertyService{
         if(properties.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
         pagination.setTotalItem(propertyRepo.findAllPropertyCount());
         return properties;
+    }
+
+    @Override
+    public void updateStatus(int projectID, boolean status, Principal principal) {
+        propertyRepo.updateStatus(projectID,status);
+        userLogRepo.insertUserLog("enable property to "+status,userRepo.findUserIDByEmail(principal.getName()));
     }
 }
