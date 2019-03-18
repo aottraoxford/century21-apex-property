@@ -292,8 +292,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/apis/agents")
-    public ResponseEntity agents(Principal principal){
-        CustomResponse customResponse=new CustomResponse(200,userService.agents(principal));
+    public ResponseEntity agents(String name,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,userService.agents(name,principal));
         return customResponse.httpResponse("result");
     }
 }

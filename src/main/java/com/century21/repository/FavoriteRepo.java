@@ -63,7 +63,7 @@ public interface FavoriteRepo {
         public String propertyFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset){
             return new SQL(){
                 {
-                    SELECT("property.id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
+                    SELECT("lat,lng,property.id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
                     FROM("property");
                     INNER_JOIN("favorite ON property.id=favorite.property_id");
                     WHERE("favorite.user_id=#{userID}");

@@ -79,9 +79,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRepo.User> agents(Principal principal) {
+    public List<UserRepo.User> agents(String name,Principal principal) {
         Integer parentID=userRepo.findUserIDByEmail(principal.getName());
-        List<UserRepo.User> agents=userRepo.agents(parentID);
+        List<UserRepo.User> agents=userRepo.agents(name,parentID);
         if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
         return agents;
     }

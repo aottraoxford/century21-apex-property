@@ -6,6 +6,7 @@ import com.century21.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 import sun.management.Agent;
 
@@ -16,10 +17,7 @@ import java.util.regex.Pattern;
 @Repository
 public interface UserRepo {
 
-    @Select("SELECT id,first_name,last_name,email,gender,phone_number,image,account_type " +
-            "FROM users " +
-            "WHERE id=#{parentID} OR parent_id=#{parentID} " +
-            "ORDER BY id DESC")
+    @SelectProvider(type = UserUtil.class,method = "agents")
     @Results({
             @Result(property = "id",column = "id"),
             @Result(property = "firstName",column = "first_name"),
@@ -28,7 +26,7 @@ public interface UserRepo {
             @Result(property = "accountType",column = "account_type"),
             @Result(property = "role",column = "id",many = @Many(select = "roles"))
     })
-    List<User> agents(@Param("parentID") int parentID);
+    List<User> agents(@Param("name")String name,@Param("parentID") int parentID);
 
     @Select("SELECT authority.role " +
             "FROM authority " +
@@ -77,6 +75,21 @@ public interface UserRepo {
 
     @Delete("DELETE FROM verification WHERE expired < now() - interval '10' minute AND enable IS false ")
     Integer removeCode();
+
+    class UserUtil{
+        public String agents(@Param("name")String name,@Param("parentID") int parentID){
+           return new SQL(){
+               {
+                   SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
+                   FROM("users");
+                   WHERE("id=#{parentID} OR parent_id=#{parentID}");
+                   if(name!=null && name.length()>0)
+                       WHERE("name ilike '%'||#{name}||'%'");
+                   ORDER_BY("id DESC");
+               }
+           } .toString();
+        }
+    }
 
     class User{
         private int id;

@@ -11,5 +11,5 @@ public interface UserService {
     void verification(int code);
     void assignRole(int userID,String roleType);
     void addAgent(int userID,Principal principal);
-    List<UserRepo.User> agents(Principal principal);
+    List<UserRepo.User> agents(String name,Principal principal);
 }

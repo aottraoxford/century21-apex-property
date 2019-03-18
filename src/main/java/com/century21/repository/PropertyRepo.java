@@ -102,125 +102,11 @@ public interface PropertyRepo {
     @SelectKey(statement = "select nextval('property_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID);
 
-    class PropertyFilter{
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getRentOrBuy() {
-            return rentOrBuy;
-        }
-
-        public void setRentOrBuy(String rentOrBuy) {
-            this.rentOrBuy = rentOrBuy;
-        }
-
-        public String getSortType() {
-            return sortType;
-        }
-
-        public void setSortType(String sortType) {
-            this.sortType = sortType;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public void setCity(String city) {
-            this.city = city;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getDistrict() {
-            return district;
-        }
-
-        public void setDistrict(String district) {
-            this.district = district;
-        }
-
-        public String getCommune() {
-            return commune;
-        }
-
-        public void setCommune(String commune) {
-            this.commune = commune;
-        }
-
-        public int getBedroom() {
-            return bedroom;
-        }
-
-        public void setBedroom(int bedroom) {
-            this.bedroom = bedroom;
-        }
-
-        public int getBathroom() {
-            return bathroom;
-        }
-
-        public void setBathroom(int bathroom) {
-            this.bathroom = bathroom;
-        }
-
-        public double getFromPrice() {
-            return fromPrice;
-        }
-
-        public void setFromPrice(double fromPrice) {
-            this.fromPrice = fromPrice;
-        }
-
-        public double getToPrice() {
-            return toPrice;
-        }
-
-        public void setToPrice(double toPrice) {
-            this.toPrice = toPrice;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        private String title;
-        @JsonProperty("rent_or_buy")
-        private String rentOrBuy;
-        @JsonProperty("sort_type")
-        private String sortType;
-        private String city;
-        private String type;
-        private String district;
-        private String commune;
-        private String status;
-        private int bedroom;
-        private int bathroom;
-        @JsonProperty("from_price")
-        private double fromPrice;
-        @JsonProperty("to_price")
-        private double toPrice;
-    }
     class PropertyUtil{
         public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
+                    SELECT("lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
@@ -286,7 +172,7 @@ public interface PropertyRepo {
         public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("id,user_id,title,unit_price,sqm_price,country,type,status");
+                    SELECT("lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
                     WHERE("status IS TRUE");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
@@ -314,6 +200,121 @@ public interface PropertyRepo {
         }
     }
 
+    class PropertyFilter{
+        private String title;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
+        @JsonProperty("sort_type")
+        private String sortType;
+        private String city;
+        private String type;
+        private String district;
+        private String commune;
+        private String status;
+        private int bedroom;
+        private int bathroom;
+        @JsonProperty("from_price")
+        private double fromPrice;
+        @JsonProperty("to_price")
+        private double toPrice;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
+
+        public String getSortType() {
+            return sortType;
+        }
+
+        public void setSortType(String sortType) {
+            this.sortType = sortType;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getDistrict() {
+            return district;
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
+        }
+
+        public String getCommune() {
+            return commune;
+        }
+
+        public void setCommune(String commune) {
+            this.commune = commune;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public int getBedroom() {
+            return bedroom;
+        }
+
+        public void setBedroom(int bedroom) {
+            this.bedroom = bedroom;
+        }
+
+        public int getBathroom() {
+            return bathroom;
+        }
+
+        public void setBathroom(int bathroom) {
+            this.bathroom = bathroom;
+        }
+
+        public double getFromPrice() {
+            return fromPrice;
+        }
+
+        public void setFromPrice(double fromPrice) {
+            this.fromPrice = fromPrice;
+        }
+
+        public double getToPrice() {
+            return toPrice;
+        }
+
+        public void setToPrice(double toPrice) {
+            this.toPrice = toPrice;
+        }
+    }
+
     class Gallery{
         private int id;
         private String gallery;
@@ -335,6 +336,7 @@ public interface PropertyRepo {
             this.gallery = gallery;
         }
     }
+
     class Properties{
        private int id;
        private String title;
@@ -344,9 +346,27 @@ public interface PropertyRepo {
        private double unitPrice;
        @JsonProperty("sqm_price")
        private double sqmPrice;
+       private double lat;
+       private double lng;
        private boolean status;
        private UserRepo.User user;
        private List<Gallery> gallery;
+
+        public double getLat() {
+            return lat;
+        }
+
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+        public double getLng() {
+            return lng;
+        }
+
+        public void setLng(double lng) {
+            this.lng = lng;
+        }
 
         public UserRepo.User getUser() {
             return user;
