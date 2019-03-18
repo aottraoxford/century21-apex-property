@@ -225,9 +225,9 @@ public interface ProjectRepo {
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
                     if(filter.getRoom()>0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
-                    if(filter.getTitle()!=null )
+                    if(filter.getTitle()!=null && filter.getTitle().length()>0)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getCity()!=null )
+                    if(filter.getCity()!=null && filter.getCity().length()>0 )
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
                     if(filter.getCountryID()>0)
                         WHERE("project.country_id=#{filter.countryID}");
@@ -237,7 +237,7 @@ public interface ProjectRepo {
                         WHERE("bedroom = #{filter.room}");
                     if(filter.getToPrice()>0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    if(filter.getRentOrBuy()!=null)
+                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
                 }
             }.toString();
@@ -251,10 +251,15 @@ public interface ProjectRepo {
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
                     if(filter.getRoom()>0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
-                    if(filter.getTitle()!=null)
+                    if(filter.getTitle()!=null && filter.getTitle().length()>0)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getCity()!=null )
+                    if(filter.getCity()!=null && filter.getCity().length()>0 )
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
+                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
+                        if(filter.getStatus().equalsIgnoreCase("true"))
+                            WHERE("isdisplay IS TRUE");
+                        else if(filter.getStatus().equalsIgnoreCase("false"))
+                            WHERE("isdisplay IS FALSE");
                     if(filter.getCountryID()>0)
                         WHERE("project.country_id=#{filter.countryID}");
                     if(filter.getProjectTypeID()>0)
@@ -263,9 +268,9 @@ public interface ProjectRepo {
                         WHERE("bedroom = #{filter.room}");
                     if(filter.getToPrice()>0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    if(filter.getRentOrBuy()!=null)
+                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
-                    if(filter.getSortType()!=null ){
+                    if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
                         if(filter.getSortType().equalsIgnoreCase("grr"))
                             ORDER_BY("grr limit #{limit} offset #{offset}");
                         else if(filter.getSortType().equalsIgnoreCase("grr-desc"))
@@ -395,6 +400,7 @@ public interface ProjectRepo {
         @JsonProperty("sort_type")
         private String sortType;
         private String city;
+        private String status;
         @JsonProperty("project_type_id")
         private int projectTypeID;
         @JsonProperty("country_id")
@@ -404,6 +410,14 @@ public interface ProjectRepo {
         private double fromPrice;
         @JsonProperty("to_price")
         private double toPrice;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
 
         public String getTitle() {
             if(title!=null) {
