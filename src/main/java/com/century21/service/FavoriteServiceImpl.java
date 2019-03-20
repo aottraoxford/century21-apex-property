@@ -41,6 +41,7 @@ public class FavoriteServiceImpl implements FavoriteService{
     public List<PropertyRepo.Properties> propertyFavorite(Principal principal, Pagination pagination) {
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
         if(userID==null) throw new CustomRuntimeException(404,"ACCOUNT NOT EXIST");
+        pagination.setTotalItem(favoriteRepo.propertyFavoriteCount(userID));
         return favoriteRepo.propertyFavorite(userID,pagination.getLimit(),pagination.getOffset());
     }
 
@@ -48,6 +49,7 @@ public class FavoriteServiceImpl implements FavoriteService{
     public List<ProjectRepo.ProjectListingResponse> projectFavorite(Principal principal, Pagination pagination) {
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
         if(userID==null) throw new CustomRuntimeException(404,"ACCOUNT NOT EXIST");
+        pagination.setTotalItem(favoriteRepo.projectFavoriteCount(userID));
         return favoriteRepo.projectFavorite(userID,pagination.getLimit(),pagination.getOffset());
     }
 }

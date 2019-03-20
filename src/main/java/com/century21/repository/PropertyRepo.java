@@ -47,6 +47,7 @@ public interface PropertyRepo {
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
             @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "rentOrBuy",column = "rent_or_sell"),
             @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
@@ -178,7 +179,7 @@ public interface PropertyRepo {
         public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status");
+                    SELECT("lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status,rent_or_sell");
                     FROM("property");
                     WHERE("status IS TRUE");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
@@ -348,6 +349,8 @@ public interface PropertyRepo {
        private String title;
        private String country;
        private String type;
+       @JsonProperty("rent_or_buy")
+       private String rentOrBuy;
        @JsonProperty("unit_price")
        private double unitPrice;
        @JsonProperty("sqm_price")
@@ -357,6 +360,14 @@ public interface PropertyRepo {
        private boolean status;
        private UserRepo.User user;
        private List<Gallery> gallery;
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
 
         public double getLat() {
             return lat;

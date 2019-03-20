@@ -10,6 +10,12 @@ import java.util.List;
 
 @Repository
 public interface FavoriteRepo {
+    @SelectProvider(type = FavoriteUtil.class,method = "projectFavoriteCount")
+    int projectFavoriteCount(@Param("userID")int userID);
+
+    @SelectProvider(type = FavoriteUtil.class,method = "propertyFavoriteCount")
+    int propertyFavoriteCount(@Param("userID")int userID);
+
     @SelectProvider(type = FavoriteUtil.class,method = "projectFavorite")
     @Results({
             @Result(property = "status",column = "isdisplay"),
@@ -55,7 +61,18 @@ public interface FavoriteRepo {
                     FROM("project");
                     INNER_JOIN("favorite ON project.id=favorite.project_id");
                     WHERE("favorite.user_id=#{userID}");
-                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
+                    ORDER_BY("favorite.id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
+
+        public String projectFavoriteCount(@Param("userID") int userID){
+            return new SQL(){
+                {
+                    SELECT("count(project.id)");
+                    FROM("project");
+                    INNER_JOIN("favorite ON project.id=favorite.project_id");
+                    WHERE("favorite.user_id=#{userID}");
                 }
             }.toString();
         }
@@ -67,7 +84,18 @@ public interface FavoriteRepo {
                     FROM("property");
                     INNER_JOIN("favorite ON property.id=favorite.property_id");
                     WHERE("favorite.user_id=#{userID}");
-                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
+                    ORDER_BY("favorite.id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
+
+        public String propertyFavoriteCount(@Param("userID") int userID){
+            return new SQL(){
+                {
+                    SELECT("count(property.id)");
+                    FROM("property");
+                    INNER_JOIN("favorite ON property.id=favorite.property_id");
+                    WHERE("favorite.user_id=#{userID}");
                 }
             }.toString();
         }

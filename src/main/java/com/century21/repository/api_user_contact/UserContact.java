@@ -6,17 +6,27 @@ import javax.validation.constraints.Min;
 
 public class UserContact {
     @JsonProperty("project_id")
-    private int projectID;
+    private Integer projectID;
+    @JsonProperty("property_id")
+    private Integer propertyID;
     private String name;
     private String phone;
     private String email;
 
-    public int getProjectID() {
+    public Integer getProjectID() {
         return projectID;
     }
 
-    public void setProjectID(int projectID) {
+    public void setProjectID(Integer projectID) {
         this.projectID = projectID;
+    }
+
+    public Integer getPropertyID() {
+        return propertyID;
+    }
+
+    public void setPropertyID(Integer propertyID) {
+        this.propertyID = propertyID;
     }
 
     public String getName() {

@@ -185,7 +185,6 @@ public class UserController {
     @ApiOperation("user contact")
     @PostMapping("/api/user-contact")
     public ResponseEntity useContact(@RequestBody @Valid UserContact userContact, HttpServletRequest httpServletRequest){
-
         userContactService.saveUserContact(userContact);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();

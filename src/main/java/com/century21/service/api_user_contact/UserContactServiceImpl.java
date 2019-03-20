@@ -12,6 +12,8 @@ public class UserContactServiceImpl implements UserContactService {
     private UserContactRepo userContactRepo;
     @Override
     public void saveUserContact(UserContact userContact) {
+        System.out.println(userContact.getPropertyID());
+        if(userContact.getProjectID()!=null && userContact.getPropertyID()!=null) throw new CustomRuntimeException(400,"project id or property id ,one of them must not use.");
         int i = userContactRepo.saveUserContact(userContact);
         if(i<1)
             throw new CustomRuntimeException(500,"Can not save.");
