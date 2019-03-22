@@ -65,14 +65,18 @@ public interface PropertyRepo {
             @Result(property = "unitPrice",column = "unit_price"),
             @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "rentOrBuy",column = "rent_or_sell"),
-            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     List<Properties> findAllProperty(@Param("limit")int limit,@Param("offset")int offset);
 
-    @Select("SELECT * FROM property_files " +
-            "WHERE property_id=#{id} AND type = 'image'")
-    List<PropertyFile> findGalleries();
+    @Select("SELECT id,name " +
+            "FROM property_files " +
+            "WHERE type = 'image' AND property_id=#{id}")
+    @Results({
+            @Result(property = "gallery",column = "name")
+    })
+    List<Gallery> findGalleries();
 
     @Select("SELECT * FROM property_files " +
             "WHERE property_id=#{id} AND type = 'doc'")
@@ -350,6 +354,7 @@ public interface PropertyRepo {
 
     class Gallery{
         private int id;
+        @JsonProperty("url")
         private String gallery;
 
         public int getId() {
@@ -360,12 +365,12 @@ public interface PropertyRepo {
             this.id = id;
         }
 
-        public String getGalleries() {
+        public String getGallery() {
             if(gallery!=null) return Url.propertyGalleryUrl+gallery;
             return gallery;
         }
 
-        public void setGalleries(String gallery) {
+        public void setGallery(String gallery) {
             this.gallery = gallery;
         }
     }
@@ -385,7 +390,7 @@ public interface PropertyRepo {
        private double lng;
        private boolean status;
        private UserRepo.User user;
-       private List<Gallery> gallery;
+       private List<Gallery> galleries;
 
         public String getRentOrBuy() {
             return rentOrBuy;
@@ -419,12 +424,12 @@ public interface PropertyRepo {
             this.user = user;
         }
 
-        public List<Gallery> getGallery() {
-            return gallery;
+        public List<Gallery> getGalleries() {
+            return galleries;
         }
 
-        public void setGallery(List<Gallery> gallery) {
-            this.gallery = gallery;
+        public void setGalleries(List<Gallery> galleries) {
+            this.galleries = galleries;
         }
 
         public int getId() {
@@ -540,8 +545,7 @@ public interface PropertyRepo {
         private boolean showMap;
         private boolean isFavorite;
         private UserRepo.User user;
-        @JsonProperty("gallery")
-        List<PropertyFile> galleries;
+        List<Gallery> galleries;
         List<PropertyFile> docs;
         List<Neighborhood> neighborhoods;
 
@@ -849,11 +853,11 @@ public interface PropertyRepo {
             this.showMap = showMap;
         }
 
-        public List<PropertyFile> getGalleries() {
+        public List<Gallery> getGalleries() {
             return galleries;
         }
 
-        public void setGalleries(List<PropertyFile> galleries) {
+        public void setGalleries(List<Gallery> galleries) {
             this.galleries = galleries;
         }
 

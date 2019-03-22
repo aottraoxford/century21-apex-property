@@ -1,1 +1,0 @@
-insert into noti(user_id,title,message,type,ref_id) values (1,"aaa","AAAAAAAA","AAAAAAA",1)
