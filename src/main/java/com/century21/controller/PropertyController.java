@@ -23,7 +23,7 @@ public class PropertyController {
     private FileUploadService fileUploadService;
     @Autowired
     private PropertyService propertyService;
-    @PostMapping("/api/property/insert")
+    @PostMapping("/apis/property/insert")
     public ResponseEntity insertProperty(@RequestBody PropertyRepo.PropertyRequest property, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.insertProperty(property,principal));
         return customResponse.httpResponse("property_id");
@@ -41,13 +41,13 @@ public class PropertyController {
         return fileUploadService.downloadFile(fileName,fileUploadProperty.getPropertyDoc(),request);
     }
 
-    @PostMapping("/api/property/file_uploads")
+    @PostMapping("/apis/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
     }
 
-    @DeleteMapping("/api/property/file_uploads")
+    @DeleteMapping("/apis/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName,Principal principal){
         propertyService.removeFile(propertyID,gallName,docName,principal);
         CustomResponse customResponse=new CustomResponse(200);
@@ -74,14 +74,14 @@ public class PropertyController {
         return customResponse.httpResponse("result","paging");
     }
 
-    @GetMapping("/api/property/{projectID}")
+    @GetMapping("/apis/property/{projectID}")
     public ResponseEntity updateStatus(@PathVariable(name = "projectID") int projectID, @RequestParam boolean status,Principal principal){
         propertyService.updateStatus(projectID,status,principal);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
-    @GetMapping("/api/property/agent/{userID}")
+    @GetMapping("/apis/property/agent/{userID}")
     public ResponseEntity agentProperties(@PathVariable int userID){
         CustomResponse customResponse=new CustomResponse(200,propertyService.findAgentProperties(userID));
         return customResponse.httpResponse("result");

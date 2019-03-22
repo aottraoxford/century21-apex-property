@@ -540,6 +540,7 @@ public interface PropertyRepo {
         private boolean showMap;
         private boolean isFavorite;
         private UserRepo.User user;
+        @JsonProperty("gallery")
         List<PropertyFile> galleries;
         List<PropertyFile> docs;
         List<Neighborhood> neighborhoods;
