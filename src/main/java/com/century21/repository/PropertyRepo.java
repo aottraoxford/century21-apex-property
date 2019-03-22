@@ -11,6 +11,20 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+    @Select("SELECT id " +
+            "FROM property_neighborhood " +
+            "WHERE property_id=#{proID}")
+    List<Integer> findAllNeighborhoodID(int proID);
+
+    @Delete("DELETE FROM property_neighborhood WHERE id=#{id}")
+    int removeNeighborhood(int id);
+
+    @Update("UPDATE property_neighborhood SET distance=#{nbh.distance},address=#{nbh.address} " +
+            "WHERE id=#{nbh.id} AND property_id=#{nbh.propertyID}")
+    int updateNeighborhood(@Param("nbh")Neighborhood neighborhood);
+
+    @UpdateProvider(type = PropertyUtil.class,method = "updateProperty")
+    int updateProperty(@Param("pro")Property property);
 
     @Insert("INSERT INTO property_neighborhood(property_id,address,distance) " +
             "VALUES(#{nbh.propertyID},#{nbh.address},#{nbh.distance})")
@@ -225,6 +239,18 @@ public interface PropertyRepo {
                     INSERT_INTO("property");
                     VALUES("user_id,id,project_id,bedroom,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
                             "#{userID},#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
+                }
+            }.toString();
+        }
+
+        public String updateProperty(@Param("pro")Property property){
+            return new SQL(){
+                {
+                    UPDATE("property");
+                    SET("bedroom=#{pro.bedroom},living_room=#{pro.livingRoom},dinning_room=#{pro.dinningRoom},kitchen=#{pro.kitchen},air_conditioner=#{pro.airConditioner},parking=#{pro.parking},balcony=#{pro.balcony},mezzanine_floor=#{pro.mezzanineFloor}" +
+                            ",title = #{pro.title},rent_or_sell=#{pro.rentOrSell},type=#{pro.type},city=#{pro.city},district=#{pro.district},commune=#{pro.commune},village=#{pro.village},house_no=#{pro.houseNo},street_no=#{pro.streetNo},description=#{pro.description}" +
+                            ",private_area=#{pro.privateArea},common_area=#{pro.commonArea},unit_price=#{pro.unitPrice},sqm_price=#{pro.sqmPrice},lat=#{pro.lat},lng=#{pro.lng},total_land_area=#{pro.totalLandArea},width=#{pro.width},height=#{pro.height},land_length=#{pro.landLength},total_area=#{pro.totalArea}");
+                    WHERE("id=#{pro.id}");
                 }
             }.toString();
         }

@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PropertyServiceImpl implements PropertyService{
@@ -130,5 +128,27 @@ public class PropertyServiceImpl implements PropertyService{
     @Override
     public List<PropertyRepo.Properties> findAgentProperties(int userID) {
         return propertyRepo.findAgentProperties(userID);
+    }
+
+    @Override
+    public PropertyRepo.Property updateProperty(PropertyRepo.Property property, Principal principal) {
+        propertyRepo.updateProperty(property);
+        Collection<Integer> idFromDB=new ArrayList<>();
+        idFromDB=propertyRepo.findAllNeighborhoodID(property.getId());
+        Collection<Integer> idFromUpdate=new ArrayList<>();
+        if(property.getNeighborhoods()!=null && property.getNeighborhoods().size()>0){
+            for(int i=0;i<property.getNeighborhoods().size();i++){
+                if(propertyRepo.updateNeighborhood(property.getNeighborhoods().get(i))<1){
+                    propertyRepo.insertNeighborhood(property.getNeighborhoods().get(i));
+                }
+                idFromUpdate.add(property.getNeighborhoods().get(i).getId());
+            }
+            idFromDB.addAll(idFromUpdate);
+            idFromDB.removeAll(idFromUpdate);
+            for(int i=0;i<idFromDB.size();i++)
+                propertyRepo.removeNeighborhood(((List<Integer>) idFromDB).get(i));
+        }
+        userLogRepo.insertUserLog("update property id="+property.getId(),userRepo.findUserIDByEmail(principal.getName()));
+        return propertyRepo.findOneProperty(property.getId());
     }
 }

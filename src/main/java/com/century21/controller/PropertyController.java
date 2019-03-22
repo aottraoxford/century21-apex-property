@@ -29,6 +29,12 @@ public class PropertyController {
         return customResponse.httpResponse("property_id");
     }
 
+    @PutMapping("/apis/property/insert")
+    public ResponseEntity updateProperty(@RequestBody PropertyRepo.Property property, Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,propertyService.updateProperty(property,principal));
+        return customResponse.httpResponse("result");
+    }
+
     @ApiIgnore
     @GetMapping("/api/property/gallery/{fileName:.+}")
     public ResponseEntity viewPropertyGalleries(@PathVariable("fileName")String fileName, HttpServletRequest request){
@@ -86,5 +92,6 @@ public class PropertyController {
         CustomResponse customResponse=new CustomResponse(200,propertyService.findAgentProperties(userID));
         return customResponse.httpResponse("result");
     }
+
 
 }
