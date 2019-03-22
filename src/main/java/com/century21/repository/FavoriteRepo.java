@@ -36,6 +36,7 @@ public interface FavoriteRepo {
 
     @SelectProvider(type = FavoriteUtil.class,method = "propertyFavorite")
     @Results({
+            @Result(property = "id",column = "id"),
             @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "rentOrBuy",column = "rent_or_sell"),
             @Result(property = "unitPrice",column = "unit_price"),
@@ -125,6 +126,7 @@ public interface FavoriteRepo {
                 }
             }.toString();
         }
+
         public String endFavorite(@Param("projectID")int projectID,@Param("propertyID")int propertyID,@Param("userID")int userID){
             return new SQL(){
                 {
