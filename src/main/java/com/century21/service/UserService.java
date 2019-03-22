@@ -1,5 +1,6 @@
 package com.century21.service;
 
+import com.century21.repository.PropertyRepo;
 import com.century21.repository.UserRepo;
 
 import java.security.Principal;

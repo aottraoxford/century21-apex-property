@@ -80,4 +80,11 @@ public class PropertyController {
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
+
+    @GetMapping("/api/property/agent/{userID}")
+    public ResponseEntity agentProperties(@PathVariable int userID){
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAgentProperties(userID));
+        return customResponse.httpResponse("result");
+    }
+
 }

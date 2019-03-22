@@ -218,6 +218,4 @@ public class ProjectServiceImpl implements ProjectService {
         return projects;
     }
 
-    public static class FavoriteServiceImpl {
-    }
 }

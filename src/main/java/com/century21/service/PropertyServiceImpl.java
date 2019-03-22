@@ -9,6 +9,7 @@ import com.century21.repository.FavoriteRepo;
 import com.century21.repository.PropertyRepo;
 import com.century21.repository.UserLogRepo;
 import com.century21.repository.UserRepo;
+import com.century21.util.MyNotification;
 import com.century21.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class PropertyServiceImpl implements PropertyService{
     private UserLogRepo userLogRepo;
     @Autowired
     private FavoriteRepo favoriteRepo;
+    @Autowired
+    private MyNotification myNotification;
 
     @Override
     public int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal) {
@@ -40,6 +43,12 @@ public class PropertyServiceImpl implements PropertyService{
         ID id = new ID();
         propertyRepo.insertProperty(id,propertyRequest,userID);
         int propertyID=id.getId();
+        if(propertyRequest.getNeighborhood()!=null) {
+            for (int i = 0; i < propertyRequest.getNeighborhood().size(); i++) {
+                propertyRequest.getNeighborhood().get(i).setPropertyID(propertyID);
+                propertyRepo.insertNeighborhood(propertyRequest.getNeighborhood().get(i));
+            }
+        }
         userLogRepo.insertUserLog("insert property id = "+propertyID,userID);
         return propertyID;
     }
@@ -115,5 +124,11 @@ public class PropertyServiceImpl implements PropertyService{
     public void updateStatus(int projectID, boolean status, Principal principal) {
         propertyRepo.updateStatus(projectID,status);
         userLogRepo.insertUserLog("enable property to "+status,userRepo.findUserIDByEmail(principal.getName()));
+    }
+
+
+    @Override
+    public List<PropertyRepo.Properties> findAgentProperties(int userID) {
+        return propertyRepo.findAgentProperties(userID);
     }
 }

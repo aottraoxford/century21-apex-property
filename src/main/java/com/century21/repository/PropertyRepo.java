@@ -11,6 +11,23 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+
+    @Insert("INSERT INTO property_neighborhood(property_id,address,distance) " +
+            "VALUES(#{nbh.propertyID},#{nbh.address},#{nbh.distance})")
+    int insertNeighborhood(@Param("nbh")Neighborhood neighborhood);
+
+    @Select("SELECT lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status " +
+            "FROM property " +
+            "WHERE user_id=#{userID}")
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+    })
+    List<Properties> findAgentProperties(int userID);
+
     @Update("UPDATE property SET status = #{status} " +
             "WHERE id = #{proID}")
     int updateStatus(@Param("proID")int projectID,@Param("status") boolean status);
@@ -83,9 +100,18 @@ public interface PropertyRepo {
             @Result(property = "showMap",column = "show_map"),
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "docs",column = "id",many = @Many(select = "findDocs")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser")),
+            @Result(property = "neighborhoods",column = "id",many = @Many(select = "findNeighborhoods"))
     })
     Property findOneProperty(@Param("proID")int proID);
+
+    @Select("SELECT * " +
+            "FROM property_neighborhood " +
+            "WHERE property_id=#{id}")
+    @Results({
+            @Result(property = "propertyID",column = "property_id")
+    })
+    List<Neighborhood> findNeighborhoods();
 
     @Select("SELECT id,first_name,last_name,email,gender,phone_number,image,account_type " +
             "FROM users " +
@@ -516,6 +542,15 @@ public interface PropertyRepo {
         private UserRepo.User user;
         List<PropertyFile> galleries;
         List<PropertyFile> docs;
+        List<Neighborhood> neighborhoods;
+
+        public List<Neighborhood> getNeighborhoods() {
+            return neighborhoods;
+        }
+
+        public void setNeighborhoods(List<Neighborhood> neighborhoods) {
+            this.neighborhoods = neighborhoods;
+        }
 
         public UserRepo.User getUser() {
             return user;
@@ -861,6 +896,45 @@ public interface PropertyRepo {
             this.type = type;
         }
     }
+    class Neighborhood{
+        private int id;
+        @JsonProperty("property_id")
+        private int propertyID;
+        private String address;
+        private double distance;
+
+        public int getPropertyID() {
+            return propertyID;
+        }
+
+        public void setPropertyID(int propertyID) {
+            this.propertyID = propertyID;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
+    }
     class PropertyRequest{
         private int id;
         @JsonProperty("project_id")
@@ -916,6 +990,15 @@ public interface PropertyRepo {
         private boolean status;
         @JsonProperty("show_map")
         private boolean showMap;
+        private List<Neighborhood> neighborhood;
+
+        public List<Neighborhood> getNeighborhood() {
+            return neighborhood;
+        }
+
+        public void setNeighborhood(List<Neighborhood> neighborhood) {
+            this.neighborhood = neighborhood;
+        }
 
         public double getPrivateArea() {
             return privateArea;
