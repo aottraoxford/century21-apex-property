@@ -23,7 +23,7 @@ public interface PropertyRepo {
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
             @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     List<Properties> findAgentProperties(int userID);
@@ -36,8 +36,9 @@ public interface PropertyRepo {
     @Results({
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "rentOrBuy",column = "rent_or_sell"),
             @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "gallery",column = "id",many = @Many(select = "gallery")),
+            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     List<Properties> findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset);
@@ -47,14 +48,6 @@ public interface PropertyRepo {
 
     @Delete("DELETE FROM property_file WHERE property_id=#{proID} AND name = #{name}")
     void removeFile(@Param("proID")int proID,@Param("name")String name);
-
-    @Select("SELECT id,name " +
-            "FROM property_files " +
-            "WHERE type = 'image' AND property_id=#{id}")
-    @Results({
-            @Result(property = "gallery",column = "name")
-    })
-    List<Gallery> gallery();
 
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyCount")
     int findAllPropertyCount();
@@ -141,7 +134,7 @@ public interface PropertyRepo {
         public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
+                    SELECT("lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");

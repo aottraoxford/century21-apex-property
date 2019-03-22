@@ -35,8 +35,21 @@ public interface FavoriteRepo {
     String projectType();
 
     @SelectProvider(type = FavoriteUtil.class,method = "propertyFavorite")
+    @Results({
+            @Result(property = "sqmPrice",column = "sqm_price"),
+            @Result(property = "rentOrBuy",column = "rent_or_sell"),
+            @Result(property = "unitPrice",column = "unit_price"),
+            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries"))
+    })
     List<PropertyRepo.Properties> propertyFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset);
 
+    @Select("SELECT id,name " +
+            "FROM property_files " +
+            "WHERE type = 'image' AND property_id=#{id}")
+    @Results({
+            @Result(property = "gallery",column = "name")
+    })
+    List<PropertyRepo.Gallery> findGalleries();
 
     @SelectProvider(type = FavoriteUtil.class,method = "startFavorite")
     void startFavorite(@Param("projectID") int projectID, @Param("propertyID")int propertyID, @Param("userID") int userID);
@@ -80,7 +93,7 @@ public interface FavoriteRepo {
         public String propertyFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset){
             return new SQL(){
                 {
-                    SELECT("lat,lng,property.id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status");
+                    SELECT("lat,lng,property.id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
                     FROM("property");
                     INNER_JOIN("favorite ON property.id=favorite.property_id");
                     WHERE("favorite.user_id=#{userID}");
