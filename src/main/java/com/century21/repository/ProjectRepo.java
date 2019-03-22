@@ -150,7 +150,7 @@ public interface ProjectRepo {
             "WHERE project_id=#{id}")
     List<ProjectIntroduction> projectIntro();
 
-    @Select("SELECT url " +
+    @Select("SELECT id,url " +
             "FROM project_gallery " +
             "WHERE project_id=#{id} AND type='image'")
     @Results({
@@ -945,7 +945,17 @@ public interface ProjectRepo {
     }
 
     class ProjectGallery {
+        private int id;
+        @JsonProperty("url")
         private String image;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public String getImage() {
             if (image != null)
