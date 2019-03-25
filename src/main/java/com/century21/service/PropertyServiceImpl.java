@@ -71,8 +71,8 @@ public class PropertyServiceImpl implements PropertyService{
         }
         files.put("galleries",gall);
         files.put("docs",documents);
-        Integer userID=userRepo.findUserIDByEmail(principal.getName());
-        userLogRepo.insertUserLog("upload file to property id= "+propertyID,userID);
+//        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+//        userLogRepo.insertUserLog("upload file to property id= "+propertyID,userID);
         return files;
     }
 
