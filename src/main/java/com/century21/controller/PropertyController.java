@@ -47,7 +47,7 @@ public class PropertyController {
         return fileUploadService.downloadFile(fileName,fileUploadProperty.getPropertyDoc(),request);
     }
 
-    @PostMapping("/apis/property/file_uploads")
+    @PostMapping("/api/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
