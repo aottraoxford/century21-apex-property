@@ -63,7 +63,7 @@ public class MyNotification {
                 scanner.close();
             }
             if(token!=null) {
-                String host = Url.host + "api/save-noti";
+                String host = Url.host + "api/noti";
                 SaveNoti saveNoti = new SaveNoti();
                 saveNoti.setRefID(refID);
                 if(type.equals("event"))

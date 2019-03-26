@@ -133,7 +133,7 @@ public class ProjectController {
     private SaveNotiService saveNotiService;
 
     @ApiIgnore
-    @PostMapping(value = "/api/save-noti",produces = "application/json")
+    @PostMapping(value = "/api/noti",produces = "application/json")
     public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
         saveNotiService.saveNoti(saveNoti, principal.getName());
         CustomResponse customResponse=new CustomResponse(200);
@@ -143,7 +143,7 @@ public class ProjectController {
     @Autowired
     private GetNotiService getNotiService;
 
-    @GetMapping(value = "/api/get-noti",produces = "application/json")
+    @GetMapping(value = "/api/noti",produces = "application/json")
     public ResponseEntity getNoti(Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,getNotiService.getNoti(principal.getName()),pagination);
