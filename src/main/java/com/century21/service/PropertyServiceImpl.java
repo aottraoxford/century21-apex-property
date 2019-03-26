@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.*;
 
@@ -119,8 +120,9 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public void updateStatus(int projectID, boolean status, Principal principal) {
-        propertyRepo.updateStatus(projectID,status);
+    public void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest) {
+        propertyRepo.updateStatus(propertyID,status);
+        myNotification.sendToAllSubscriber("New Property Available", "Calculation includes only common costs associated with home ownership. Estimates based on local averages and assumptions that may not apply to you and are provided for informational purposes only.",propertyRepo.findOneGallery(propertyID),httpServletRequest.getHeader("Authorization"),"property",propertyID );
         userLogRepo.insertUserLog("enable property to "+status,userRepo.findUserIDByEmail(principal.getName()));
     }
 

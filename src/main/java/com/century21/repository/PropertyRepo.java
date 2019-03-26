@@ -46,6 +46,9 @@ public interface PropertyRepo {
             "WHERE id = #{proID}")
     int updateStatus(@Param("proID")int projectID,@Param("status") boolean status);
 
+    @Select("SELECT name FROM property_files WHERE type = 'image' AND property_id=#{propertyID} LIMIT 1")
+    String findOneGallery(int propertyID);
+
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilter")
     @Results({
             @Result(property = "id",column = "id"),

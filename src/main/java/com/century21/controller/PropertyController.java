@@ -80,9 +80,9 @@ public class PropertyController {
         return customResponse.httpResponse("result","paging");
     }
 
-    @GetMapping("/apis/property/{projectID}")
-    public ResponseEntity updateStatus(@PathVariable(name = "projectID") int projectID, @RequestParam boolean status,Principal principal){
-        propertyService.updateStatus(projectID,status,principal);
+    @GetMapping("/apis/property/{propertyID}")
+    public ResponseEntity updateStatus(@PathVariable(name = "propertyID") int propertyID, @RequestParam boolean status,Principal principal,HttpServletRequest httpServletRequest){
+        propertyService.updateStatus(propertyID,status,principal,httpServletRequest);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
