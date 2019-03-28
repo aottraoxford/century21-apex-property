@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+    @Select("SELECT status FROM property WHERE id=#{propertyID}")
+    boolean checkStatus(int propertyID);
+
     @Select("SELECT id " +
             "FROM property_neighborhood " +
             "WHERE property_id=#{proID}")

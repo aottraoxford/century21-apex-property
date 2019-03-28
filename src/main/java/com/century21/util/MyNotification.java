@@ -39,6 +39,10 @@ public class MyNotification {
                 strJsonBody+="\"data\": {" +
                         "\"event_id\": \"" + refID + "\"," +
                         "\"post\":\"event\"},";
+            }else if(type.equalsIgnoreCase("property")){
+                strJsonBody+="\"data\": {" +
+                        "\"property_id\": \"" + refID + "\"," +
+                        "\"post\":\"property\"},";
             }
              strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
                     + "}";

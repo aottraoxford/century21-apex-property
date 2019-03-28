@@ -93,10 +93,4 @@ public class PropertyController {
         return customResponse.httpResponse("result");
     }
 
-    @GetMapping("/api/noti/property")
-    public ResponseEntity getNotiProperty(Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
-
 }
