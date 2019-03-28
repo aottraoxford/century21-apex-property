@@ -123,7 +123,7 @@ public class PropertyServiceImpl implements PropertyService{
     public void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest) {
         boolean propertyStatus=propertyRepo.checkStatus(propertyID);
         propertyRepo.updateStatus(propertyID,status);
-        if(status==true && propertyRepo.checkStatus(propertyID)==false)
+        if(status && !propertyStatus)
             myNotification.sendToAllSubscriber("New Property Available", "Calculation includes only common costs associated with home ownership. Estimates based on local averages and assumptions that may not apply to you and are provided for informational purposes only.",propertyRepo.findOneGallery(propertyID),httpServletRequest.getHeader("Authorization"),"property",propertyID );
         userLogRepo.insertUserLog("enable property to "+status,userRepo.findUserIDByEmail(principal.getName()));
     }
