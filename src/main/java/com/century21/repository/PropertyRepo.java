@@ -11,8 +11,12 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
-    @Select("SELECT status FROM property WHERE id=#{propertyID}")
-    boolean checkStatus(int propertyID);
+
+    @Select("SELECT title,status,(select name from property_files where type='image' AND property_id=#{proID} limit 1) as image,description " +
+            "FROM property " +
+            "WHERE id=#{proID}")
+    PropertyNoti propertyNoti(int proID);
+
 
     @Select("SELECT id " +
             "FROM property_neighborhood " +
@@ -48,9 +52,6 @@ public interface PropertyRepo {
     @Update("UPDATE property SET status = #{status} " +
             "WHERE id = #{proID}")
     int updateStatus(@Param("proID")int projectID,@Param("status") boolean status);
-
-    @Select("SELECT name FROM property_files WHERE type = 'image' AND property_id=#{propertyID} LIMIT 1")
-    String findOneGallery(int propertyID);
 
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilter")
     @Results({
@@ -259,6 +260,46 @@ public interface PropertyRepo {
                     WHERE("id=#{pro.id}");
                 }
             }.toString();
+        }
+    }
+
+    class PropertyNoti{
+        private String title;
+        private String image;
+        private String description;
+        private boolean status;
+
+        public boolean isStatus() {
+            return status;
+        }
+
+        public void setStatus(boolean status) {
+            this.status = status;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getImage() {
+            if(image!=null) return Url.propertyGalleryUrl+image;
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
     }
 

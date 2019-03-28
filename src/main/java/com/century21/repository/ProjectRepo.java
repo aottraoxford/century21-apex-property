@@ -16,6 +16,10 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepo {
+    @Select("SELECT name,description,thumbnail,isdisplay " +
+            "FROM project " +
+            "WHERE id = #{proID} ")
+    ProjectNoti projectNoti(int proID);
 
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilterCount")
     int findAllProjectByFilterCount(@Param("filter")FilterRequest filter);
@@ -392,6 +396,49 @@ public interface ProjectRepo {
                     VALUES("type,project_id", "#{type},#{proID}");
                 }
             }.toString();
+        }
+    }
+
+    class ProjectNoti{
+        @JsonProperty("title")
+        private String name;
+        private String description;
+        @JsonProperty("image")
+        private String thumbnail;
+        @JsonProperty("status")
+        private boolean isdisplay;
+
+        public boolean isIsdisplay() {
+            return isdisplay;
+        }
+
+        public void setIsdisplay(boolean isdisplay) {
+            this.isdisplay = isdisplay;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getThumbnail() {
+            if(thumbnail!=null) return Url.projectThumbnailUrl+thumbnail;
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
         }
     }
 
