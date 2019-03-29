@@ -119,6 +119,7 @@ public interface PropertyRepo {
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "docs",column = "id",many = @Many(select = "findDocs")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser")),
+            @Result(property = "floorNo",column = "floor_no"),
             @Result(property = "neighborhoods",column = "id",many = @Many(select = "findNeighborhoods"))
     })
     Property findOneProperty(@Param("proID")int proID);
