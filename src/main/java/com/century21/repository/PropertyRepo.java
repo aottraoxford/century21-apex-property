@@ -569,6 +569,7 @@ public interface PropertyRepo {
         private int airConditioner;
         private int parking;
         private int balcony;
+        @JsonProperty("floor_no")
         private int floorNo;
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
@@ -1030,6 +1031,7 @@ public interface PropertyRepo {
         private int airConditioner;
         private int parking;
         private int balcony;
+        @JsonProperty("floor_no")
         private int floorNo;
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
