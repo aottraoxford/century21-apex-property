@@ -29,7 +29,7 @@ public class PropertyController {
         return customResponse.httpResponse("property_id");
     }
 
-    @PutMapping("/apis/property/insert")
+    @PutMapping("/apis/property/update")
     public ResponseEntity updateProperty(@RequestBody PropertyRepo.Property property, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.updateProperty(property,principal));
         return customResponse.httpResponse("result");

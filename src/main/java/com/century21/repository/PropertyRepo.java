@@ -244,8 +244,8 @@ public interface PropertyRepo {
             return new SQL(){
                 {
                     INSERT_INTO("property");
-                    VALUES("user_id,id,project_id,bedroom,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
-                            "#{userID},#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
+                    VALUES("user_id,id,project_id,bedroom,floor_no,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
+                            "#{userID},#{id.id},#{ppt.projectID},#{ppt.bedroom},#{ppt.floorNo},#{ppt.bathroom},#{ppt.livingRoom},#{ppt.dinningRoom},#{ppt.kitchen},#{ppt.airConditioner},#{ppt.parking},#{ppt.balcony},#{ppt.mezzanineFloor},#{ppt.title},#{ppt.rentOrSell},#{ppt.type},#{ppt.city},#{ppt.district},#{ppt.commune},#{ppt.village},#{ppt.houseNo},#{ppt.streetNo},#{ppt.description},#{ppt.privateArea},#{ppt.commonArea},#{ppt.unitPrice},#{ppt.sqmPrice},#{ppt.lat},#{ppt.lng},#{ppt.width},#{ppt.height},#{ppt.totalArea},#{ppt.landWidth},#{ppt.landLength},#{ppt.totalLandArea},#{ppt.status},#{ppt.showMap}");
                 }
             }.toString();
         }
@@ -254,7 +254,7 @@ public interface PropertyRepo {
             return new SQL(){
                 {
                     UPDATE("property");
-                    SET("bedroom=#{pro.bedroom},living_room=#{pro.livingRoom},dinning_room=#{pro.dinningRoom},kitchen=#{pro.kitchen},air_conditioner=#{pro.airConditioner},parking=#{pro.parking},balcony=#{pro.balcony},mezzanine_floor=#{pro.mezzanineFloor}" +
+                    SET("bedroom=#{pro.bedroom},floor_no=#{pro.floorNo},living_room=#{pro.livingRoom},dinning_room=#{pro.dinningRoom},kitchen=#{pro.kitchen},air_conditioner=#{pro.airConditioner},parking=#{pro.parking},balcony=#{pro.balcony},mezzanine_floor=#{pro.mezzanineFloor}" +
                             ",title = #{pro.title},rent_or_sell=#{pro.rentOrSell},type=#{pro.type},city=#{pro.city},district=#{pro.district},commune=#{pro.commune},village=#{pro.village},house_no=#{pro.houseNo},street_no=#{pro.streetNo},description=#{pro.description}" +
                             ",private_area=#{pro.privateArea},common_area=#{pro.commonArea},unit_price=#{pro.unitPrice},sqm_price=#{pro.sqmPrice},lat=#{pro.lat},lng=#{pro.lng},total_land_area=#{pro.totalLandArea},width=#{pro.width},height=#{pro.height},land_length=#{pro.landLength},total_area=#{pro.totalArea}");
                     WHERE("id=#{pro.id}");
@@ -569,6 +569,7 @@ public interface PropertyRepo {
         private int airConditioner;
         private int parking;
         private int balcony;
+        private int floorNo;
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
         private String title;
@@ -614,6 +615,14 @@ public interface PropertyRepo {
         List<Gallery> galleries;
         List<PropertyFile> docs;
         List<Neighborhood> neighborhoods;
+
+        public int getFloorNo() {
+            return floorNo;
+        }
+
+        public void setFloorNo(int floorNo) {
+            this.floorNo = floorNo;
+        }
 
         public List<Neighborhood> getNeighborhoods() {
             return neighborhoods;
@@ -1021,6 +1030,7 @@ public interface PropertyRepo {
         private int airConditioner;
         private int parking;
         private int balcony;
+        private int floorNo;
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
         private String title;
@@ -1062,6 +1072,14 @@ public interface PropertyRepo {
         @JsonProperty("show_map")
         private boolean showMap;
         private List<Neighborhood> neighborhood;
+
+        public int getFloorNo() {
+            return floorNo;
+        }
+
+        public void setFloorNo(int floorNo) {
+            this.floorNo = floorNo;
+        }
 
         public List<Neighborhood> getNeighborhood() {
             return neighborhood;
