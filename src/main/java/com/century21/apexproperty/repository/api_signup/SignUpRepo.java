@@ -11,7 +11,7 @@ public interface SignUpRepo {
 
     @Select("SELECT COUNT(id) " +
             "FROM users " +
-            "WHERE email = #{email} AND account_type = 'origin'")
+            "WHERE email ilike #{email} AND account_type = 'origin'")
     int countEmailByEmail(@Param("email") String email);
 
     @Select("SELECT COUNT(id) " +
