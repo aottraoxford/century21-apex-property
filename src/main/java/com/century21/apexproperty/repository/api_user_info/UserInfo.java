@@ -22,6 +22,15 @@ public class UserInfo {
     private String swapEmail;
     @JsonProperty("account_type")
     private String accountType;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getSwapEmail() {
         return swapEmail;

@@ -10,16 +10,6 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan("com.century21.apexproperty.repository")
 public class DatasourceConfig {
-    /*@Bean(name = "dataSource")
-    public DataSource dataSource(){
-        return DataSourceBuilder
-                .create()
-                .url("jdbc:postgresql://localhost:5432/century21cambodia")
-                .username("postgres")
-                .password("123")
-                .driverClassName("org.postgresql.Driver")
-                .build();
-    }*/
     @Bean(name = "dataSource")
     public DataSource dataSource() {
         return DataSourceBuilder

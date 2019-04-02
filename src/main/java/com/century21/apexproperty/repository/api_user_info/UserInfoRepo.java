@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserInfoRepo {
-    @Select("SELECT first_name,last_name,email,gender,phone_number,image,account_type " +
+    @Select("SELECT authority.role,first_name,last_name,email,gender,phone_number,image,account_type " +
             "FROM users " +
-            "WHERE id=#{userID}")
+            "INNER JOIN authorizations ON authorizations.users_id=#{userID} " +
+            "INNER JOIN authority ON authorizations.authority_id=authority.id " +
+            "WHERE users.id=#{userID}")
     @Results({
         @Result(property = "firstName",column = "first_name"),
         @Result(property = "lastName",column = "last_name"),
