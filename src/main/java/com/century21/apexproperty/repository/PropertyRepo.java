@@ -257,7 +257,7 @@ public interface PropertyRepo {
                     UPDATE("property");
                     SET("bedroom=#{pro.bedroom},floor_no=#{pro.floorNo},living_room=#{pro.livingRoom},dinning_room=#{pro.dinningRoom},kitchen=#{pro.kitchen},air_conditioner=#{pro.airConditioner},parking=#{pro.parking},balcony=#{pro.balcony},mezzanine_floor=#{pro.mezzanineFloor}" +
                             ",title = #{pro.title},rent_or_sell=#{pro.rentOrSell},type=#{pro.type},city=#{pro.city},district=#{pro.district},commune=#{pro.commune},village=#{pro.village},house_no=#{pro.houseNo},street_no=#{pro.streetNo},description=#{pro.description}" +
-                            ",private_area=#{pro.privateArea},common_area=#{pro.commonArea},unit_price=#{pro.unitPrice},sqm_price=#{pro.sqmPrice},lat=#{pro.lat},lng=#{pro.lng},total_land_area=#{pro.totalLandArea},width=#{pro.width},height=#{pro.height},land_length=#{pro.landLength},total_area=#{pro.totalArea}");
+                            ",private_area=#{pro.privateArea},common_area=#{pro.commonArea},unit_price=#{pro.unitPrice},sqm_price=#{pro.sqmPrice},lat=#{pro.lat},lng=#{pro.lng},total_land_area=#{pro.totalLandArea},width=#{pro.width},height=#{pro.height},land_length=#{pro.landLength},land_width=#{pro.landWidth},total_area=#{pro.totalArea}");
                     WHERE("id=#{pro.id}");
                 }
             }.toString();
