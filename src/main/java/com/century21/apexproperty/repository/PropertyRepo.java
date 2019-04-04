@@ -67,7 +67,7 @@ public interface PropertyRepo {
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilterCount")
     int findAllPropertyByFilterCount(@Param("filter")PropertyFilter filter);
 
-    @Delete("DELETE FROM property_file WHERE property_id=#{proID} AND name = #{name}")
+    @Delete("DELETE FROM property_files WHERE property_id=#{proID} AND name = #{name}")
     void removeFile(@Param("proID")int proID,@Param("name")String name);
 
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyCount")

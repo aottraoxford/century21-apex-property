@@ -34,10 +34,10 @@ public class SwaggerConfig {
     }
     private ApiInfo swaggerInfo() {
         return new ApiInfo(
-                "Century 21 Cambodia Backend Webservice",
+                "Century 21 Apex Property Backend Webservice",
                 "API",
                 "version 1.0",
-                "tercy.herokuapp.com",
+                "century21api.herokuapp.com",
                 new Contact("VANN DARONG", "https://www.facebook.com/darongvann44", "darongvann@gmail.com"),
                 "license by darong",
                 "https://www.facebook.com/darongvann44",
