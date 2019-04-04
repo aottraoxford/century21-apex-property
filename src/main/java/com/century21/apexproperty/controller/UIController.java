@@ -116,7 +116,7 @@ public class UIController {
                 neighborhood.setPropertyID(i);
                 neighborhood.setDistance(3.4);
                 neighborhood.setAddress("Phnom Penh International Airport");
-                propertyRepo.insertNeighborhood(neighborhood);
+                propertyRepo.insertNeighborhood(neighborhood,i);
             }
         }
 

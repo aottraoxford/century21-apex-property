@@ -45,7 +45,7 @@ public class PropertyServiceImpl implements PropertyService{
         if(propertyRequest.getNeighborhood()!=null) {
             for (int i = 0; i < propertyRequest.getNeighborhood().size(); i++) {
                 propertyRequest.getNeighborhood().get(i).setPropertyID(propertyID);
-                propertyRepo.insertNeighborhood(propertyRequest.getNeighborhood().get(i));
+                propertyRepo.insertNeighborhood(propertyRequest.getNeighborhood().get(i),propertyID);
             }
         }
         userLogRepo.insertUserLog("insert property id = "+propertyID,userID);
@@ -145,8 +145,8 @@ public class PropertyServiceImpl implements PropertyService{
         Collection<Integer> idFromUpdate=new ArrayList<>();
         if(property.getNeighborhoods()!=null && property.getNeighborhoods().size()>0){
             for(int i=0;i<property.getNeighborhoods().size();i++){
-                if(propertyRepo.updateNeighborhood(property.getNeighborhoods().get(i))<1){
-                    propertyRepo.insertNeighborhood(property.getNeighborhoods().get(i));
+                if(propertyRepo.updateNeighborhood(property.getNeighborhoods().get(i),property.getId())<1){
+                    propertyRepo.insertNeighborhood(property.getNeighborhoods().get(i),property.getId());
                 }
                 idFromUpdate.add(property.getNeighborhoods().get(i).getId());
             }

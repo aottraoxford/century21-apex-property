@@ -27,15 +27,15 @@ public interface PropertyRepo {
     int removeNeighborhood(int id);
 
     @Update("UPDATE property_neighborhood SET distance=#{nbh.distance},address=#{nbh.address} " +
-            "WHERE id=#{nbh.id} AND property_id=#{nbh.propertyID}")
-    int updateNeighborhood(@Param("nbh")Neighborhood neighborhood);
+            "WHERE id=#{nbh.id} AND property_id=#{proID}")
+    int updateNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
 
     @UpdateProvider(type = PropertyUtil.class,method = "updateProperty")
     int updateProperty(@Param("pro")Property property);
 
     @Insert("INSERT INTO property_neighborhood(property_id,address,distance) " +
-            "VALUES(#{nbh.propertyID},#{nbh.address},#{nbh.distance})")
-    int insertNeighborhood(@Param("nbh")Neighborhood neighborhood);
+            "VALUES(#{proID},#{nbh.address},#{nbh.distance})")
+    int insertNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
 
     @Select("SELECT lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status " +
             "FROM property " +
