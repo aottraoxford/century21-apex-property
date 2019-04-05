@@ -90,10 +90,10 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public List<PropertyRepo.Properties> findAllProperty(Pagination pagination,Principal principal) {
-        List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty(pagination.getLimit(),pagination.getOffset());
+    public List<PropertyRepo.Properties> findAllProperty(String title,Pagination pagination,Principal principal) {
+        List<PropertyRepo.Properties> properties=propertyRepo.findAllProperty(title,pagination.getLimit(),pagination.getOffset());
         if(properties==null || properties.size()<1) throw new CustomRuntimeException(404,"ZERO_RESULT");
-        pagination.setTotalItem(propertyRepo.findAllPropertyCount());
+        pagination.setTotalItem(propertyRepo.findAllPropertyCount(title));
         return properties;
     }
 
@@ -115,7 +115,7 @@ public class PropertyServiceImpl implements PropertyService{
     public List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter, Pagination pagination) {
         List<PropertyRepo.Properties> properties = propertyRepo.findAllPropertyByFilter(filter,pagination.getLimit(),pagination.getOffset());
         if(properties.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
-        pagination.setTotalItem(propertyRepo.findAllPropertyCount());
+        pagination.setTotalItem(propertyRepo.findAllPropertyByFilterCount(filter));
         return properties;
     }
 

@@ -71,7 +71,7 @@ public interface PropertyRepo {
     void removeFile(@Param("proID")int proID,@Param("name")String name);
 
     @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyCount")
-    int findAllPropertyCount();
+    int findAllPropertyCount(@Param("title")String title);
 
     @SelectProvider(type = PropertyUtil.class,method = "findAllProperty")
     @Results({
@@ -82,7 +82,7 @@ public interface PropertyRepo {
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
-    List<Properties> findAllProperty(@Param("limit")int limit,@Param("offset")int offset);
+    List<Properties> findAllProperty(@Param("title")String title,@Param("limit")int limit,@Param("offset")int offset);
 
     @Select("SELECT id,name " +
             "FROM property_files " +
@@ -211,22 +211,26 @@ public interface PropertyRepo {
             }.toString();
         }
 
-        public String findAllPropertyCount(){
+        public String findAllPropertyCount(@Param("title")String title){
             return new SQL(){
                 {
                     SELECT("count(id)");
                     FROM("property");
                     WHERE("status IS TRUE");
+                    if(title!=null && title.trim().length()>0)
+                        WHERE("title ilike '%'||#{title}||'%'");
                 }
             }.toString();
         }
 
-        public String findAllProperty(@Param("limit")int limit,@Param("offset")int offset){
+        public String findAllProperty(@Param("title")String title,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
                     SELECT("lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status,rent_or_sell");
                     FROM("property");
                     WHERE("status IS TRUE");
+                    if(title!=null && title.trim().length()>0)
+                        WHERE("title ilike '%'||#{title}||'%'");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();

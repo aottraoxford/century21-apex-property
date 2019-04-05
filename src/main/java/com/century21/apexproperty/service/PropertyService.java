@@ -14,7 +14,7 @@ public interface PropertyService {
     PropertyRepo.Property updateProperty(PropertyRepo.Property property, Principal principal);
     Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] doc,Principal principal);
     PropertyRepo.Property findOneProperty(int proID,Principal principal);
-    List<PropertyRepo.Properties> findAllProperty(Pagination pagination,Principal principal);
+    List<PropertyRepo.Properties> findAllProperty(String title,Pagination pagination,Principal principal);
     void removeFile(int propertyID,String gallName,String docName,Principal principal);
     List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter,Pagination pagination);
     void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest);
