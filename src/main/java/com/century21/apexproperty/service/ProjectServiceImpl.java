@@ -152,9 +152,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectRepo.ProjectListingResponse> projects(String title, int cid, int pid, String status, Pagination pagination) {
-        if (title != null) {
-            title = title.trim().replaceAll(" ", "%");
-        }
         List<ProjectRepo.ProjectListingResponse> projects = projectRepo.findAllProject(title, cid, pid, status, pagination.getLimit(), pagination.getOffset());
         if (projects == null || projects.size() < 1) throw new CustomRuntimeException(404, "ZERO_RESULT");
         pagination.setTotalItem(projectRepo.findAllProjectCount(title, cid, pid, status));

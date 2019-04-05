@@ -227,6 +227,11 @@ public interface ProjectRepo {
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
+                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
+                        if(filter.getStatus().equalsIgnoreCase("true"))
+                            WHERE("isdisplay IS TRUE");
+                        else if(filter.getStatus().equalsIgnoreCase("false"))
+                            WHERE("isdisplay IS FALSE");
                     if(filter.getRoom()>0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0)
@@ -330,7 +335,6 @@ public interface ProjectRepo {
                     if(title!=null && title.trim().length()>0) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
-                    WHERE("country_id=#{cid}");
                     if(status.equalsIgnoreCase("true"))
                         WHERE("isdisplay IS TRUE");
                     else if(status.equalsIgnoreCase("false"))
