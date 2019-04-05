@@ -171,14 +171,14 @@ public interface PropertyRepo {
                     }
                     if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
                     if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
-                    if(filter.getToPrice()>0 && filter.getFromPrice()>0) WHERE("property.price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    else if(filter.getFromPrice()>0) WHERE("property.price > #{filter.fromPrice}");
-                    else if(filter.getToPrice()>0) WHERE("property.price < #{filter.toPrice}");
+                    if(filter.getToPrice()>0 && filter.getFromPrice()>0) WHERE("property.unite_price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if(filter.getFromPrice()>0) WHERE("property.unit_price > #{filter.fromPrice}");
+                    else if(filter.getToPrice()>0) WHERE("property.unit_price < #{filter.toPrice}");
                     if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
                         if(filter.getSortType().equalsIgnoreCase("price"))
-                            ORDER_BY("price limit #{limit} offset #{offset}");
+                            ORDER_BY("unit_price limit #{limit} offset #{offset}");
                         else if(filter.getSortType().equalsIgnoreCase("price-desc"))
-                            ORDER_BY("price DESC limit #{limit} offset #{offset}");
+                            ORDER_BY("unit_price DESC limit #{limit} offset #{offset}");
                         else if(filter.getSortType().equalsIgnoreCase("title"))
                             ORDER_BY("name limit #{limit} offset #{offset}");
                         else if(filter.getSortType().equalsIgnoreCase("title-desc"))
@@ -206,7 +206,9 @@ public interface PropertyRepo {
                     }
                     if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
                     if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
-                    if(filter.getToPrice()>0) WHERE("property.price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    if(filter.getToPrice()>0 && filter.getFromPrice()>0) WHERE("property.unite_price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if(filter.getFromPrice()>0) WHERE("property.unit_price > #{filter.fromPrice}");
+                    else if(filter.getToPrice()>0) WHERE("property.unit_price < #{filter.toPrice}");
                 }
             }.toString();
         }
