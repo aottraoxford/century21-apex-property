@@ -307,7 +307,8 @@ public interface ProjectRepo {
                 {
                     SELECT("id,name,price,sqm_price,grr,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
-                    WHERE("country_id=#{cid}");
+                    if(cid>0)
+                        WHERE("country_id=#{cid}");
                     if(title!=null) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
