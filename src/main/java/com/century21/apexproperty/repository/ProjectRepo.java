@@ -309,7 +309,7 @@ public interface ProjectRepo {
                     FROM("project");
                     if(cid>0)
                         WHERE("country_id=#{cid}");
-                    if(title!=null) {
+                    if(title!=null && title.trim().length()>0) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
                     if(status.equalsIgnoreCase("true"))
@@ -327,7 +327,7 @@ public interface ProjectRepo {
                 {
                     SELECT("COUNT(id)");
                     FROM("project");
-                    if(title!=null) {
+                    if(title!=null && title.trim().length()>0) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
                     WHERE("country_id=#{cid}");
@@ -335,6 +335,8 @@ public interface ProjectRepo {
                         WHERE("isdisplay IS TRUE");
                     else if(status.equalsIgnoreCase("false"))
                         WHERE("isdisplay IS false");
+                    if(cid>0)
+                        WHERE("country_id=#{cid}");
                     if(pid>0)
                         WHERE("project_type_id=#{pid}");
                 }
