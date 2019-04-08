@@ -39,7 +39,8 @@ public interface PropertyRepo {
 
     @Select("SELECT lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status " +
             "FROM property " +
-            "WHERE user_id=#{userID}")
+            "WHERE user_id=#{userID} " +
+            "ORDER BY id DESC limit #{limit} offset #{offset}")
     @Results({
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
@@ -47,7 +48,12 @@ public interface PropertyRepo {
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
-    List<Properties> findAgentProperties(int userID);
+    List<Properties> findAgentProperties(int userID,int limit,int offset);
+
+    @Select("SELECT count(id) " +
+            "FROM property " +
+            "WHERE user_id=#{userID} " )
+    int findAgentPropertiesCount(int userID);
 
     @Update("UPDATE property SET status = #{status} " +
             "WHERE id = #{proID}")

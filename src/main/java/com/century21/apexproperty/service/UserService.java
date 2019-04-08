@@ -1,5 +1,6 @@
 package com.century21.apexproperty.service;
 
+import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.repository.UserRepo;
 
 import java.security.Principal;
@@ -11,5 +12,5 @@ public interface UserService {
     void verification(int code);
     void assignRole(int userID,String roleType);
     void addAgent(int userID,Principal principal);
-    List<UserRepo.User> agents(String name,Principal principal);
+    List<UserRepo.User> agents(String name, Principal principal, Pagination pagination);
 }

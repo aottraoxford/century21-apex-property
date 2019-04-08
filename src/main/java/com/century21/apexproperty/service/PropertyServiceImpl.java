@@ -133,8 +133,11 @@ public class PropertyServiceImpl implements PropertyService{
 
 
     @Override
-    public List<PropertyRepo.Properties> findAgentProperties(int userID) {
-        return propertyRepo.findAgentProperties(userID);
+    public List<PropertyRepo.Properties> findAgentProperties(int userID,Pagination pagination) {
+        List<PropertyRepo.Properties> properties=propertyRepo.findAgentProperties(userID,pagination.getLimit(),pagination.getOffset());
+        if(properties.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem(propertyRepo.findAgentPropertiesCount(userID));
+        return properties;
     }
 
     @Override

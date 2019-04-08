@@ -47,6 +47,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.List;
 
@@ -290,8 +291,9 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/apis/agents")
-    public ResponseEntity agents(String name,Principal principal){
-        CustomResponse customResponse=new CustomResponse(200,userService.agents(name,principal));
-        return customResponse.httpResponse("result");
+    public ResponseEntity agents(String name,Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,userService.agents(name,principal,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
     }
 }

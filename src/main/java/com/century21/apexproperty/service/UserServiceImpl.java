@@ -1,6 +1,7 @@
 package com.century21.apexproperty.service;
 
 import com.century21.apexproperty.exception.CustomRuntimeException;
+import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.util.MailService;
 import com.century21.apexproperty.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,10 +80,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRepo.User> agents(String name,Principal principal) {
+    public List<UserRepo.User> agents(String name, Principal principal, Pagination pagination) {
         Integer parentID=userRepo.findUserIDByEmail(principal.getName());
-        List<UserRepo.User> agents=userRepo.agents(name,parentID);
+        List<UserRepo.User> agents=userRepo.agents(name,parentID,pagination.getLimit(),pagination.getOffset());
         if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem(userRepo.agentsCount(name,parentID));
         return agents;
     }
 }

@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 @Repository
 public interface UserRepo {
 
+    @SelectProvider(type = UserUtil.class,method = "agentsCount")
+    int agentsCount(@Param("name")String name,@Param("parentID") int parentID);
+
     @SelectProvider(type = UserUtil.class,method = "agents")
     @Results({
             @Result(property = "id",column = "id"),
@@ -23,7 +26,7 @@ public interface UserRepo {
             @Result(property = "accountType",column = "account_type"),
             @Result(property = "role",column = "id",many = @Many(select = "roles"))
     })
-    List<User> agents(@Param("name")String name,@Param("parentID") int parentID);
+    List<User> agents(@Param("name")String name,@Param("parentID") int parentID,int limit,int offset);
 
     @Select("SELECT authority.role " +
             "FROM authority " +
@@ -74,7 +77,7 @@ public interface UserRepo {
     Integer removeCode();
 
     class UserUtil{
-        public String agents(@Param("name")String name,@Param("parentID") int parentID){
+        public String agents(@Param("name")String name,@Param("parentID") int parentID,int limit ,int offset){
            return new SQL(){
                {
                    SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
@@ -82,9 +85,21 @@ public interface UserRepo {
                    WHERE("id=#{parentID} OR parent_id=#{parentID}");
                    if(name!=null && name.length()>0)
                        WHERE("name ilike '%'||#{name}||'%'");
-                   ORDER_BY("id DESC");
+                   ORDER_BY("id DESC limit #{limit} offset #{offset}");
                }
            } .toString();
+        }
+
+        public String agentsCount(@Param("name")String name,@Param("parentID") int parentID){
+            return new SQL(){
+                {
+                    SELECT("count(id)");
+                    FROM("users");
+                    WHERE("id=#{parentID} OR parent_id=#{parentID}");
+                    if(name!=null && name.length()>0)
+                        WHERE("name ilike '%'||#{name}||'%'");
+                }
+            } .toString();
         }
     }
 
