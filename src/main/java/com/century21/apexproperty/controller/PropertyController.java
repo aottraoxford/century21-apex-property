@@ -88,10 +88,11 @@ public class PropertyController {
     }
 
     @GetMapping("/apis/property/agent/{userID}")
-    public ResponseEntity agentProperties(@PathVariable int userID,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+    public ResponseEntity agentProperties(@PathVariable int userID,@RequestParam(required = false)String status,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,propertyService.findAgentProperties(userID,pagination),pagination);
-        return customResponse.httpResponse("result","paging");
+        PropertyRepo.AgentPropertiesStatistic agentPropertiesStatistic=new PropertyRepo.AgentPropertiesStatistic();
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAgentProperties(userID,status,pagination,agentPropertiesStatistic),pagination,agentPropertiesStatistic);
+        return customResponse.httpResponse("result","paging","statistic");
     }
 
 }

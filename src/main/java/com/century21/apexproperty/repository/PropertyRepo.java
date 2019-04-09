@@ -6,17 +6,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface PropertyRepo {
 
+    @Select("SELECT count(id) " +
+            "FROM property " +
+            "WHERE user_id=#{userID} AND status is true")
+    int enablePropertyCount(int userID);
+
+    @Select("SELECT count(id) " +
+            "FROM property " +
+            "WHERE user_id=#{userID} AND status is false")
+    int disablePropertyCount(int userID);
+
     @Select("SELECT title,status,(select name from property_files where type='image' AND property_id=#{proID} limit 1) as image,description " +
             "FROM property " +
             "WHERE id=#{proID}")
     PropertyNoti propertyNoti(int proID);
-
 
     @Select("SELECT id " +
             "FROM property_neighborhood " +
@@ -37,10 +45,7 @@ public interface PropertyRepo {
             "VALUES(#{proID},#{nbh.address},#{nbh.distance})")
     int insertNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
 
-    @Select("SELECT lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status " +
-            "FROM property " +
-            "WHERE user_id=#{userID} " +
-            "ORDER BY id DESC limit #{limit} offset #{offset}")
+    @SelectProvider(type = PropertyUtil.class,method = "findAgentProperties")
     @Results({
             @Result(property = "id",column = "id"),
             @Result(property = "unitPrice",column = "unit_price"),
@@ -48,12 +53,10 @@ public interface PropertyRepo {
             @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
             @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
-    List<Properties> findAgentProperties(int userID,int limit,int offset);
+    List<Properties> findAgentProperties(int userID,String status,int limit,int offset);
 
-    @Select("SELECT count(id) " +
-            "FROM property " +
-            "WHERE user_id=#{userID} " )
-    int findAgentPropertiesCount(int userID);
+    @SelectProvider(type = PropertyUtil.class,method = "findAgentPropertiesCount")
+    int findAgentPropertiesCount(int userID,String status);
 
     @Update("UPDATE property SET status = #{status} " +
             "WHERE id = #{proID}")
@@ -159,6 +162,40 @@ public interface PropertyRepo {
     Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID);
 
     class PropertyUtil{
+
+        public String findAgentPropertiesCount(int userID,String status){
+            return new SQL(){
+                {
+                    SELECT("count(id)");
+                    FROM("property");
+                    WHERE("user_id=#{userID}");
+                    if(status!=null && status.trim().length()>0){
+                        if(status.equalsIgnoreCase("false"))
+                            WHERE("status is false");
+                        else if(status.equalsIgnoreCase("true"))
+                            WHERE("status is true");
+                    }
+                }
+            }.toString();
+        }
+
+        public String findAgentProperties(int userID,String status,int limit,int offset){
+            return new SQL(){
+                {
+                    SELECT("lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status");
+                    FROM("property");
+                    WHERE("user_id=#{userID}");
+                    if(status!=null && status.trim().length()>0){
+                        if(status.equalsIgnoreCase("false"))
+                            WHERE("status is false");
+                        else if(status.equalsIgnoreCase("true"))
+                            WHERE("status is true");
+                    }
+                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
+
         public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
@@ -282,6 +319,37 @@ public interface PropertyRepo {
                 }
             }.toString();
         }
+    }
+
+    class AgentPropertiesStatistic{
+        private int enable;
+        private int disable;
+        private int total;
+
+        public int getEnable() {
+            return enable;
+        }
+
+        public void setEnable(int enable) {
+            this.enable = enable;
+        }
+
+        public int getDisable() {
+            return disable;
+        }
+
+        public void setDisable(int disable) {
+            this.disable = disable;
+        }
+
+        public int getTotal() {
+            return total;
+        }
+
+        public void setTotal(int total) {
+            this.total = total;
+        }
+
     }
 
     class PropertyNoti{

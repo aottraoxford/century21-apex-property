@@ -18,5 +18,5 @@ public interface PropertyService {
     void removeFile(int propertyID,String gallName,String docName,Principal principal);
     List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter,Pagination pagination);
     void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest);
-    List<PropertyRepo.Properties> findAgentProperties(int userID,Pagination pagination);
+    List<PropertyRepo.Properties> findAgentProperties(int userID, String status, Pagination pagination, PropertyRepo.AgentPropertiesStatistic agentPropertiesStatistic);
 }
