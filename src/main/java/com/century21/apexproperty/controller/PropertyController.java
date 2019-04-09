@@ -67,9 +67,9 @@ public class PropertyController {
     }
 
     @PostMapping("/api/property/listing")
-    public ResponseEntity properties(@RequestParam(required = false)String title ,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,Principal principal){
+    public ResponseEntity properties(@RequestParam(required = false)String title ,@RequestParam(required = false)String status,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty(title,pagination,principal),pagination);
+        CustomResponse customResponse=new CustomResponse(200,propertyService.findAllProperty(title,status,pagination,principal),pagination);
         return customResponse.httpResponse("result","paging");
     }
 
