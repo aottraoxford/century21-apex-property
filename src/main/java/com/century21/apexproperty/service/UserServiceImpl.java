@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
     public void addAgent(int userID, Principal principal) {
         Integer adminID=userRepo.findUserIDByEmail(principal.getName());
         if(userRepo.setChild(adminID,userID)==0) throw new CustomRuntimeException(404,"USER account not exist.");
+        userRepo.updateRole(userID,2);
     }
 
     @Override
