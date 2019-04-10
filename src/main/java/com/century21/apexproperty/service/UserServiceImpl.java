@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -86,5 +87,16 @@ public class UserServiceImpl implements UserService {
         if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
         pagination.setTotalItem(userRepo.agentsCount(name,parentID));
         return agents;
+    }
+
+    @Override
+    public List<UserRepo.User> findUsers(String name, String role, Pagination pagination) {
+        if(name!=null && name.trim().length()>0){
+            name = name.replaceAll(" ","%");
+        }
+        List<UserRepo.User> users=userRepo.findUsers(name,role,pagination.getLimit(),pagination.getOffset());
+        if(users==null || users.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        pagination.setTotalItem(userRepo.findUsersCount(name,role));
+        return users;
     }
 }

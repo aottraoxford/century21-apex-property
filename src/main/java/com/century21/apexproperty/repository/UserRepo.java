@@ -14,6 +14,20 @@ import java.util.regex.Pattern;
 @Repository
 public interface UserRepo {
 
+    @SelectProvider(type = UserUtil.class,method = "findUsers")
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "firstName",column = "first_name"),
+            @Result(property = "lastName",column = "last_name"),
+            @Result(property = "phoneNumber",column = "phone_number"),
+            @Result(property = "accountType",column = "account_type"),
+            @Result(property = "role",column = "id",many = @Many(select = "roles"))
+    })
+    List<User> findUsers(String name,String role,int limit,int offset);
+
+    @SelectProvider(type = UserUtil.class,method = "findUsersCount")
+    int findUsersCount(String name,String role);
+
     @SelectProvider(type = UserUtil.class,method = "agentsCount")
     int agentsCount(@Param("name")String name,@Param("parentID") int parentID);
 
@@ -77,6 +91,40 @@ public interface UserRepo {
     Integer removeCode();
 
     class UserUtil{
+        public String findUsers(String name,String role,int limit,int offset){
+            return new SQL(){
+                {
+                    SELECT("users.id,first_name,last_name,email,gender,phone_number,image,account_type");
+                    FROM("users");
+                    if(role!=null && role.trim().length()>0) {
+                        INNER_JOIN("authorizations ON users.id=authorizations.users_id");
+                        INNER_JOIN("authority ON authorizations.authority_id=authority.id");
+                        WHERE("authority.role ilike #{role}");
+                    }
+                    if(name!=null && name.trim().length()>0)
+                        WHERE("concat(first_name,' ',last_name) ilike '%'||#{name}||'%'");
+                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
+        }
+
+        public String findUsersCount(String name,String role){
+            return new SQL(){
+                {
+                    SELECT("count(users.id)");
+                    FROM("users");
+                    if(role!=null && role.trim().length()>0) {
+                        INNER_JOIN("authorizations ON users.id=authorizations.users_id");
+                        INNER_JOIN("authority ON authorizations.authority_id=authority.id");
+                        WHERE("authority.role ilike #{role}");
+                    }
+                    if(name!=null && name.trim().length()>0)
+                        WHERE("concat(first_name,' ',last_name) ilike '%'||#{name}||'%'");
+
+                }
+            }.toString();
+        }
+
         public String agents(@Param("name")String name,@Param("parentID") int parentID,int limit ,int offset){
            return new SQL(){
                {

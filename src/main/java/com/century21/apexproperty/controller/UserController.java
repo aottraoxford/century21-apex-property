@@ -296,4 +296,12 @@ public class UserController {
         CustomResponse customResponse=new CustomResponse(200,userService.agents(name,principal,pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/apis/users")
+    public ResponseEntity users(@RequestParam(required = false)String name,@RequestParam(required = false)String role,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,userService.findUsers(name,role,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
 }
