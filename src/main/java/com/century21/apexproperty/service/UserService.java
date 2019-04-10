@@ -10,8 +10,7 @@ public interface UserService {
     void sendMail(String email);
     void changePassword(UserRepo.ChangePassword changePassword);
     void verification(int code);
-    void assignRole(int userID,String roleType);
-    void addAgent(int userID,Principal principal);
+    void assignRole(int userID,String roleType,Principal principal);
     List<UserRepo.User> agents(String name, Principal principal, Pagination pagination);
     List<UserRepo.User> findUsers(String name,String role,Pagination pagination);
 }

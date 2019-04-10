@@ -68,17 +68,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void assignRole(int userID, String roleType) {
-        Integer roleID=userRepo.roleID(roleType);
-        if(roleID==null) throw new CustomRuntimeException(404,"AVAILABLE ROLE( ADMIN, AGENT ,USER)");
-        if(userRepo.updateRole(userID,roleID)<1) throw new CustomRuntimeException(404,"USER account does not exist.");
-    }
+    public void assignRole(int userID, String roleType,Principal principal) {
+        String role = userRepo.findUserRole(userID);
+        if(role==null) throw new CustomRuntimeException(404,"USER NOT EXIST");
+        if(role.equalsIgnoreCase("admin")) throw new CustomRuntimeException(400,"THIS USER IS ADMIN");
 
-    @Override
-    public void addAgent(int userID, Principal principal) {
+        Integer roleID=userRepo.roleID(roleType);
         Integer adminID=userRepo.findUserIDByEmail(principal.getName());
-        if(userRepo.setChild(adminID,userID)==0) throw new CustomRuntimeException(404,"USER account not exist.");
-        userRepo.updateRole(userID,2);
+
+        if(roleID==null) throw new CustomRuntimeException(404,"AVAILABLE ROLE( ADMIN, AGENT ,USER)");
+        if(roleType.equalsIgnoreCase("agent")){
+            userRepo.updateRole(userID,roleID);
+            userRepo.setChild(adminID,userID);
+        }else if(roleType.equalsIgnoreCase("user")){
+            userRepo.updateRole(userID,roleID);
+            userRepo.setChild(null,userID);
+        }else if(roleType.equalsIgnoreCase("admin")){
+            userRepo.updateRole(userID,roleID);
+            userRepo.setChild(null,userID);
+        }
     }
 
     @Override

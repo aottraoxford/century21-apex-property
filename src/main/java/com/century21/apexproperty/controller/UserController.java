@@ -275,16 +275,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/apis/admin/role/assign")
-    public ResponseEntity assignRole(@RequestBody UserRepo.AssignRoleRequest roleRequest){
-        userService.assignRole(roleRequest.getUserID(),roleRequest.getRole());
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/apis/admin/agent/add")
-    public ResponseEntity addAgent(int userID,Principal principal){
-        userService.addAgent(userID,principal);
+    public ResponseEntity assignRole(@RequestBody UserRepo.AssignRoleRequest roleRequest,Principal principal){
+        userService.assignRole(roleRequest.getUserID(),roleRequest.getRole(),principal);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
