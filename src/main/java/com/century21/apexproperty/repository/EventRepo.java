@@ -60,7 +60,7 @@ public interface EventRepo {
                     SELECT("id,title,banner,enable,event_date");
                     FROM("events");
                     WHERE("type ilike 'event'");
-                    if(title!=null){
+                    if(title!=null && title.trim().length()>0){
                         WHERE("title ILIKE '%'||#{title}||'%'");
                     }
                     if (status.equalsIgnoreCase("true"))
@@ -78,7 +78,7 @@ public interface EventRepo {
                     SELECT("COUNT(id)");
                     FROM("events");
                     WHERE("type ILIKE 'event'");
-                    if(title!=null){
+                    if(title!=null && title.trim().length()>0){
                         WHERE("title ILIKE '%'||#{title}||'%'");
                     }
                     if (status.equalsIgnoreCase("true"))

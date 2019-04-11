@@ -176,8 +176,8 @@ public class ProjectController {
     @Autowired
     private SliderService sliderService;
     @GetMapping("/api/slider")
-    public ResponseEntity sliders(@RequestParam(defaultValue = "true") boolean enable){
-        CustomResponse customResponse=new CustomResponse(200,sliderService.getSlider(enable));
+    public ResponseEntity sliders(@RequestParam(required = false) String status){
+        CustomResponse customResponse=new CustomResponse(200,sliderService.getSlider(status));
         return customResponse.httpResponse("result");
     }
 

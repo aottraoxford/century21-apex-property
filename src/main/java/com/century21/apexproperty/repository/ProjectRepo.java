@@ -227,25 +227,27 @@ public interface ProjectRepo {
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
-                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
-                        if(filter.getStatus().equalsIgnoreCase("true"))
-                            WHERE("isdisplay IS TRUE");
-                        else if(filter.getStatus().equalsIgnoreCase("false"))
-                            WHERE("isdisplay IS FALSE");
                     if(filter.getRoom()>0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
                     if(filter.getCity()!=null && filter.getCity().length()>0 )
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
+                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
+                        if(filter.getStatus().equalsIgnoreCase("true"))
+                            WHERE("isdisplay IS TRUE");
+                        else if(filter.getStatus().equalsIgnoreCase("false"))
+                            WHERE("isdisplay IS FALSE");
                     if(filter.getCountryID()>0)
                         WHERE("project.country_id=#{filter.countryID}");
                     if(filter.getProjectTypeID()>0)
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
                     if(filter.getRoom()>0)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getToPrice()>0)
+                    if(filter.getToPrice()>0 && filter.getFromPrice()>0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if(filter.getToPrice()>0) WHERE("price < #{filter.toPrice}");
+                    else if(filter.getFromPrice()>0) WHERE("price <");
                     if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
                         WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
                 }

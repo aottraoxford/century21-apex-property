@@ -13,7 +13,8 @@ import java.util.List;
 public interface SliderRepo {
     @SelectProvider(type= SliderUtil.class,method = "getSlider")
     @Results({
-            @Result(property = "slider",column = "banner")
+            @Result(property = "slider",column = "banner"),
+            @Result(property = "status",column = "enable")
     })
-    List<Slider> getSlider(@Param("en") boolean enable);
+    List<Slider> getSlider(@Param("en") String en);
 }

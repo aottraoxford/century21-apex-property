@@ -13,7 +13,7 @@ public class SliderServiceImpl implements SliderService {
     @Autowired
     private SliderRepo sliderRepo;
     @Override
-    public List<Slider> getSlider(boolean enable) {
+    public List<Slider> getSlider(String enable) {
         List<Slider> slider=sliderRepo.getSlider(enable);
         if(slider==null || slider.size()<1) throw new CustomRuntimeException(404,"ZERO RECORD");
         return slider;

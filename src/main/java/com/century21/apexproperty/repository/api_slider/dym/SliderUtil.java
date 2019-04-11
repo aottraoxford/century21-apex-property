@@ -4,16 +4,18 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class SliderUtil {
-    public String getSlider(@Param("en")boolean enable){
+    public String getSlider(@Param("en")String en){
         return new SQL(){
             {
-                SELECT("id,title,banner");
+                SELECT("id,title,banner,enable");
                 FROM("events");
                 WHERE("type ILIKE 'slider'");
-                if(enable==true)
-                    WHERE("enable IS true");
-                else
-                    WHERE("enable IS false");
+                if(en!=null && en.trim().length()>0) {
+                    if(en.equalsIgnoreCase("true"))
+                        WHERE("enable IS true");
+                    else if(en.equalsIgnoreCase("false"))
+                        WHERE("enable IS false");
+                }
                 ORDER_BY("id DESC");
             }
         }.toString();
