@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserInfo {
+    private int id;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -23,6 +24,14 @@ public class UserInfo {
     @JsonProperty("account_type")
     private String accountType;
     private String role;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getRole() {
         return role;
