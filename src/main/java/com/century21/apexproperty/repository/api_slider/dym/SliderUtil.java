@@ -20,4 +20,20 @@ public class SliderUtil {
             }
         }.toString();
     }
+
+    public String getSliderCount(@Param("en")String en){
+        return new SQL(){
+            {
+                SELECT("count(id)");
+                FROM("events");
+                WHERE("type ILIKE 'slider'");
+                if(en!=null && en.trim().length()>0) {
+                    if(en.equalsIgnoreCase("true"))
+                        WHERE("enable IS true");
+                    else if(en.equalsIgnoreCase("false"))
+                        WHERE("enable IS false");
+                }
+            }
+        }.toString();
+    }
 }

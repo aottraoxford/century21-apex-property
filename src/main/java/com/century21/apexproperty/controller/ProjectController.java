@@ -176,9 +176,10 @@ public class ProjectController {
     @Autowired
     private SliderService sliderService;
     @GetMapping("/api/slider")
-    public ResponseEntity sliders(@RequestParam(required = false) String status){
-        CustomResponse customResponse=new CustomResponse(200,sliderService.getSlider(status));
-        return customResponse.httpResponse("result");
+    public ResponseEntity sliders(@RequestParam(required = false) String status,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,sliderService.getSlider(status,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
     }
 
     @Autowired

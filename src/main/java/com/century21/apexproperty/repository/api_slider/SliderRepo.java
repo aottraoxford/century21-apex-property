@@ -17,4 +17,7 @@ public interface SliderRepo {
             @Result(property = "status",column = "enable")
     })
     List<Slider> getSlider(@Param("en") String en);
+
+    @SelectProvider(type= SliderUtil.class,method = "getSliderCount")
+    int getSliderCount(String en);
 }
