@@ -769,6 +769,7 @@ public interface ProjectRepo {
         @JsonProperty("project_type")
         private String projectType;
         private String description;
+        private String thumbnail;
         private Double grr;
         @JsonProperty("introductions")
         private List<ProjectIntroduction> projectIntro;
@@ -783,6 +784,16 @@ public interface ProjectRepo {
         private Date builtDate;
         @JsonProperty("completed_date")
         private Date completedDate;
+
+        public String getThumbnail() {
+            if(thumbnail!=null)
+                return Url.projectThumbnailUrl+thumbnail;
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
 
         public double getSqmPrice() {
             return sqmPrice;
