@@ -47,7 +47,7 @@ public interface UserRepo {
             @Result(property = "accountType",column = "account_type"),
             @Result(property = "role",column = "id",many = @Many(select = "roles"))
     })
-    List<User> agents(@Param("name")String name,@Param("parentID") int parentID,int limit,int offset);
+    List<User> agents(@Param("name")String name,@Param("userID") int userID,int limit,int offset);
 
     @Select("SELECT authority.role " +
             "FROM authority " +
@@ -132,12 +132,12 @@ public interface UserRepo {
             }.toString();
         }
 
-        public String agents(@Param("name")String name,@Param("parentID") int parentID,int limit ,int offset){
+        public String agents(@Param("name")String name,@Param("userID") int userID,int limit ,int offset){
            return new SQL(){
                {
                    SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
                    FROM("users");
-                   WHERE("id=#{parentID} OR parent_id=#{parentID}");
+                   WHERE("parent_id=(select parent_id from users where id = #{userID})");
                    if(name!=null && name.length()>0)
                        WHERE("name ilike '%'||#{name}||'%'");
                    ORDER_BY("id DESC limit #{limit} offset #{offset}");

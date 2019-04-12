@@ -91,10 +91,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRepo.User> agents(String name, Principal principal, Pagination pagination) {
-        Integer parentID=userRepo.findUserIDByEmail(principal.getName());
-        List<UserRepo.User> agents=userRepo.agents(name,parentID,pagination.getLimit(),pagination.getOffset());
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        List<UserRepo.User> agents=userRepo.agents(name,userID,pagination.getLimit(),pagination.getOffset());
         if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
-        pagination.setTotalItem(userRepo.agentsCount(name,parentID));
+        pagination.setTotalItem(userRepo.agentsCount(name,userID));
         return agents;
     }
 
