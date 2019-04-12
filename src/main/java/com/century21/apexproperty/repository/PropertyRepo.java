@@ -11,6 +11,13 @@ import java.util.List;
 @Repository
 public interface PropertyRepo {
 
+    @Select("SELECT user_id " +
+            "FROM property WHERE id = #{proID}")
+    Integer findOwnerID(int proID);
+
+    @Select("SELECT id FROM user WHERE parent_id = #{parentID AND id = #{userID}" )
+    Integer findAdminID();
+
     @Select("SELECT count(id) " +
             "FROM property " +
             "WHERE user_id=#{userID} AND status is true")

@@ -145,6 +145,10 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public PropertyRepo.Property updateProperty(PropertyRepo.Property property, Principal principal) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        Integer ownerID=propertyRepo.findOwnerID(property.getId());
+        if(!userID.equals(ownerID)) throw new CustomRuntimeException(401,"You are not the owner of the property");
+
         propertyRepo.updateProperty(property);
         Collection<Integer> idFromDB=new ArrayList<>();
         idFromDB=propertyRepo.findAllNeighborhoodID(property.getId());
