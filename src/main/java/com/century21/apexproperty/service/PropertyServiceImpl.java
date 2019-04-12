@@ -54,6 +54,17 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] docs,Principal principal) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        Integer ownerID=propertyRepo.findOwnerID(propertyID);
+        boolean isOwner=true;
+        if(!userID.equals(ownerID)){
+            isOwner=false;
+        }
+        if(propertyRepo.findAdminID(propertyID)!=null){
+            isOwner=true;
+        }
+        if(!isOwner) throw new CustomRuntimeException(401,"You are not the owner of the property");
+
         List<String> gall=fileUploadService.storeImages(galleries,fileUploadProperty.getPropertyGallery());
         List<String> documents;
         if(docs!=null){
@@ -72,7 +83,7 @@ public class PropertyServiceImpl implements PropertyService{
         }
         files.put("galleries",gall);
         files.put("docs",documents);
-        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+
         userLogRepo.insertUserLog("upload file to property id= "+propertyID,userID);
         return files;
     }
@@ -99,6 +110,17 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public void removeFile(int propertyID, String gallName, String docName,Principal principal) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        Integer ownerID=propertyRepo.findOwnerID(propertyID);
+        boolean isOwner=true;
+        if(!userID.equals(ownerID)){
+            isOwner=false;
+        }
+        if(propertyRepo.findAdminID(propertyID)!=null){
+            isOwner=true;
+        }
+        if(!isOwner) throw new CustomRuntimeException(401,"You are not the owner of the property");
+
         if(gallName!=null) {
             fileUploadService.removeImage(gallName, fileUploadProperty.getPropertyGallery());
             propertyRepo.removeFile(propertyID,gallName);
@@ -107,7 +129,7 @@ public class PropertyServiceImpl implements PropertyService{
             fileUploadService.removeImage(docName, fileUploadProperty.getPropertyDoc());
             propertyRepo.removeFile(propertyID,docName);
         }
-        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+
         userLogRepo.insertUserLog("remove file from property id ="+propertyID,userID);
     }
 
@@ -121,6 +143,7 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest) {
+        if(propertyRepo.findAdminID(propertyID)==null) throw new CustomRuntimeException(401,"You are not the owner of the property");
 
         PropertyRepo.PropertyNoti propertyNoti=propertyRepo.propertyNoti(propertyID);
 
@@ -154,7 +177,6 @@ public class PropertyServiceImpl implements PropertyService{
         if(propertyRepo.findAdminID(property.getId())!=null){
             isOwner=true;
         }
-        System.out.println(propertyRepo.findAdminID(property.getId()));
         if(!isOwner) throw new CustomRuntimeException(401,"You are not the owner of the property");
 
         propertyRepo.updateProperty(property);

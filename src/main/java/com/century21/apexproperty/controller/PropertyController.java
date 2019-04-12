@@ -24,6 +24,8 @@ public class PropertyController {
     private FileUploadService fileUploadService;
     @Autowired
     private PropertyService propertyService;
+
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping("/apis/property/insert")
     public ResponseEntity insertProperty(@RequestBody PropertyRepo.PropertyRequest property, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.insertProperty(property,principal));
@@ -49,12 +51,14 @@ public class PropertyController {
         return fileUploadService.downloadFile(fileName,fileUploadProperty.getPropertyDoc(),request);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping("/apis/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @DeleteMapping("/apis/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName,Principal principal){
         propertyService.removeFile(propertyID,gallName,docName,principal);
@@ -82,6 +86,7 @@ public class PropertyController {
         return customResponse.httpResponse("result","paging");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/apis/property/{propertyID}")
     public ResponseEntity updateStatus(@PathVariable(name = "propertyID") int propertyID, @RequestParam boolean status,Principal principal,HttpServletRequest httpServletRequest){
         propertyService.updateStatus(propertyID,status,principal,httpServletRequest);
@@ -89,6 +94,7 @@ public class PropertyController {
         return customResponse.httpResponse();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @GetMapping("/apis/property/agent/{userID}")
     public ResponseEntity agentProperties(@PathVariable int userID,@RequestParam(required = false)String status,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
