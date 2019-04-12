@@ -15,8 +15,11 @@ public interface PropertyRepo {
             "FROM property WHERE id = #{proID}")
     Integer findOwnerID(int proID);
 
-    @Select("SELECT id FROM user WHERE parent_id = #{parentID AND id = #{userID}" )
-    Integer findAdminID();
+    @Select("SELECT parent_id " +
+            "FROM property " +
+            "INNER JOIN users ON users.id=property.user_id " +
+            "WHERE property.id=#{proID}" )
+    Integer findAdminID(int proID);
 
     @Select("SELECT count(id) " +
             "FROM property " +

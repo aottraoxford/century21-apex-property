@@ -8,6 +8,7 @@ import com.century21.apexproperty.model.response.CustomResponse;
 import com.century21.apexproperty.repository.PropertyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
@@ -29,6 +30,7 @@ public class PropertyController {
         return customResponse.httpResponse("property_id");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PutMapping("/apis/property/update")
     public ResponseEntity updateProperty(@RequestBody PropertyRepo.Property property, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.updateProperty(property,principal));
