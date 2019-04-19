@@ -25,7 +25,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.century21.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.century21.apexproperty.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(swaggerInfo())
