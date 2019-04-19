@@ -209,7 +209,7 @@ public interface PropertyRepo {
         public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("description,lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
+                    SELECT("property.description,lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
