@@ -57,7 +57,7 @@ public interface EventRepo {
         public String findAllEvent(@Param("title")String title,@Param("status") String status,@Param("limit")int limit,@Param("offset")int offset) {
             return new SQL() {
                 {
-                    SELECT("id,title,banner,enable,event_date");
+                    SELECT("id,title,description,banner,enable,event_date");
                     FROM("events");
                     WHERE("type ilike 'event'");
                     if(title!=null && title.trim().length()>0){

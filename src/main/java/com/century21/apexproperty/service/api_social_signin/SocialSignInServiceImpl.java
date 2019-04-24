@@ -4,6 +4,7 @@ import com.century21.apexproperty.exception.CustomRuntimeException;
 import com.century21.apexproperty.model.request.SocialSignIn;
 import com.century21.apexproperty.model.response.CustomResponse;
 import com.century21.apexproperty.model.response.OAuth2;
+import com.century21.apexproperty.repository.UserRepo;
 import com.century21.apexproperty.repository.api_social_signin.SocialSignInRepo;
 import com.century21.apexproperty.util.JwtUtil;
 import com.century21.apexproperty.util.Url;
@@ -24,11 +25,14 @@ public class SocialSignInServiceImpl implements SocialSignInService {
     private JwtUtil jwtUtil;
     @Autowired
     private SocialSignInRepo socialSignInRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     @Override
     public ResponseEntity socialSignIn(String token) {
         SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, JwtUtil.secret, SocialSignIn.class);
         CustomResponse customResponse;
+
         if (socialSignIn.getEmail()==null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
             socialSignIn.setEmail(socialSignIn.getSocialId());
         }else socialSignIn.setEmail(socialSignIn.getEmail()+"|"+UUID.randomUUID());

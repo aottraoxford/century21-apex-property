@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface SocialSignInRepo {
+    @Select("SELECT count(id) FROM users WHERE email = #{email}")
+    int isEmailExist(String email);
+
     @Select("SELECT email,phone_number,password,id " +
             "FROM users " +
             "WHERE appid=#{email} AND enable IS true")

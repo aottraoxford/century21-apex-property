@@ -21,6 +21,13 @@ public interface UserRepo {
             "WHERE users.id=#{userID}")
     String findUserRole(int userID);
 
+    @Select("SELECT role " +
+            "FROM authority " +
+            "INNER JOIN authorizations on authorizations.authority_id=authority.id " +
+            "INNER JOIN users on users.id=authorizations.users_id " +
+            "WHERE users.email=#{email}")
+    String findUserRoleByEmail(String email);
+
     @SelectProvider(type = UserUtil.class,method = "findUsers")
     @Results({
             @Result(property = "id",column = "id"),
