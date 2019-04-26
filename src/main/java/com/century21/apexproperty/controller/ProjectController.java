@@ -185,8 +185,8 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
     @PostMapping("/api/project/insert")
-    public ResponseEntity insertProject(@RequestBody ProjectRepo.ProjectRequest project){
-        CustomResponse customResponse=new CustomResponse(200,projectService.insertProject(project));
+    public ResponseEntity insertProject(@RequestBody ProjectRepo.ProjectRequest project,Principal principal){
+        CustomResponse customResponse=new CustomResponse(200,projectService.insertProject(project,principal));
         return customResponse.httpResponse("result");
     }
 

@@ -7,12 +7,16 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Repository
 public interface UserRepo {
+
+    @SelectProvider(type = UserUtil.class,method = "findAllContact")
+    void findAllContact(int limit,int offset);
 
     @Select("SELECT role " +
             "FROM authority " +
@@ -97,6 +101,7 @@ public interface UserRepo {
             "WHERE name = #{email} AND enable IS TRUE")
     void removeEmail(String email);
 
+
     @Update("UPDATE users SET password=crypt(#{change.password},gen_salt('bf')) " +
             "WHERE email = #{change.email}")
     Integer updatePassword(@Param("change")ChangePassword change);
@@ -105,6 +110,38 @@ public interface UserRepo {
     Integer removeCode();
 
     class UserUtil{
+        public String test(){
+            return "select count(id) from project";
+        }
+        public String findAllContact(ContactFilter filter,int userID,String roleType,int limit,int offset){
+            return new SQL(){
+                {
+                    if(filter.getType().equalsIgnoreCase("project")){
+                        SELECT("contact.id");
+                        FROM("contact");
+                        INNER_JOIN("project on contact.project_id = project.id");
+                        INNER_JOIN("users on users.id = project.user_id");
+                        WHERE("users.id=#{userID}");
+                        if(roleType.equalsIgnoreCase("admin")){
+                            OR();
+                            WHERE("users.parent_id=(SELECT parent_id FROM users WHERE id=#{userID})");
+                        }
+                    }else if(filter.getType().equalsIgnoreCase("property")) {
+                        SELECT("contact.id");
+                        FROM("contact");
+                        INNER_JOIN("property on contact.property_id = property.id");
+                        INNER_JOIN("users on users.id = property.user_id");
+                        WHERE("users.id=#{userID}");
+                        if(roleType.equalsIgnoreCase("admin")){
+                            OR();
+                            WHERE("users.parent_id=(SELECT parent_id FROM users WHERE id=#{userID})");
+                        }
+                    }
+                }
+
+            }.toString();
+        }
+
         public String findUsers(String name,String role,int limit,int offset){
             return new SQL(){
                 {
@@ -162,6 +199,162 @@ public interface UserRepo {
                         WHERE("name ilike '%'||#{name}||'%'");
                 }
             } .toString();
+        }
+    }
+
+    class Contact{
+        private int id;
+        private String name;
+        private String phone;
+        private String email;
+        private Date createAt;
+        private Property property;
+        private Project project;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Date getCreateAt() {
+            return createAt;
+        }
+
+        public void setCreateAt(Date createAt) {
+            this.createAt = createAt;
+        }
+
+        public Property getProperty() {
+            return property;
+        }
+
+        public void setProperty(Property property) {
+            this.property = property;
+        }
+
+        public Project getProject() {
+            return project;
+        }
+
+        public void setProject(Project project) {
+            this.project = project;
+        }
+
+        class Property{
+            private int id;
+            private String title;
+            private String description;
+            private String url;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getDescription() {
+                return description;
+            }
+
+            public void setDescription(String description) {
+                this.description = description;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+        }
+
+        class Project{
+            private int id;
+            private String title;
+            private String description;
+            private String url;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getDescription() {
+                return description;
+            }
+
+            public void setDescription(String description) {
+                this.description = description;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+        }
+    }
+
+    class ContactFilter{
+        private String type;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 

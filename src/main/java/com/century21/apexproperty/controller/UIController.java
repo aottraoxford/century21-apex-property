@@ -28,6 +28,7 @@ public class UIController {
     @Autowired
     private PropertyRepo propertyRepo;
 
+
     @GetMapping({"/"})
     public String swagger() {
         return "redirect:/swagger-ui.html";

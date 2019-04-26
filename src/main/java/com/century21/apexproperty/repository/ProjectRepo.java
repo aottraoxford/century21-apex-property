@@ -180,7 +180,7 @@ public interface ProjectRepo {
 
     @InsertProvider(type = ProjectUtil.class, method = "insertProject")
     @SelectKey(statement = "select nextval('project_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
-    int insertProject(@Param("id") ID id, @Param("project") ProjectRequest project);
+    int insertProject(@Param("id") ID id,@Param("userID")int userID, @Param("project") ProjectRequest project);
 
     @InsertProvider(type = ProjectUtil.class, method = "insertProjectIntro")
     int insertProjectIntro(@Param("intro") ProjectIntroduction intro, @Param("proID") int projectID);
@@ -374,11 +374,11 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String insertProject(@Param("id") ID id,@Param("project") ProjectRequest project) {
+        public String insertProject(@Param("id") ID id,@Param("userID")int userID,@Param("project") ProjectRequest project) {
             return new SQL() {
                 {
                     INSERT_INTO("project");
-                    VALUES("id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,price,sqm_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.price},#{project.sqmPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
+                    VALUES("user_id,id,city,name,grr,country_id,project_type_id,completed_date,built_date,description,price,sqm_price,avg_rent_from,avg_rent_to,down_payment,rent_or_buy,address_1,address_2", "#{userID},#{id.id},#{project.city},#{project.name},#{project.grr},#{project.countryID},#{project.projectTypeID},#{project.completedDate},#{project.builtDate},#{project.description},#{project.price},#{project.sqmPrice},#{project.avgRentFrom},#{project.avgRentTo},#{project.downPayment},#{project.rentOrBuy},#{project.addressOne},#{project.addressTwo}");
                 }
             }.toString();
         }

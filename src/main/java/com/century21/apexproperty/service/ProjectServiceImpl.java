@@ -27,10 +27,11 @@ public class ProjectServiceImpl implements ProjectService {
     private UserRepo userRepo;
 
     @Override
-    public ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest projectRequest) {
-
+    public ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest projectRequest,Principal principal) {
+        Integer userID=userRepo.findUserIDByEmail(principal.getName());
+        if(userID==null || userID==0) throw new CustomRuntimeException(404,"user id not found.");
         ID id = new ID();
-        projectRepo.insertProject(id, projectRequest);
+        projectRepo.insertProject(id,userID, projectRequest);
         int projectID = id.getId();
 
         if(projectRequest.getTowerTypes()!=null) {

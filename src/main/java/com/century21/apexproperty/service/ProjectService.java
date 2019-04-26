@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProjectService {
-    ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest project);
+    ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest project,Principal principal);
 
     Map<String,Object> uploadProjectImage(MultipartFile thumbnail, MultipartFile[] galleries, int projectID);
 
