@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import springfox.documentation.annotations.ApiIgnore;
+//import springfox.documentation.annotations.ApiIgnore;
 
 
-@ApiIgnore
+//@ApiIgnore
 @Controller
 public class UIController {
     @Autowired
@@ -27,7 +27,6 @@ public class UIController {
 
     @Autowired
     private PropertyRepo propertyRepo;
-
 
     @GetMapping({"/"})
     public String swagger() {

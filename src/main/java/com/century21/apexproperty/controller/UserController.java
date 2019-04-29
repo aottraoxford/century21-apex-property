@@ -34,24 +34,23 @@ import com.century21.apexproperty.util.Url;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
+//import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import java.awt.print.Pageable;
 import java.security.Principal;
 import java.util.List;
 
-@Api(value = "user management",description = "user management")
+//@Api(value = "user management",description = "user management")
 @RestController
 @Validated //validate request param
 public class UserController {
@@ -76,7 +75,7 @@ public class UserController {
     @Autowired
     private SendEmailVerificationService sendEmailVerificationService;
 
-    @ApiOperation("send 4 number to email to verify")
+    //@ApiOperation("send 4 number to email to verify")
     @GetMapping(value = "/api/send-email-verification-code",produces = "application/json")
     public ResponseEntity emailVerification(@Email @RequestParam("email") String email, HttpServletRequest httpServletRequest){
 
@@ -92,7 +91,7 @@ public class UserController {
     @Autowired
     EnableEmailService enableEmailService;
 
-    @ApiOperation("retrieve email and code to enable email")
+    //@ApiOperation("retrieve email and code to enable email")
     @PatchMapping(value = "/api/enable-email",produces = "application/json")
     public ResponseEntity enableEmail(@Valid @RequestBody EnableEmail enableEmail, HttpServletRequest httpServletRequest){
 
@@ -104,7 +103,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @ApiOperation("user sign up with gmail and password")
+    //@ApiOperation("user sign up with gmail and password")
     @PostMapping(value = "/api/sign-up",produces = "application/json")
     public ResponseEntity signUp(@Valid @RequestBody SignUp signUp){
         signUpService.signUp(signUp);
@@ -112,7 +111,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @ApiOperation("user login with century 21 cambodia account")
+    //@ApiOperation("user login with century 21 cambodia account")
     @PostMapping(value="/api/sign-in",produces = "application/json")
     public ResponseEntity signIn(@Valid @RequestBody SignIn signIn){
 
@@ -136,13 +135,13 @@ public class UserController {
         return customResponse.httpResponse("result");
     }
 
-    @ApiOperation("sign in with facebook,gmail,wechat")
+    //@ApiOperation("sign in with facebook,gmail,wechat")
     @PostMapping(value="/api/social-sign-in",produces = "application/json")
     public ResponseEntity socialSignIn(HttpServletRequest httpServletRequest){
         return socialSignInService.socialSignIn(httpServletRequest.getHeader("x-auth"));
     }
 
-    @ApiOperation("refresh token")
+    //@ApiOperation("refresh token")
     @PostMapping(value = "/api/refresh-token",produces = "application/json")
     public ResponseEntity refreshToken(@RequestBody RefreshToken refreshToken){
         CustomResponse customResponse;
@@ -166,14 +165,14 @@ public class UserController {
         return customResponse.httpResponse("result");
     }
 
-    @ApiOperation("user information")
+    //@ApiOperation("user information")
     @GetMapping("/api/user-info")
     public ResponseEntity userInfo(@RequestParam(value = "id",required = false)Integer userID, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID,principal.getName()));
         return customResponse.httpResponse("result");
     }
 
-    @ApiOperation("user question")
+    //@ApiOperation("user question")
     @PostMapping("/api/user-question")
     public ResponseEntity userQuestion(@RequestBody @Valid UserQuestion userQuestion, HttpServletRequest httpServletRequest){
 
@@ -182,7 +181,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @ApiOperation("user contact")
+    //@ApiOperation("user contact")
     @PostMapping("/api/user-contact")
     public ResponseEntity useContact(@RequestBody @Valid UserContact userContact, HttpServletRequest httpServletRequest){
         userContactService.saveUserContact(userContact);
@@ -190,8 +189,8 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    @ApiIgnore
-    @ApiOperation("user image")
+    //@ApiIgnore
+    //@ApiOperation("user image")
     @GetMapping("/api/user/image/{fileName:.+}")
     public ResponseEntity userImage(@PathVariable(value = "fileName")String fileName,HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getUserImage(),request);
@@ -201,7 +200,7 @@ public class UserController {
     private UserUploadImageService userUploadImageService;
     @Autowired
     private UserUploadImageRepo userUploadImageRepo;
-    @ApiOperation("user upload image")
+    //@ApiOperation("user upload image")
     @PostMapping(value="/api/user-upload-image",produces = "application/json")
     public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam(value = "userID",required = false)Integer userID,Principal principal){
         if(userID==null){
@@ -293,6 +292,13 @@ public class UserController {
     public ResponseEntity users(@RequestParam(required = false)String name,@RequestParam(required = false)String role,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userService.findUsers(name,role,pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
+
+    @PostMapping("/apis/contacts")
+    public ResponseEntity contacts(@RequestBody UserRepo.ContactFilter filter,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,Principal principal){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,userService.findContacts(filter,pagination,principal),pagination);
         return customResponse.httpResponse("result","paging");
     }
 }

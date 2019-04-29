@@ -1,7 +1,7 @@
 package com.century21.apexproperty.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 
@@ -10,40 +10,40 @@ public class SignUp {
     @NotNull
     @NotEmpty
     @Size(min=1,max=25)
-    @ApiModelProperty(position = 1)
+    //@ApiModelProperty(position = 1)
     @JsonProperty("first_name")
     private String firstName;
     @NotBlank
     @NotNull
     @NotEmpty
     @Size(min=1,max=25)
-    @ApiModelProperty(position = 2)
+    //@ApiModelProperty(position = 2)
     @JsonProperty("last_name")
     private String lastName;
     @NotBlank
     @NotNull
     @NotEmpty
-    @ApiModelProperty(position = 3)
+    //@ApiModelProperty(position = 3)
     private String gender;
     @NotBlank
     @NotNull
     @NotEmpty
     @Email
     @Size(max = 50)
-    @ApiModelProperty(position = 4)
+    //@ApiModelProperty(position = 4)
     private String email;
-    @NotBlank
-    @NotNull
-    @NotEmpty
-    @Size(min = 9,max = 20 )
-    @ApiModelProperty(position = 5)
+//    @NotBlank
+//    @NotNull
+//    @NotEmpty
+//    @Size(min = 9,max = 20 )
+    //@ApiModelProperty(position = 5)
     @JsonProperty("phone_number")
     private String phoneNumber;
     @NotBlank
     @NotNull
     @NotEmpty
     @Size(min = 8)
-    @ApiModelProperty(position = 6)
+    //@ApiModelProperty(position = 6)
     private String password;
 
     public String getFirstName() {

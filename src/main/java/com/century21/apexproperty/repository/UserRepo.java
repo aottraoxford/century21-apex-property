@@ -14,9 +14,14 @@ import java.util.regex.Pattern;
 
 @Repository
 public interface UserRepo {
+    @SelectProvider(type = UserUtil.class,method = "findAllContactCount")
+    int findAllContactCount(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType);
 
     @SelectProvider(type = UserUtil.class,method = "findAllContact")
-    void findAllContact(int limit,int offset);
+    @Results({
+            @Result(property = "createAt",column = "created_at")
+    })
+    List<Contact> findAllContact(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset);
 
     @Select("SELECT role " +
             "FROM authority " +
@@ -110,36 +115,65 @@ public interface UserRepo {
     Integer removeCode();
 
     class UserUtil{
-        public String test(){
-            return "select count(id) from project";
+        public String findAllContactCount(@Param("filter")ContactFilter filter,@Param("userID")int userID,@Param("roleType")String roleType){
+            String contactofProperty,contactofProject;
+            if(roleType.equalsIgnoreCase("admin")){
+                contactofProject="select count(contact.id) from contact " +
+                        "inner join project on contact.project_id = project.id " +
+                        "inner join users on users.id=project.user_id " +
+                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+                contactofProperty="select count(contact.id) from contact " +
+                        "inner join property on contact.property_id = property.id " +
+                        "inner join users on users.id=property.user_id " +
+                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+            }else if(roleType.equalsIgnoreCase("agent")){
+                contactofProject="select count(contact.id) from contact " +
+                        "inner join project on contact.project_id = project.id " +
+                        "inner join users on users.id=project.user_id " +
+                        "where contact.issue is null and users.id = #{userID}";
+                contactofProperty="select count(contact.id) from contact " +
+                        "inner join property on contact.property_id = property.id " +
+                        "inner join users on users.id=property.user_id " +
+                        "where contact.issue is null and users.id = #{userID}";
+            }else return "select count(id) from contact limit 0";
+            if(filter.getType().equalsIgnoreCase("project"))
+                return contactofProject;
+            else if(filter.getType().equalsIgnoreCase("property"))
+                return contactofProperty;
+            else {
+                System.out.println("select sum(count) from (("+contactofProject+") union ("+contactofProperty+"))as foo");
+                return "select sum(count) from (("+contactofProject+") union ("+contactofProperty+"))as foo";
+            }
         }
-        public String findAllContact(ContactFilter filter,int userID,String roleType,int limit,int offset){
-            return new SQL(){
-                {
-                    if(filter.getType().equalsIgnoreCase("project")){
-                        SELECT("contact.id");
-                        FROM("contact");
-                        INNER_JOIN("project on contact.project_id = project.id");
-                        INNER_JOIN("users on users.id = project.user_id");
-                        WHERE("users.id=#{userID}");
-                        if(roleType.equalsIgnoreCase("admin")){
-                            OR();
-                            WHERE("users.parent_id=(SELECT parent_id FROM users WHERE id=#{userID})");
-                        }
-                    }else if(filter.getType().equalsIgnoreCase("property")) {
-                        SELECT("contact.id");
-                        FROM("contact");
-                        INNER_JOIN("property on contact.property_id = property.id");
-                        INNER_JOIN("users on users.id = property.user_id");
-                        WHERE("users.id=#{userID}");
-                        if(roleType.equalsIgnoreCase("admin")){
-                            OR();
-                            WHERE("users.parent_id=(SELECT parent_id FROM users WHERE id=#{userID})");
-                        }
-                    }
-                }
 
-            }.toString();
+        public String findAllContact(@Param("filter")ContactFilter filter,@Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset){
+            String contactofProperty,contactofProject;
+            if(roleType.equalsIgnoreCase("admin")){
+                contactofProject="select contact.* from contact " +
+                        "inner join project on contact.project_id = project.id " +
+                        "inner join users on users.id=project.user_id " +
+                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+                contactofProperty="select contact.* from contact " +
+                        "inner join property on contact.property_id = property.id " +
+                        "inner join users on users.id=property.user_id " +
+                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+            }else if(roleType.equalsIgnoreCase("agent")){
+                contactofProject="select contact.* from contact " +
+                        "inner join project on contact.project_id = project.id " +
+                        "inner join users on users.id=project.user_id " +
+                        "where contact.issue is null and users.id = #{userID}";
+                contactofProperty="select contact.* from contact " +
+                        "inner join property on contact.property_id = property.id " +
+                        "inner join users on users.id=property.user_id " +
+                        "where contact.issue is null and users.id = #{userID}";
+            }else return "select id from contact limit 0";
+            if(filter.getType().equalsIgnoreCase("project"))
+                return contactofProject+" order by id desc limit #{limit} offset #{offset}";
+            else if(filter.getType().equalsIgnoreCase("property"))
+                return contactofProperty+" order by id desc limit #{limit} offset #{offset}";
+            else {
+                return "("+contactofProject+") union ("+contactofProperty+") order by id desc limit #{limit} offset #{offset}";
+            }
         }
 
         public String findUsers(String name,String role,int limit,int offset){
@@ -207,9 +241,8 @@ public interface UserRepo {
         private String name;
         private String phone;
         private String email;
+        @JsonProperty("created_at")
         private Date createAt;
-        private Property property;
-        private Project project;
 
         public int getId() {
             return id;
@@ -251,21 +284,6 @@ public interface UserRepo {
             this.createAt = createAt;
         }
 
-        public Property getProperty() {
-            return property;
-        }
-
-        public void setProperty(Property property) {
-            this.property = property;
-        }
-
-        public Project getProject() {
-            return project;
-        }
-
-        public void setProject(Project project) {
-            this.project = project;
-        }
 
         class Property{
             private int id;
@@ -356,6 +374,7 @@ public interface UserRepo {
         public void setType(String type) {
             this.type = type;
         }
+
     }
 
     class User{

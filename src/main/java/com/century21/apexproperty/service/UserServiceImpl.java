@@ -107,4 +107,15 @@ public class UserServiceImpl implements UserService {
         pagination.setTotalItem(userRepo.findUsersCount(name,role));
         return users;
     }
+
+    @Override
+    public List<UserRepo.Contact> findContacts(UserRepo.ContactFilter filter, Pagination pagination, Principal principal) {
+        Integer userID = userRepo.findUserIDByEmail(principal.getName());
+        if(userID==null) throw new CustomRuntimeException(404,"user id not found.");
+        String roleType=userRepo.findUserRoleByEmail(principal.getName());
+        List<UserRepo.Contact> contacts = userRepo.findAllContact(filter,userID,roleType,pagination.getLimit(),pagination.getOffset());
+        if(contacts.size()<1) throw new CustomRuntimeException(404,"zero result.");
+        pagination.setTotalItem(userRepo.findAllContactCount(filter,userID,roleType));
+        return contacts;
+    }
 }

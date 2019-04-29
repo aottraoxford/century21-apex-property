@@ -19,14 +19,14 @@ import com.century21.apexproperty.service.api_slider_update.SliderUpdateService;
 import com.century21.apexproperty.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.apexproperty.service.search.SearchService;
 import com.century21.apexproperty.util.Url;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+//import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
+//import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -42,7 +42,7 @@ public class ProjectController {
 
     @Autowired
     private VisibleProjectService visibleProjectService;
-    @ApiOperation("(BACK END)visible project")
+    //@ApiOperation("(BACK END)visible project")
     @PutMapping(value = "/api/visible-project",produces = "application/json")
     public ResponseEntity visibleProject(@RequestParam("status")boolean status, @RequestParam("projectID")int projectID, HttpServletRequest request){
         visibleProjectService.visibleProject(status,projectID,request.getHeader("Authorization"));
@@ -52,7 +52,7 @@ public class ProjectController {
 
     @Autowired
     private AddSliderService addSliderService;
-    @ApiOperation("(BACK END) add more slide ")
+    //@ApiOperation("(BACK END) add more slide ")
     @PostMapping("/api/slider/add")
     public ResponseEntity addSlider(@RequestParam("title")String name,@RequestPart MultipartFile file){
         String fileName= fileUploadService.storeImage(file,fileUploadProperty.getSlider());
@@ -64,7 +64,7 @@ public class ProjectController {
 
     @Autowired
     private SliderUpdateService sliderUpdateService;
-    @ApiOperation("(BACK END) update slide ")
+    //@ApiOperation("(BACK END) update slide ")
     @PostMapping("/api/slider/update")
     public ResponseEntity updateSliders(@RequestParam(value = "enable",defaultValue = "true")boolean enable,@RequestParam("sliderID")int sliderID,@RequestPart(value = "file",required = false)MultipartFile file){
         CustomResponse customResponse=new CustomResponse(200,sliderUpdateService.updateSlider(enable,sliderID,file));
@@ -87,33 +87,33 @@ public class ProjectController {
         return customResponse.httpResponse("result","paging");
     }
 
-    @ApiOperation("list project types")
+    //@ApiOperation("list project types")
     @GetMapping(value = "/api/project-types",produces = "application/json")
     public ResponseEntity projectTypes(){
         CustomResponse customResponse = new CustomResponse(200,searchService.projectTypes());
         return customResponse.httpResponse("result");
     }
 
-    @ApiOperation("list countries")
+    //@ApiOperation("list countries")
     @GetMapping(value = "/api/countries",produces = "application/json")
     public ResponseEntity countries(){
         CustomResponse customResponse=new CustomResponse(200,searchService.countries());
         return customResponse.httpResponse("result");
     }
 
-    @ApiIgnore
+    //@ApiIgnore
     @GetMapping("/api/project/thumbnail/{fileName:.+}")
     public ResponseEntity viewProjectThumbnail(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getProjectThumbnail(),request);
     }
 
-    @ApiIgnore
+    //@ApiIgnore
     @GetMapping("/api/project/gallery/{fileName:.+}")
     public ResponseEntity viewProjectGallery(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getProjectGallery(),request);
     }
 
-    @ApiIgnore
+    //@ApiIgnore
     @GetMapping("/api/event/banner/{fileName:.+}")
     public ResponseEntity viewBanner(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getEventImage(),request);
@@ -122,7 +122,7 @@ public class ProjectController {
     @Autowired
     private TypeCountryProjectService typeCountryProjectService;
 
-    @ApiOperation("get type country project ")
+    //@ApiOperation("get type country project ")
     @GetMapping(value = "/api/type-country-project",produces = "application/json")
     public ResponseEntity typeCountryProject(){
         CustomResponse customResponse=new CustomResponse(200,typeCountryProjectService.typeCP());
@@ -132,7 +132,7 @@ public class ProjectController {
     @Autowired
     private SaveNotiService saveNotiService;
 
-    @ApiIgnore
+    //@ApiIgnore
     @PostMapping(value = "/api/noti",produces = "application/json")
     public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
         saveNotiService.saveNoti(saveNoti, principal.getName());
@@ -167,7 +167,7 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @ApiIgnore
+    //@ApiIgnore
     @GetMapping("/api/slider/{fileName:.+}")
     public ResponseEntity viewSlider(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getSlider(),request);
@@ -191,7 +191,7 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/api/project/image/upload",produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,@ApiParam(name="galleries",allowMultiple = true) @RequestPart(value = "galleries",required = false) MultipartFile[] galleries){
+    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,/*@ApiParam(name="galleries",allowMultiple = true)*/ @RequestPart(value = "galleries",required = false) MultipartFile[] galleries){
         CustomResponse customResponse=new CustomResponse(200,projectService.uploadProjectImage(thumbnail,galleries,projectID));
         return customResponse.httpResponse("result");
     }

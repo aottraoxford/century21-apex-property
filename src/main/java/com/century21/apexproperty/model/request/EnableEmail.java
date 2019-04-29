@@ -1,6 +1,6 @@
 package com.century21.apexproperty.model.request;
 
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 
@@ -9,10 +9,10 @@ public class EnableEmail {
     @NotBlank
     @NotEmpty
     @NotNull
-    @ApiModelProperty(position = 1)
+    //@ApiModelProperty(position = 1)
     private String email;
 
-    @ApiModelProperty(position = 2)
+    //@ApiModelProperty(position = 2)
     private int code;
 
     public String getEmail() {
