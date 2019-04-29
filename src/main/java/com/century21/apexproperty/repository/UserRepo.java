@@ -142,7 +142,7 @@ public interface UserRepo {
                 return contactofProperty;
             else {
                 System.out.println("select sum(count) from (("+contactofProject+") union ("+contactofProperty+"))as foo");
-                return "select sum(count) from (("+contactofProject+") union ("+contactofProperty+"))as foo";
+                return "select sum(count) from (("+contactofProject+") union all ("+contactofProperty+"))as foo";
             }
         }
 
@@ -172,7 +172,7 @@ public interface UserRepo {
             else if(filter.getType().equalsIgnoreCase("property"))
                 return contactofProperty+" order by id desc limit #{limit} offset #{offset}";
             else {
-                return "("+contactofProject+") union ("+contactofProperty+") order by id desc limit #{limit} offset #{offset}";
+                return "("+contactofProject+") union all ("+contactofProperty+") order by id desc limit #{limit} offset #{offset}";
             }
         }
 
