@@ -166,7 +166,7 @@ public class UserController {
     }
 
     //@ApiOperation("user information")
-    @GetMapping("/api/user-info")
+    @GetMapping("/apis/user-info")
     public ResponseEntity userInfo(@RequestParam(value = "id",required = false)Integer userID, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,userInfoService.userInfo(userID,principal.getName()));
         return customResponse.httpResponse("result");
@@ -201,7 +201,7 @@ public class UserController {
     @Autowired
     private UserUploadImageRepo userUploadImageRepo;
     //@ApiOperation("user upload image")
-    @PostMapping(value="/api/user-upload-image",produces = "application/json")
+    @PostMapping(value="/apis/user-upload-image",produces = "application/json")
     public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam(value = "userID",required = false)Integer userID,Principal principal){
         if(userID==null){
             userID=userUploadImageRepo.getIDByEmail(principal.getName());
@@ -220,16 +220,17 @@ public class UserController {
         return customResponse.httpResponse("image");
     }
 
+
     @Autowired
     private FavoriteService favoriteService;
-    @PostMapping("/api/favorite_on")
+    @PostMapping("/apis/favorite_on")
     public ResponseEntity projectFavorite(@RequestBody FavoriteRepo.FavoriteOn favoriteOn, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,favoriteService.favorite(favoriteOn.getProjectID(),favoriteOn.getPropertyID(),principal));
         return customResponse.httpResponse("favorite");
     }
 
 
-    @GetMapping("/api/user/favorite/{type}")
+    @GetMapping("/apis/user/favorite/{type}")
     public ResponseEntity userFavorite(@PathVariable String type,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
         if(type.equalsIgnoreCase("property")) {
@@ -243,7 +244,7 @@ public class UserController {
 
     @Autowired
     private UserUpdateService userUpdateService;
-    @PostMapping("/api/user/update")
+    @PostMapping("/apis/user/update")
     public ResponseEntity userUpdate(@RequestBody UpdateInfo updateInfo, Principal principal){
         CustomResponse customResponse=new CustomResponse(200,userUpdateService.userUpdate(updateInfo,principal));
         return customResponse.httpResponse("result");
@@ -280,6 +281,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @GetMapping("/apis/agents")
     public ResponseEntity agents(String name,Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
@@ -295,6 +297,7 @@ public class UserController {
         return customResponse.httpResponse("result","paging");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping("/apis/contacts")
     public ResponseEntity contacts(@RequestBody UserRepo.ContactFilter filter,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
