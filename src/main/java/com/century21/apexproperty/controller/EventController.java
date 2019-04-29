@@ -6,6 +6,7 @@ import com.century21.apexproperty.repository.EventRepo;
 import com.century21.apexproperty.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,14 +29,16 @@ public class EventController {
         return customResponse.httpResponse("result");
     }
 
-    @GetMapping(value = "api/events/change_status",produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(value = "apis/events/change_status",produces = "application/json")
     public ResponseEntity changeStatus(@RequestParam int eventID,@RequestParam boolean status, HttpServletRequest header){
         eventService.changeEventStatus(eventID,status,header);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
-    @PostMapping(value = "api/events/insert",produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = "apis/events/insert",produces = "application/json")
     public ResponseEntity insertEvent(@ModelAttribute EventRepo.EventRequest eventRequest){
         CustomResponse customResponse=new CustomResponse(200, eventService.insertEvent(eventRequest));
         return customResponse.httpResponse("result");

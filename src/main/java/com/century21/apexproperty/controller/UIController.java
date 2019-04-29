@@ -6,10 +6,20 @@ import com.century21.apexproperty.repository.PropertyRepo;
 import com.century21.apexproperty.repository.UserRepo;
 import com.century21.apexproperty.repository.api_signup.SignUpRepo;
 import com.century21.apexproperty.repository.api_user_upload_image.UserUploadImageRepo;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 //import springfox.documentation.annotations.ApiIgnore;
 
 
@@ -27,6 +37,22 @@ public class UIController {
 
     @Autowired
     private PropertyRepo propertyRepo;
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() throws IOException, InvalidFormatException {
+        Workbook workbook = WorkbookFactory.create(new File("./authority.xlsx"));
+        System.out.println("Workbook has " + workbook.getNumberOfSheets() + " Sheets : ");
+        Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+        System.out.println("Retrieving Sheets using Iterator");
+        while (sheetIterator.hasNext()) {
+            Sheet sheet = sheetIterator.next();
+            System.out.println("=> " + sheet.getSheetName());
+        }
+
+
+        return "OK";
+    }
 
     @GetMapping({"/"})
     public String swagger() {

@@ -27,6 +27,7 @@ public interface ProjectRepo {
     @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilter")
     @Results({
             @Result(property = "status",column = "isdisplay"),
+            @Result(property = "rentOrBuy",column = "rent_or_buy"),
             @Result(property = "country",column = "country_id",one = @One(select = "country")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
@@ -256,7 +257,7 @@ public interface ProjectRepo {
         public String findAllProjectByFilter(@Param("filter")FilterRequest filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("substring(project.description,1,200)||'.....' as description,project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
+                    SELECT("substring(project.description,1,200)||'.....' as description,rent_or_buy,project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
@@ -645,7 +646,17 @@ public interface ProjectRepo {
         @JsonProperty("project_type")
         private String projectType;
         private String thumbnail;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
         private boolean status;
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
 
         public String getDescription() {
             return description;
