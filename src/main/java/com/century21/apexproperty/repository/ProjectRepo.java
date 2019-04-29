@@ -256,7 +256,7 @@ public interface ProjectRepo {
         public String findAllProjectByFilter(@Param("filter")FilterRequest filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("project.description,project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
+                    SELECT("substring(project.description,1,200)||'.....' as description,project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
@@ -312,7 +312,7 @@ public interface ProjectRepo {
         public String findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("description,id,name,price,sqm_price,grr,country_id,project_type_id,thumbnail,isdisplay");
+                    SELECT("substring(project.description,1,200)||'.....' as description,id,name,price,sqm_price,grr,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
                     if(cid>0)
                         WHERE("country_id=#{cid}");

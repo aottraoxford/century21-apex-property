@@ -209,7 +209,7 @@ public interface PropertyRepo {
         public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("property.description,lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
+                    SELECT("substring(property.description,1,200)||'.....' as description,lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
                     if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
@@ -285,7 +285,7 @@ public interface PropertyRepo {
         public String findAllProperty(@Param("title")String title,@Param("status")String status,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("description,lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status,rent_or_sell");
+                    SELECT("substring(property.description,1,200)||'.....' as description,lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status,rent_or_sell");
                     FROM("property");
                     WHERE("status IS TRUE");
                     if(title!=null && title.trim().length()>0)
