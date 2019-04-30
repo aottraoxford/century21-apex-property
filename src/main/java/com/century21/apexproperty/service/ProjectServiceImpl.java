@@ -121,7 +121,9 @@ public class ProjectServiceImpl implements ProjectService {
         String nameThumbnail = "";
         if (thumbnail != null) {
             if (aThumbnail != null) fileUploadService.removeImage(aThumbnail, fileUploadProperty.getProjectThumbnail());
-            nameThumbnail = Url.projectThumbnailUrl + fileUploadService.storeImage(thumbnail, fileUploadProperty.getProjectThumbnail());
+            String fileName=fileUploadService.storeImage(thumbnail, fileUploadProperty.getProjectThumbnail());
+            projectRepo.updateThumbnail(fileName,projectID);
+            nameThumbnail = Url.projectThumbnailUrl + fileName;
         }
         List<String> nameGalleries = new ArrayList<>();
         if (galleries != null || galleries.length > 0) {

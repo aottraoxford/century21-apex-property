@@ -10,8 +10,8 @@ import java.util.List;
 public interface ProjectRelatedRepo {
     @SelectProvider(type= ProjectRelatedUtil.class,method = "getProjectsRelated")
     @Results({
-            @Result(property = "startPrice",column = "start_price"),
-            @Result(property = "endPrice",column = "end_price"),
+            @Result(property = "status",column = "isdisplay"),
+            @Result(property = "rentOrBuy",column = "rent_or_buy"),
             @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
