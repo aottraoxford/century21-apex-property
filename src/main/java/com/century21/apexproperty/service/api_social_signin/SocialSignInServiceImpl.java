@@ -54,7 +54,7 @@ public class SocialSignInServiceImpl implements SocialSignInService {
                     .queryString("password", socialSignIn.getSocialId())
                     .asObject(OAuth2.class);
             List<String> roles=new ArrayList<>();
-            roles.add("USER");
+            roles.add(socialSignInRepo.findRoleByAppID(socialSignIn.getSocialId()));
             jsonResponse.getBody().setRoles(roles);
             customResponse = new CustomResponse(200, jsonResponse.getBody());
         } catch (UnirestException e) {

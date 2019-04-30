@@ -10,6 +10,13 @@ import java.util.List;
 
 @Repository
 public interface SocialSignInRepo {
+    @Select("SELECT authority.role " +
+            "FROM authority " +
+            "INNER JOIN authorizations ON authority.id=authorizations.authority_id " +
+            "INNER JOIN users on users.id=authorizations.users_id " +
+            "WHERE users.appid=#{appID}")
+    String findRoleByAppID(String appID);
+
     @Select("SELECT count(id) FROM users WHERE email = #{email}")
     int isEmailExist(String email);
 
