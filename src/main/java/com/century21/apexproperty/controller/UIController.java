@@ -8,9 +8,6 @@ import com.century21.apexproperty.repository.api_signup.SignUpRepo;
 import com.century21.apexproperty.repository.api_social_signin.SocialSignInRepo;
 import com.century21.apexproperty.repository.api_user_upload_image.UserUploadImageRepo;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
