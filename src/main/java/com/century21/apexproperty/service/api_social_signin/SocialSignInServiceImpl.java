@@ -33,6 +33,11 @@ public class SocialSignInServiceImpl implements SocialSignInService {
         SocialSignIn socialSignIn = (SocialSignIn) jwtUtil.tokenToObject(token, JwtUtil.secret, SocialSignIn.class);
         CustomResponse customResponse;
 
+        //check if >0 email from social is exist
+        if(socialSignInRepo.isEmailExist(socialSignIn.getEmail())>0){
+
+        }
+
         if (socialSignIn.getEmail()==null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
             socialSignIn.setEmail(socialSignIn.getSocialId());
         }else socialSignIn.setEmail(socialSignIn.getEmail()+"|"+UUID.randomUUID());

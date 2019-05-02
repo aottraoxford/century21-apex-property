@@ -2,10 +2,12 @@ package com.century21.apexproperty.controller;
 
 import com.century21.apexproperty.model.ID;
 import com.century21.apexproperty.model.request.SignUp;
+import com.century21.apexproperty.repository.EventRepo;
 import com.century21.apexproperty.repository.ProjectRepo;
 import com.century21.apexproperty.repository.PropertyRepo;
 import com.century21.apexproperty.repository.UserRepo;
 import com.century21.apexproperty.repository.api_signup.SignUpRepo;
+import com.century21.apexproperty.repository.api_silder_add.AddSliderRepo;
 import com.century21.apexproperty.repository.api_social_signin.SocialSignInRepo;
 import com.century21.apexproperty.repository.api_user_upload_image.UserUploadImageRepo;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 //import springfox.documentation.annotations.ApiIgnore;
@@ -41,7 +44,13 @@ public class UIController {
     private ProjectRepo projectRepo;
 
     @Autowired
+    private EventRepo eventRepo;
+
+    @Autowired
     private VisibleProjectRepo visibleProjectRepo;
+
+    @Autowired
+    private AddSliderRepo addSliderRepo;
 
     @GetMapping("/test")
     public String test(){
@@ -57,7 +66,7 @@ public class UIController {
     @GetMapping("/data/property")
     public String dataProperty(){
         PropertyRepo.PropertyRequest propertyRequest=new PropertyRepo.PropertyRequest();
-        int row=100;
+        int row=20;
         for(int i=1;i<=row;i++) {
             propertyRequest.setAirConditioner((int)(Math.random()*8)+1);
             propertyRequest.setBalcony((int)(Math.random()*8)+1);
@@ -101,11 +110,11 @@ public class UIController {
                 propertyRepo.insertFiles(((int)(Math.random()*8)+1)+".jpg","image",i);
             propertyRepo.insertFiles("1.pdf","doc",i);
             PropertyRepo.Neighborhood neighborhood=new PropertyRepo.Neighborhood();
-            for(int j=1;j<=6;j++){
+            for(int j=1;j<=6;j++) {
                 neighborhood.setPropertyID(i);
                 neighborhood.setDistance(3.4);
                 neighborhood.setAddress("Phnom Penh International Airport");
-                propertyRepo.insertNeighborhood(neighborhood,i);
+                propertyRepo.insertNeighborhood(neighborhood, i);
             }
         }
         return "OK";
@@ -145,13 +154,14 @@ public class UIController {
             userUploadImageRepo.saveUserImage(i,(int)(Math.random()*5)+1+".jpg");
             userRepo.setChild(1,i);
         }
+       
         return "OK";
     }
 
     @ResponseBody
     @GetMapping("/data/project")
     public String dataProject() {
-        int row = 100;
+        int row = 20;
         ProjectRepo.ProjectRequest projectRequest = new ProjectRepo.ProjectRequest();
         for (int i = 1; i <= row; i++) {
             projectRequest.setName(i+"Project for sell - free 1 charger and t-shirt and popcorn for free");
@@ -207,7 +217,7 @@ public class UIController {
                     projectRepo.insertProjectIntro(projectIntroduction,i);
                 }
             }
-            for(int j=1;j<-3;j++) {
+            for(int j=1;j<=3;j++) {
                 projectRepo.insertTowerType("Tower "+j, i);
                 ProjectRepo.PropertyType propertyType=new ProjectRepo.PropertyType();
                 propertyType.setBathroom((int) (Math.random() * 8) + 1);
@@ -220,6 +230,24 @@ public class UIController {
                 projectRepo.insertPropertyType(propertyType,i);
             }
         }
+        return "OK";
+    }
+
+    @ResponseBody
+    @GetMapping("/data/event-slide")
+    public String dataEvent(){
+        for(int i=1;i<=5;i++){
+            EventRepo.EventRequest eventRequest=new EventRepo.EventRequest();
+            eventRequest.setDescription("The 2020 One21 Experience® will be a CENTURY 21 exclusive event, elevated by learning from top-tier speakers and personalities, an amazing expo featuring the products and services of our world-class partners, and first-class entertainment to keep our days well-rounded.");
+            eventRequest.setTitle("HINDSIGHT IS 2020");
+            eventRequest.setMessage("The 2020 One21 Experience® will be a CENTURY 21 exclusive event, elevated by learning from top-tier speakers and personalities, an amazing expo featuring the products and services of our world-class partners, and first-class entertainment to keep our days well-rounded.");
+            eventRepo.insertEvent(new ID(),eventRequest,i+".jpg",new Timestamp(new Date().getTime()));
+        }
+
+        for(int i=1;i<=4;i++){
+            addSliderRepo.addSlider("slider"+i,i+".jpg");
+        }
+
         return "OK";
     }
 }

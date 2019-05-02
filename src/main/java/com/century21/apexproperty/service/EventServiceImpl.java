@@ -34,6 +34,7 @@ public class EventServiceImpl implements EventService {
             title=title.trim().replaceAll(" ","%");
         }
         List<EventRepo.EventResponse> events = eventRepo.findAllEvent(title, status, pagination.getLimit(), pagination.getOffset());
+
         if (events == null || events.size() < 1) throw new CustomRuntimeException(404, "ZERO RESULT");
         Date today = new Date();
         for (int i = 0; i < events.size(); i++) {

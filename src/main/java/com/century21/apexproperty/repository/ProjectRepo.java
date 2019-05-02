@@ -641,6 +641,7 @@ public interface ProjectRepo {
         private String name;
         private double price;
         private double grr;
+        private double sqmPrice;
         private String country;
         private String description;
         @JsonProperty("project_type")
@@ -649,6 +650,14 @@ public interface ProjectRepo {
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
         private boolean status;
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
 
         public String getRentOrBuy() {
             return rentOrBuy;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ public interface FavoriteRepo {
     @SelectProvider(type = FavoriteUtil.class,method = "projectFavorite")
     @Results({
             @Result(property = "status",column = "isdisplay"),
+            @Result(property = "rentOrBuy",column = "rent_or_buy"),
             @Result(property = "country",column = "country_id",one = @One(select = "country")),
+            @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
     })
     List<ProjectRepo.ProjectListingResponse> projectFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset);
@@ -71,7 +74,7 @@ public interface FavoriteRepo {
         public String projectFavorite(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset){
             return new SQL(){
                 {
-                    SELECT("project.id,grr,project.name,start_price,end_price,country_id,project_type_id,thumbnail,isdisplay");
+                    SELECT("project.id,grr,project.name,price,sqm_price,country_id,project_type_id,thumbnail,isdisplay,rent_or_buy,substring(description,1,200)||'.....' as description");
                     FROM("project");
                     INNER_JOIN("favorite ON project.id=favorite.project_id");
                     WHERE("favorite.user_id=#{userID}");
