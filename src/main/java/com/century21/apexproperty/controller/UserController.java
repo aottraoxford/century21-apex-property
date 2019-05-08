@@ -304,4 +304,5 @@ public class UserController {
         CustomResponse customResponse=new CustomResponse(200,userService.findContacts(filter,pagination,principal),pagination);
         return customResponse.httpResponse("result","paging");
     }
+
 }

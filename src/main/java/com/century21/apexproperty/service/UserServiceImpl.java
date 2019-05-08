@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public List<UserRepo.User> agents(String name, Principal principal, Pagination pagination) {
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
         List<UserRepo.User> agents=userRepo.agents(name,userID,pagination.getLimit(),pagination.getOffset());
-        if(agents==null) throw new CustomRuntimeException(404,"ZERO RESULT");
+        if(agents==null || agents.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
         pagination.setTotalItem(userRepo.agentsCount(name,userID));
         return agents;
     }

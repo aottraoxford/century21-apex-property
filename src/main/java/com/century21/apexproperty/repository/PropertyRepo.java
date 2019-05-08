@@ -691,7 +691,7 @@ public interface PropertyRepo {
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
         private String title;
-        @JsonProperty("rent_or_sell")
+        @JsonProperty("rent_or_buy")
         private String rentOrSell;
         private String type;
         private String city;

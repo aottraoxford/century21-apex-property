@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 @Repository
 public interface UserRepo {
+
     @SelectProvider(type = UserUtil.class,method = "findAllContactCount")
     int findAllContactCount(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType);
 
@@ -215,7 +216,9 @@ public interface UserRepo {
                {
                    SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
                    FROM("users");
-                   WHERE("parent_id=(select parent_id from users where id = #{userID})");
+                   WHERE("parent_id=(select id from users where id = #{userID})");
+                   OR();
+                   WHERE("id = #{userID}");
                    if(name!=null && name.length()>0)
                        WHERE("name ilike '%'||#{name}||'%'");
                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
