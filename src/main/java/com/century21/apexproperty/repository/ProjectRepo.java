@@ -28,10 +28,24 @@ public interface ProjectRepo {
     @Results({
             @Result(property = "status",column = "isdisplay"),
             @Result(property = "rentOrBuy",column = "rent_or_buy"),
+            @Result(property = "sqmPrice",column = "sqm_price"),
             @Result(property = "country",column = "country_id",one = @One(select = "country")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType")),
+            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
     })
     List<ProjectListingResponse> findAllProjectByFilter(@Param("filter")FilterRequest filterRequest,@Param("limit")int limit,@Param("offset")int offset);
+
+    @Select("SELECT id,first_name,last_name,email,gender,phone_number,image,account_type " +
+            "FROM users " +
+            "WHERE id=#{user_id}")
+    @Results({
+            @Result(property = "id",column = "id"),
+            @Result(property = "firstName",column = "first_name"),
+            @Result(property = "lastName",column = "last_name"),
+            @Result(property = "phoneNumber",column = "phone_number"),
+            @Result(property = "accountType",column = "account_type")
+    })
+    UserRepo.User findOneUser();
 
     @Select("SELECT id " +
             "FROM project_intro " +
@@ -254,11 +268,13 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
+
         public String findAllProjectByFilter(@Param("filter")FilterRequest filter,@Param("limit")int limit,@Param("offset")int offset){
             return new SQL(){
                 {
-                    SELECT("substring(project.description,1,200)||'.....' as description,rent_or_buy,project.id,project.name,price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
+                    SELECT("project.user_id,substring(project.description,1,200)||'.....' as description,rent_or_buy,project.id,project.name,price,project.sqm_price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
                     FROM("project");
+                    INNER_JOIN("users ON project.user_id=users.id");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
                     if(filter.getRoom()>0)
@@ -641,6 +657,7 @@ public interface ProjectRepo {
         private String name;
         private double price;
         private double grr;
+        @JsonProperty("sqm_price")
         private double sqmPrice;
         private String country;
         private String description;
@@ -650,6 +667,15 @@ public interface ProjectRepo {
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
         private boolean status;
+        private UserRepo.User user;
+
+        public UserRepo.User getUser() {
+            return user;
+        }
+
+        public void setUser(UserRepo.User user) {
+            this.user = user;
+        }
 
         public double getSqmPrice() {
             return sqmPrice;
