@@ -112,7 +112,7 @@ public interface UserRepo {
             "WHERE email = #{change.email}")
     Integer updatePassword(@Param("change")ChangePassword change);
 
-    @Delete("DELETE FROM verification WHERE expired < now() - interval '10' minute AND enable IS false ")
+    @Delete("DELETE FROM verification WHERE expired < now() - interval '15' minute AND enable IS false ")
     Integer removeCode();
 
     class UserUtil{
@@ -142,7 +142,6 @@ public interface UserRepo {
             else if(filter.getType().equalsIgnoreCase("property"))
                 return contactofProperty;
             else {
-                System.out.println("select sum(count) from (("+contactofProject+") union ("+contactofProperty+"))as foo");
                 return "select sum(count) from (("+contactofProject+") union all ("+contactofProperty+"))as foo";
             }
         }

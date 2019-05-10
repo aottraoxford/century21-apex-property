@@ -6,6 +6,7 @@ import com.century21.apexproperty.repository.EventRepo;
 import com.century21.apexproperty.repository.ProjectRepo;
 import com.century21.apexproperty.repository.PropertyRepo;
 import com.century21.apexproperty.repository.UserRepo;
+import com.century21.apexproperty.repository.api_send_email_verification_code.SendEmailVerificationRepo;
 import com.century21.apexproperty.repository.api_signup.SignUpRepo;
 import com.century21.apexproperty.repository.api_silder_add.AddSliderRepo;
 import com.century21.apexproperty.repository.api_social_signin.SocialSignInRepo;
@@ -23,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -56,56 +58,62 @@ public class UIController {
     @Autowired
     private AddSliderRepo addSliderRepo;
 
+    @Autowired
+    private SendEmailVerificationRepo sendEmailVerificationRepo;
+
     @GetMapping("/test")
     public String test(){
-        try {
-            String jsonResponse;
+//        try {
+//            String jsonResponse;
+//
+//            URL url = new URL("https://onesignal.com/api/v1/notifications");
+//            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+//            con.setUseCaches(false);
+//            con.setDoOutput(true);
+//            con.setDoInput(true);
+//
+//            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+//            con.setRequestProperty("Authorization", "Basic ODYzOTJlMTYtNGMzNi00MjUzLTg2MWEtMmI0NDU1YzQzYmM3");
+//            con.setRequestMethod("POST");
+//
+//            String strJsonBody = "{"
+//                    +   "\"app_id\": \"6ed2f44c-9a7a-4a25-89b9-73c19b0ae705\","
+//                    +   "\"filters\": [{\"field\":\"tag\",\"key\":\"name\",\"value\":\"test\"}],"
+//                    +   "\"data\": {\"foo\": \"bar\"},"
+//                    +   "\"contents\": {\"en\": \"English Message\"}"
+//                    + "}";
+//
+//
+//            System.out.println("strJsonBody:\n" + strJsonBody);
+//
+//            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+//            con.setFixedLengthStreamingMode(sendBytes.length);
+//
+//            OutputStream outputStream = con.getOutputStream();
+//            outputStream.write(sendBytes);
+//
+//            int httpResponse = con.getResponseCode();
+//            System.out.println("httpResponse: " + httpResponse);
+//
+//            if (  httpResponse >= HttpURLConnection.HTTP_OK
+//                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+//                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+//                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+//                scanner.close();
+//            }
+//            else {
+//                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+//                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+//                scanner.close();
+//            }
+//            System.out.println("jsonResponse:\n" + jsonResponse);
+//
+//        } catch(Throwable t) {
+//            t.printStackTrace();
+//        }
 
-            URL url = new URL("https://onesignal.com/api/v1/notifications");
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setUseCaches(false);
-            con.setDoOutput(true);
-            con.setDoInput(true);
-
-            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            con.setRequestProperty("Authorization", "Basic ODYzOTJlMTYtNGMzNi00MjUzLTg2MWEtMmI0NDU1YzQzYmM3");
-            con.setRequestMethod("POST");
-
-            String strJsonBody = "{"
-                    +   "\"app_id\": \"6ed2f44c-9a7a-4a25-89b9-73c19b0ae705\","
-                    +   "\"filters\": [{\"field\":\"tag\",\"key\":\"name\",\"value\":\"test\"}],"
-                    +   "\"data\": {\"foo\": \"bar\"},"
-                    +   "\"contents\": {\"en\": \"English Message\"}"
-                    + "}";
 
 
-            System.out.println("strJsonBody:\n" + strJsonBody);
-
-            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-            con.setFixedLengthStreamingMode(sendBytes.length);
-
-            OutputStream outputStream = con.getOutputStream();
-            outputStream.write(sendBytes);
-
-            int httpResponse = con.getResponseCode();
-            System.out.println("httpResponse: " + httpResponse);
-
-            if (  httpResponse >= HttpURLConnection.HTTP_OK
-                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                scanner.close();
-            }
-            else {
-                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-                scanner.close();
-            }
-            System.out.println("jsonResponse:\n" + jsonResponse);
-
-        } catch(Throwable t) {
-            t.printStackTrace();
-        }
 
         return "index";
     }
