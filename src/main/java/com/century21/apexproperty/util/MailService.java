@@ -18,6 +18,13 @@ public class MailService {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
+        //properties.put("mail.smtp.host", "c21apex.com");
+        //properties.put("mail.smtp.port", "465");
+//        Session session = Session.getInstance(properties, new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication("developer@c21apex.com", "KEXFTGyKng");
+//            }
+//        });
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("testmailoxford@gmail.com", "!@#$1234qwer");

@@ -12,6 +12,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoRepo userInfoRepo;
     @Override
     public UserInfo userInfo(Integer userID, String email) {
+
         if(userID==null){
             userID=userInfoRepo.getIDByEmail(email);
             if(userID==null) throw new CustomRuntimeException(404,"USER NOT EXIST");

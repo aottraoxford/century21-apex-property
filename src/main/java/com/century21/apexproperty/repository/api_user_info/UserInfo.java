@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 public class UserInfo {
     private int id;
+    @JsonProperty("group_id")
+    private int groupID;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -24,6 +26,14 @@ public class UserInfo {
     @JsonProperty("account_type")
     private String accountType;
     private String role;
+
+    public int getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
+    }
 
     public int getId() {
         return id;

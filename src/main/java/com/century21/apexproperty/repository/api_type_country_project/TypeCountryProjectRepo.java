@@ -13,7 +13,7 @@ public interface TypeCountryProjectRepo {
     @Select("SELECT DISTINCT country.name,country.id " +
             "FROM project " +
             "INNER JOIN country ON project.country_id=country.id " +
-            "WHERE isdisplay IS TRUE")
+            "WHERE isdisplay IS TRUE and country.id=1")
     @Results({
             @Result(property = "countryID",column = "id"),
             @Result(property = "countryName",column = "name"),

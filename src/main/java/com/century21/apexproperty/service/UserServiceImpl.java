@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
             userRepo.setChild(null,userID);
         }else if(roleType.equalsIgnoreCase("admin")){
             userRepo.updateRole(userID,roleID);
-            userRepo.setChild(null,userID);
+            userRepo.setChild(userID,userID);
         }
     }
 
