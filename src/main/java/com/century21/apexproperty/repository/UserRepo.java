@@ -15,6 +15,15 @@ import java.util.regex.Pattern;
 @Repository
 public interface UserRepo {
 
+    @Select("SELECT first_name,last_name " +
+            "FROM users " +
+            "WHERE email = #{email}")
+    @Results({
+            @Result(property = "firstName",column = "first_name"),
+            @Result(property = "lastName",column = "last_name")
+    })
+    User findUserByEmail(String email);
+
     @SelectProvider(type = UserUtil.class,method = "findAllContactCount")
     int findAllContactCount(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType);
 
@@ -112,7 +121,7 @@ public interface UserRepo {
             "WHERE email = #{change.email}")
     Integer updatePassword(@Param("change")ChangePassword change);
 
-    @Delete("DELETE FROM verification WHERE expired < now() - interval '15' minute AND enable IS false ")
+    @Delete("DELETE FROM verification WHERE expired < now() - interval '60' minute AND enable IS false ")
     Integer removeCode();
 
     class UserUtil{
