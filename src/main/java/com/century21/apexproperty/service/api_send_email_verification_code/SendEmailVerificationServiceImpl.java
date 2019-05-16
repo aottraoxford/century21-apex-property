@@ -61,7 +61,7 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
 
         String mailTemplate = "" +
                 "<div style=\"height:100px\">" +
-                "<img style = \"width:100px;height:100px;float:right;display:block\" src = \"icon.jpg\"/>" +
+                "<img style = \"width:100px;height:100px;float:right;display:block\" src = \""+ Url.bannerUrl +"icon.jpg\"/>" +
                 "</div>"+
                 "<div>"+
                 "<p>You have selected "+email+" as your new C21 Apex Property account. To verify this email address belongs to you, enter the code below on the app</p>"+
