@@ -82,7 +82,7 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
 
 //            //send mail to email
 //            mailTemplate+=code+"</h1><h6>NOTE: This CODE will be invalid after 15 minutes then u require to request code again.</h6><p>If you don't register for user account with CENTURY 21 CAMBODIA,simply ignore this email. No action will be taken.<h1></h1> Take care.<h1></h1>CENTURY 21 CAMBODIA</p></body></html>";
-//            mailService.sendMail(email,mailTemplate);
+            mailService.sendMail(email,mailTemplate);
 
         if(sendEmailVerificationRepo.saveEmailId(email,code)<1){
             throw new CustomRuntimeException(500,"ERROR CODE");
