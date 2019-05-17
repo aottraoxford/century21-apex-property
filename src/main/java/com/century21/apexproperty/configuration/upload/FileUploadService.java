@@ -100,7 +100,6 @@ public class FileUploadService {
             Resource resource = new UrlResource(filePath.toUri());
 
             resource.contentLength();
-
             String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
             if(contentType==null){
                 throw new CustomRuntimeException(500,"Invalid file type.");
