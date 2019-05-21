@@ -1,6 +1,7 @@
 package com.century21.apexproperty.configuration.mybatis;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
+@MapperScan("com.century21.apexproperty.repository")
 @Configuration
 public class MyBatisConfig {
     @Qualifier("dataSource")

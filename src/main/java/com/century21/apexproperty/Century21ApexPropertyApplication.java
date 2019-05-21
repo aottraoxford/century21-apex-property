@@ -6,7 +6,9 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.io.IOException;
 
@@ -14,7 +16,7 @@ import java.io.IOException;
 @EnableConfigurationProperties({
         FileUploadProperty.class
 })
-public class Century21ApexPropertyApplication {
+public class Century21ApexPropertyApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
 
@@ -41,5 +43,10 @@ public class Century21ApexPropertyApplication {
             }
         });
 
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
+        return builder.sources(Century21ApexPropertyApplication.class);
     }
 }

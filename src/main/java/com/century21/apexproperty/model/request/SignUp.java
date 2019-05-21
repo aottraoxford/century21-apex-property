@@ -9,14 +9,14 @@ public class SignUp {
     @NotBlank
     @NotNull
     @NotEmpty
-    @Size(min=1,max=25)
+    @Size(min=6)
     //@ApiModelProperty(position = 1)
     @JsonProperty("first_name")
     private String firstName;
     @NotBlank
     @NotNull
     @NotEmpty
-    @Size(min=1,max=25)
+    @Size(min=6)
     //@ApiModelProperty(position = 2)
     @JsonProperty("last_name")
     private String lastName;
@@ -29,14 +29,8 @@ public class SignUp {
     @NotNull
     @NotEmpty
     @Email
-    @Size(max = 50)
     //@ApiModelProperty(position = 4)
     private String email;
-//    @NotBlank
-//    @NotNull
-//    @NotEmpty
-//    @Size(min = 9,max = 20 )
-    //@ApiModelProperty(position = 5)
     @JsonProperty("phone_number")
     private String phoneNumber;
     @NotBlank
