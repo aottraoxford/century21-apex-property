@@ -26,7 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -101,19 +101,19 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/project/thumbnail/{fileName:.+}")
     public ResponseEntity viewProjectThumbnail(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getProjectThumbnail(),request);
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/project/gallery/{fileName:.+}")
     public ResponseEntity viewProjectGallery(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getProjectGallery(),request);
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/event/banner/{fileName:.+}")
     public ResponseEntity viewBanner(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getEventImage(),request);
@@ -132,7 +132,7 @@ public class ProjectController {
     @Autowired
     private SaveNotiService saveNotiService;
 
-    //@ApiIgnore
+    @ApiIgnore
     @PostMapping(value = "/api/noti",produces = "application/json")
     public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
         saveNotiService.saveNoti(saveNoti, principal.getName());
@@ -167,7 +167,7 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/slider/{fileName:.+}")
     public ResponseEntity viewSlider(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getSlider(),request);

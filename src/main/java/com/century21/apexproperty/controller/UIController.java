@@ -28,10 +28,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.*;
-//import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.annotations.ApiIgnore;
 
 
-//@ApiIgnore
+@ApiIgnore
 @Controller
 public class UIController {
     @Autowired
@@ -63,8 +63,7 @@ public class UIController {
 
     @GetMapping({"/"})
     public String index() {
-        //return "redirect:/swagger-ui.html";
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/api-doc")

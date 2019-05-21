@@ -42,7 +42,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -189,7 +189,7 @@ public class UserController {
         return customResponse.httpResponse();
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     //@ApiOperation("user image")
     @GetMapping("/api/user/image/{fileName:.+}")
     public ResponseEntity userImage(@PathVariable(value = "fileName")String fileName,HttpServletRequest request){

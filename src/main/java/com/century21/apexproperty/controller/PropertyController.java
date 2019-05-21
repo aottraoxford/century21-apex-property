@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-//import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -39,13 +39,13 @@ public class PropertyController {
         return customResponse.httpResponse("result");
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/property/gallery/{fileName:.+}")
     public ResponseEntity viewPropertyGalleries(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.loadFile(fileName,fileUploadProperty.getPropertyGallery(),request);
     }
 
-    //@ApiIgnore
+    @ApiIgnore
     @GetMapping("/api/property/doc/{fileName:.+}")
     public ResponseEntity viewPropertyDocs(@PathVariable("fileName")String fileName, HttpServletRequest request){
         return fileUploadService.downloadFile(fileName,fileUploadProperty.getPropertyDoc(),request);
