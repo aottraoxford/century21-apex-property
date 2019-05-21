@@ -6,7 +6,7 @@
     <groupId>com.century21</groupId>
     <artifactId>century21cambodia</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>century21cambodia</name>
     <description>webservice</description>
