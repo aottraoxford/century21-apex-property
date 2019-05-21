@@ -62,9 +62,14 @@ public class UIController {
     private SendEmailVerificationRepo sendEmailVerificationRepo;
 
     @GetMapping({"/"})
-    public String swagger() {
+    public String index() {
         //return "redirect:/swagger-ui.html";
         return "/index";
+    }
+
+    @GetMapping("/api-doc")
+    public String swagger() {
+        return "redirect:/swagger-ui.html";
     }
 
     @ResponseBody
