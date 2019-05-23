@@ -52,14 +52,14 @@ public class PropertyController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
-    @PostMapping("/apis/property/file_uploads")
+    @PostMapping(value = "/apis/property/file_uploads",consumes = "multipart/form-data")
     public ResponseEntity fileUploads(@RequestParam int propertyID, @RequestPart MultipartFile[] galleries, @RequestPart(required = false) MultipartFile[] docs,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.fileUploads(propertyID,galleries,docs,principal));
         return customResponse.httpResponse("result");
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
-    @DeleteMapping("/apis/property/file_uploads")
+    @DeleteMapping(value = "/apis/property/file_uploads",consumes = "multipart/form-data")
     public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName,Principal principal){
         propertyService.removeFile(propertyID,gallName,docName,principal);
         CustomResponse customResponse=new CustomResponse(200);
