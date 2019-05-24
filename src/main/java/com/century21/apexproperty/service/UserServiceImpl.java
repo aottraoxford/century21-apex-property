@@ -120,4 +120,12 @@ public class UserServiceImpl implements UserService {
         pagination.setTotalItem(userRepo.findAllContactCount(filter,userID,roleType));
         return contacts;
     }
+
+    @Override
+    public List<UserRepo.Question> findQuestions(Pagination pagination) {
+        List<UserRepo.Question> questions=userRepo.findQuestions(pagination.getLimit(),pagination.getOffset());
+        if(questions==null && questions.size()<1) throw new CustomRuntimeException(404,"zero result.");
+        pagination.setTotalItem(userRepo.findQuestionsCount());
+        return questions;
+    }
 }

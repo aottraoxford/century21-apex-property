@@ -63,7 +63,7 @@ public class UIController {
 
     @GetMapping({"/"})
     public String index() {
-        return "index";
+        return "redirect:https://c21apex.com";
     }
 
     @GetMapping("/api-doc")

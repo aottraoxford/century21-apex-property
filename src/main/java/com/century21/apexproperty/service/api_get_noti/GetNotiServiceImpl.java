@@ -20,11 +20,19 @@ public class GetNotiServiceImpl implements GetNotiService {
         List<GetNoti> getNotiList=getNofiRepo.getNoti(userID);
         if(getNotiList==null || getNotiList.size()<1) throw new CustomRuntimeException(404,"NO RESULT");
         for(int i=0;i<getNotiList.size();i++){
-            if(getNotiList.get(i).getType().equals("project")) {
-                getNotiList.get(i).setImage(Url.projectThumbnailUrl+getNofiRepo.getThumbnail(getNotiList.get(i).getRefID()));
+            if(getNotiList.get(i).getType().equalsIgnoreCase("project")) {
+                String thumnail=getNofiRepo.getThumbnail(getNotiList.get(i).getRefID());
+                if(thumnail!=null)
+                    getNotiList.get(i).setImage(Url.projectThumbnailUrl+thumnail);
             }
-            else if(getNotiList.get(i).getType().equals("event")){
-                getNotiList.get(i).setImage(Url.bannerUrl+getNofiRepo.getBanner(getNotiList.get(i).getRefID()));
+            else if(getNotiList.get(i).getType().equalsIgnoreCase("event")){
+                String banner = getNofiRepo.getBanner(getNotiList.get(i).getRefID());
+                if(banner!=null)
+                    getNotiList.get(i).setImage(Url.bannerUrl+banner);
+            }else if(getNotiList.get(i).getType().equalsIgnoreCase("property")){
+                String thumbnail = getNofiRepo.getPropertyThumbnail(getNotiList.get(i).getRefID());
+                if(thumbnail!=null)
+                    getNotiList.get(i).setImage(Url.propertyGalleryUrl+thumbnail);
             }
         }
         return getNotiList;

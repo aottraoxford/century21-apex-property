@@ -19,6 +19,12 @@ public interface GetNofiRepo {
             "WHERE id=#{eventID}")
     String getBanner(int eventID);
 
+    @Select("SELECT name " +
+            "FROM property_files " +
+            "WHERE property_id=#{propertyID} " +
+            "ORDER BY id limit 1")
+    String getPropertyThumbnail(int propertyID);
+
     @Select("SELECT thumbnail " +
             "FROM project " +
             "WHERE id=#{projectID}")

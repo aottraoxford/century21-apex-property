@@ -305,4 +305,10 @@ public class UserController {
         return customResponse.httpResponse("result","paging");
     }
 
+    @GetMapping("/apis/questions")
+    public ResponseEntity questions(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+        Pagination pagination=new Pagination(page,limit);
+        CustomResponse customResponse=new CustomResponse(200,userService.findQuestions(pagination),pagination);
+        return customResponse.httpResponse("result","paging");
+    }
 }

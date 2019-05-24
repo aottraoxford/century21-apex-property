@@ -69,8 +69,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventRepo.EventResponse insertEvent(EventRepo.EventRequest eventRequest) {
-        String fileName = fileUploadService.storeImage(eventRequest.getFile(), fileUploadProperty.getEventImage());
-
+        String fileName=null;
+        if(eventRequest.getFile()!=null){
+            fileName = fileUploadService.storeImage(eventRequest.getFile(), fileUploadProperty.getEventImage());
+        }
         Timestamp date;
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

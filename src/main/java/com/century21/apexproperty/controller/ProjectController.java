@@ -21,15 +21,23 @@ import com.century21.apexproperty.service.search.SearchService;
 import com.century21.apexproperty.util.Url;
 //import io.swagger.annotations.ApiOperation;
 //import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiParam;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 import springfox.documentation.annotations.ApiIgnore;
+import sun.plugin.javascript.navig.Array;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProjectController {
@@ -133,7 +141,7 @@ public class ProjectController {
     private SaveNotiService saveNotiService;
 
     @ApiIgnore
-    @PostMapping(value = "/api/noti",produces = "application/json")
+    @PostMapping(value = "/apis/noti",produces = "application/json")
     public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
         saveNotiService.saveNoti(saveNoti, principal.getName());
         CustomResponse customResponse=new CustomResponse(200);
@@ -143,7 +151,7 @@ public class ProjectController {
     @Autowired
     private GetNotiService getNotiService;
 
-    @GetMapping(value = "/api/noti",produces = "application/json")
+    @GetMapping(value = "/apis/noti",produces = "application/json")
     public ResponseEntity getNoti(Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,getNotiService.getNoti(principal.getName()),pagination);
@@ -190,8 +198,8 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @PostMapping(value = "/api/project/image/upload",produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,/*@ApiParam(name="galleries",allowMultiple = true)*/ @RequestPart(value = "galleries",required = false) MultipartFile[] galleries){
+    @PostMapping(value = "/api/project/image/upload",produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,@RequestPart(value = "galleries",required = false) MultipartFile[] galleries){
         CustomResponse customResponse=new CustomResponse(200,projectService.uploadProjectImage(thumbnail,galleries,projectID));
         return customResponse.httpResponse("result");
     }

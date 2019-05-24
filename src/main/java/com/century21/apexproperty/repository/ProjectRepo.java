@@ -132,7 +132,7 @@ public interface ProjectRepo {
 
     @SelectProvider(type = ProjectUtil.class, method = "findOneProject")
     @Results(value = {
-            @Result(property = "id",column = "project.id"),
+            @Result(property = "id",column = "id"),
             @Result(property = "builtDate", column = "built_date"),
             @Result(property = "completedDate", column = "completed_date"),
             @Result(property = "title", column = "name"),

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,6 +15,20 @@ import java.util.regex.Pattern;
 
 @Repository
 public interface UserRepo {
+
+    @Select("SELECT * " +
+            "FROM contact " +
+            "WHERE email IS NULL " +
+            "ORDER BY id DESC limit #{limit} offset #{offset} ")
+    @Results({
+            @Result(property = "createdAt",column = "created_at")
+    })
+    List<Question> findQuestions(int limit,int offset);
+
+    @Select("SELECT count(id) " +
+            "FROM contact " +
+            "WHERE email IS NULL ")
+    int findQuestionsCount();
 
     @Select("SELECT first_name,last_name " +
             "FROM users " +
@@ -244,6 +259,63 @@ public interface UserRepo {
                         WHERE("name ilike '%'||#{name}||'%'");
                 }
             } .toString();
+        }
+    }
+    class Question{
+        private int id;
+        private String name;
+        private String phone;
+        private String country;
+        private String issue;
+        @JsonProperty("created_at")
+        private Date createdAt;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getIssue() {
+            return issue;
+        }
+
+        public void setIssue(String issue) {
+            this.issue = issue;
+        }
+
+        public Date getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(Date createdAt) {
+            this.createdAt = createdAt;
         }
     }
 

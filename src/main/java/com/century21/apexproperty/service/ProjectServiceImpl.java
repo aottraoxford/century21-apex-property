@@ -33,6 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
         ID id = new ID();
         projectRepo.insertProject(id,userID, projectRequest);
         int projectID = id.getId();
+        System.out.println(id.getId());
 
         if(projectRequest.getTowerTypes()!=null) {
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {

@@ -14,4 +14,5 @@ public interface UserService {
     List<UserRepo.User> agents(String name, Principal principal, Pagination pagination);
     List<UserRepo.User> findUsers(String name,String role,Pagination pagination);
     List<UserRepo.Contact> findContacts(UserRepo.ContactFilter filter,Pagination pagination,Principal principal);
+    List<UserRepo.Question> findQuestions(Pagination pagination);
 }

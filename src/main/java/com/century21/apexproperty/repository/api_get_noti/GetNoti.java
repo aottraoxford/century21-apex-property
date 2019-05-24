@@ -1,5 +1,6 @@
 package com.century21.apexproperty.repository.api_get_noti;
 
+import com.century21.apexproperty.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class GetNoti {
@@ -64,6 +65,12 @@ public class GetNoti {
     }
 
     public String getImage() {
+        if(image!=null){
+            if(type.equalsIgnoreCase("project"))
+                return Url.projectThumbnailUrl+image;
+            else if(type.equalsIgnoreCase("property"))
+                return Url.propertyGalleryUrl+image;
+        }
         return image;
     }
 

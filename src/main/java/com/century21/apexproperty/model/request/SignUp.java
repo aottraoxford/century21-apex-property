@@ -9,14 +9,12 @@ public class SignUp {
     @NotBlank
     @NotNull
     @NotEmpty
-    @Size(min=6)
     //@ApiModelProperty(position = 1)
     @JsonProperty("first_name")
     private String firstName;
     @NotBlank
     @NotNull
     @NotEmpty
-    @Size(min=6)
     //@ApiModelProperty(position = 2)
     @JsonProperty("last_name")
     private String lastName;
