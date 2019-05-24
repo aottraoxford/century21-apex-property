@@ -19,25 +19,14 @@ import com.century21.apexproperty.service.api_slider_update.SliderUpdateService;
 import com.century21.apexproperty.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.apexproperty.service.search.SearchService;
 import com.century21.apexproperty.util.Url;
-//import io.swagger.annotations.ApiOperation;
-//import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiParam;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.util.StringUtils;
 import springfox.documentation.annotations.ApiIgnore;
-import sun.plugin.javascript.navig.Array;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @RestController
 public class ProjectController {
