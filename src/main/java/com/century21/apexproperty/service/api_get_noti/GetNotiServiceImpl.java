@@ -23,16 +23,16 @@ public class GetNotiServiceImpl implements GetNotiService {
             if(getNotiList.get(i).getType().equalsIgnoreCase("project")) {
                 String thumnail=getNofiRepo.getThumbnail(getNotiList.get(i).getRefID());
                 if(thumnail!=null)
-                    getNotiList.get(i).setImage(Url.projectThumbnailUrl+thumnail);
+                    getNotiList.get(i).setImage(thumnail);
             }
             else if(getNotiList.get(i).getType().equalsIgnoreCase("event")){
                 String banner = getNofiRepo.getBanner(getNotiList.get(i).getRefID());
                 if(banner!=null)
-                    getNotiList.get(i).setImage(Url.bannerUrl+banner);
+                    getNotiList.get(i).setImage(banner);
             }else if(getNotiList.get(i).getType().equalsIgnoreCase("property")){
                 String thumbnail = getNofiRepo.getPropertyThumbnail(getNotiList.get(i).getRefID());
                 if(thumbnail!=null)
-                    getNotiList.get(i).setImage(Url.propertyGalleryUrl+thumbnail);
+                    getNotiList.get(i).setImage(thumbnail);
             }
         }
         return getNotiList;
