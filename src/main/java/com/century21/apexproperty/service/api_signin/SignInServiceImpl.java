@@ -20,7 +20,6 @@ public class SignInServiceImpl implements SignInService {
         if(emailExist==false){
             throw new CustomRuntimeException(401,"Email not yet enable");
         }
-        System.out.println(signInRepo.findIdByEmail(email));
         return signInRepo.roles(signInRepo.findIdByEmail(email));
     }
 }

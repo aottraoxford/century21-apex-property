@@ -3,18 +3,27 @@ package com.century21.apexproperty.repository.api_get_noti;
 import com.century21.apexproperty.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Date;
+
 public class GetNoti {
-    @JsonIgnore
     private int id;
     @JsonIgnore
     private int userID;
-    @JsonIgnore
     private String type;
     @JsonIgnore
     private int refID;
     private String title;
     private String message;
     private String image;
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public int getRefID() {
         return refID;

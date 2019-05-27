@@ -35,7 +35,8 @@ public interface GetNofiRepo {
             "WHERE user_id = #{userID}")
     @Results({
             @Result(property = "refID",column = "ref_id"),
-            @Result(property = "userID",column = "user_id")
+            @Result(property = "userID",column = "user_id"),
+            @Result(property = "date",column = "created_at")
     })
     List<GetNoti> getNoti(int userID);
 }
