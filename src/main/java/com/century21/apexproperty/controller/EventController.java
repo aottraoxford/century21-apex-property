@@ -37,7 +37,7 @@ public class EventController {
         return customResponse.httpResponse();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping(value = "apis/events/insert",produces = "application/json")
     public ResponseEntity insertEvent(@ModelAttribute EventRepo.EventRequest eventRequest){
         CustomResponse customResponse=new CustomResponse(200, eventService.insertEvent(eventRequest));

@@ -37,12 +37,29 @@ public class ProjectController {
     @Autowired
     private FileUploadProperty fileUploadProperty;
 
+    public class Noti{
+        private String message;
+
+        public Noti(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            if(message==null ) return "New Project Available.";
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+
     @Autowired
     private VisibleProjectService visibleProjectService;
     //@ApiOperation("(BACK END)visible project")
     @PutMapping(value = "/api/visible-project",produces = "application/json")
-    public ResponseEntity visibleProject(@RequestParam("status")boolean status, @RequestParam("projectID")int projectID, HttpServletRequest request){
-        visibleProjectService.visibleProject(status,projectID,request.getHeader("Authorization"));
+    public ResponseEntity visibleProject(@ModelAttribute Noti noti ,@RequestParam("status")boolean status, @RequestParam("projectID")int projectID, HttpServletRequest request){
+        visibleProjectService.visibleProject(noti,status,projectID,request.getHeader("Authorization"));
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }

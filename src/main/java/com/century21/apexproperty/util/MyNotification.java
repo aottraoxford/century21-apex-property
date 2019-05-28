@@ -2,6 +2,7 @@ package com.century21.apexproperty.util;
 
 import com.century21.apexproperty.exception.CustomRuntimeException;
 import com.century21.apexproperty.repository.api_save_noti.SaveNoti;
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import org.springframework.context.annotation.Configuration;
 
@@ -54,7 +55,6 @@ public class MyNotification {
 
             httpResponse = con.getResponseCode();
 
-
             if (  httpResponse >= HttpURLConnection.HTTP_OK
                     && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
                 Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
@@ -67,21 +67,25 @@ public class MyNotification {
                 scanner.close();
             }
             if(token!=null) {
-                String host = Url.host + "api/noti";
+                String host = Url.host + "apis/noti";
                 SaveNoti saveNoti = new SaveNoti();
                 saveNoti.setRefID(refID);
-                if(type.equals("event"))
+                if(type.equalsIgnoreCase("event"))
                     saveNoti.setType("event");
-                else saveNoti.setType("project");
+                else if(type.equalsIgnoreCase("project"))
+                    saveNoti.setType("project");
+                else if(type.equalsIgnoreCase("property"))
+                    saveNoti.setType("property");
                 saveNoti.setMessage(message);
                 saveNoti.setTitle(title);
-                Unirest.post(host)
+                HttpResponse j = Unirest.post(host)
                         .header("accept", "application/json")
                         .header("Content-Type", "application/json")
                         .header("Authorization",  token)
                         .body(saveNoti)
                         .asJson();
             }
+
         } catch(Throwable t) {
             throw new CustomRuntimeException(httpResponse,jsonResponse);
         }

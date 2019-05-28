@@ -37,4 +37,5 @@ public class SaveNoti {
     public void setRefID(int refID) {
         this.refID = refID;
     }
+
 }
