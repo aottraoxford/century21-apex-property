@@ -1,6 +1,7 @@
 package com.century21.apexproperty.service.api_get_noti;
 
 import com.century21.apexproperty.exception.CustomRuntimeException;
+import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.repository.api_get_noti.GetNofiRepo;
 import com.century21.apexproperty.repository.api_get_noti.GetNoti;
 import com.century21.apexproperty.util.Url;
@@ -14,7 +15,7 @@ public class GetNotiServiceImpl implements GetNotiService {
     @Autowired
     private GetNofiRepo getNofiRepo;
     @Override
-    public List<GetNoti> getNoti(String email) {
+    public List<GetNoti> getNoti(String email, Pagination pagination) {
         Integer userID=getNofiRepo.getUserID(email);
         if(userID==null) throw new CustomRuntimeException(404,"USER NOT FOUND.");
         List<GetNoti> getNotiList=getNofiRepo.getNoti(userID);
@@ -35,6 +36,7 @@ public class GetNotiServiceImpl implements GetNotiService {
                     getNotiList.get(i).setImage(thumbnail);
             }
         }
+        pagination.setTotalItem(getNofiRepo.getNotiCount(userID));
         return getNotiList;
     }
 }

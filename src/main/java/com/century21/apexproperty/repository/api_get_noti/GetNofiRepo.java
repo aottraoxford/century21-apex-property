@@ -39,4 +39,9 @@ public interface GetNofiRepo {
             @Result(property = "date",column = "created_at")
     })
     List<GetNoti> getNoti(int userID);
+
+    @Select("SELECT count(id) " +
+            "FROM noti " +
+            "WHERE user_id = #{userID}")
+    int getNotiCount(int userID);
 }
