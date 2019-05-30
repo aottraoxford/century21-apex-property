@@ -31,8 +31,8 @@ public class EventController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "apis/events/change_status",produces = "application/json")
-    public ResponseEntity changeStatus(@RequestParam int eventID,@RequestParam boolean status, HttpServletRequest header){
-        eventService.changeEventStatus(eventID,status,header);
+    public ResponseEntity changeStatus(@RequestParam int eventID,@RequestParam boolean status){
+        eventService.changeEventStatus(eventID,status);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }

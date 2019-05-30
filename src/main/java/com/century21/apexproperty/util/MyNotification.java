@@ -2,8 +2,10 @@ package com.century21.apexproperty.util;
 
 import com.century21.apexproperty.exception.CustomRuntimeException;
 import com.century21.apexproperty.repository.api_save_noti.SaveNoti;
+import com.century21.apexproperty.repository.api_save_noti.SaveNotiRepo;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.OutputStream;
@@ -13,7 +15,9 @@ import java.util.Scanner;
 
 @Configuration
 public class MyNotification {
-    public void sendToAllSubscriber(String title,String message,String imageUrl,String token,String type,int refID){
+    @Autowired
+    private SaveNotiRepo saveNotiRepo;
+    public void sendToAllSubscriber(String title,String message,String imageUrl,String type,int refID){
         String jsonResponse=""; int httpResponse=500;
         try {
 
@@ -24,11 +28,11 @@ public class MyNotification {
             con.setDoInput(true);
 
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            con.setRequestProperty("Authorization", "Basic ODYzOTJlMTYtNGMzNi00MjUzLTg2MWEtMmI0NDU1YzQzYmM3");
+            con.setRequestProperty("Authorization", "Basic ZjI5NTlkMzgtMzY4YS00OWIzLWIwY2UtMDY3MjRiMWIzNGZi");
             con.setRequestMethod("POST");
 
             String strJsonBody = "{"
-                    +   "\"app_id\": \"6ed2f44c-9a7a-4a25-89b9-73c19b0ae705\","
+                    +   "\"app_id\": \"bc3a4944-d4b8-499c-9db0-07c916166a23\","
                     +   "\"included_segments\": [\"All\"],"
                     +   "\"headings\":{\"en\" : \""+title+"\"},"
                     +   "\"contents\": {\"en\": \""+message+"\"},";
@@ -66,25 +70,17 @@ public class MyNotification {
                 jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                 scanner.close();
             }
-            if(token!=null) {
-                String host = Url.host + "apis/noti";
-                SaveNoti saveNoti = new SaveNoti();
-                saveNoti.setRefID(refID);
-                if(type.equalsIgnoreCase("event"))
-                    saveNoti.setType("event");
-                else if(type.equalsIgnoreCase("project"))
-                    saveNoti.setType("project");
-                else if(type.equalsIgnoreCase("property"))
-                    saveNoti.setType("property");
-                saveNoti.setMessage(message);
-                saveNoti.setTitle(title);
-                HttpResponse j = Unirest.post(host)
-                        .header("accept", "application/json")
-                        .header("Content-Type", "application/json")
-                        .header("Authorization",  token)
-                        .body(saveNoti)
-                        .asJson();
-            }
+            SaveNoti saveNoti = new SaveNoti();
+            saveNoti.setRefID(refID);
+            if(type.equalsIgnoreCase("event"))
+                saveNoti.setType("event");
+            else if(type.equalsIgnoreCase("project"))
+                saveNoti.setType("project");
+            else if(type.equalsIgnoreCase("property"))
+                saveNoti.setType("property");
+            saveNoti.setMessage(message);
+            saveNoti.setTitle(title);
+            saveNotiRepo.SaveNoti(saveNoti,null);
 
         } catch(Throwable t) {
             throw new CustomRuntimeException(httpResponse,jsonResponse);

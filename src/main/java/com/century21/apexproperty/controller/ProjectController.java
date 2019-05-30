@@ -12,7 +12,6 @@ import com.century21.apexproperty.service.api_allcity.CityService;
 import com.century21.apexproperty.service.api_get_noti.GetNotiService;
 import com.century21.apexproperty.service.api_project_related.ProjectRelatedService;
 import com.century21.apexproperty.service.api_project_statistic.ProjectStatisticService;
-import com.century21.apexproperty.service.api_save_noti.SaveNotiService;
 import com.century21.apexproperty.service.api_slider.SliderService;
 import com.century21.apexproperty.service.api_slider_add.AddSliderService;
 import com.century21.apexproperty.service.api_slider_update.SliderUpdateService;
@@ -58,8 +57,8 @@ public class ProjectController {
     private VisibleProjectService visibleProjectService;
     //@ApiOperation("(BACK END)visible project")
     @PutMapping(value = "/api/visible-project",produces = "application/json")
-    public ResponseEntity visibleProject(@ModelAttribute Noti noti ,@RequestParam("status")boolean status, @RequestParam("projectID")int projectID, HttpServletRequest request){
-        visibleProjectService.visibleProject(noti,status,projectID,request.getHeader("Authorization"));
+    public ResponseEntity visibleProject(@ModelAttribute Noti noti ,@RequestParam("status")boolean status, @RequestParam("projectID")int projectID){
+        visibleProjectService.visibleProject(noti,status,projectID);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
@@ -143,24 +142,14 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @Autowired
-    private SaveNotiService saveNotiService;
-
-    @ApiIgnore
-    @PostMapping(value = "/apis/noti",produces = "application/json")
-    public ResponseEntity saveNoti(@RequestBody SaveNoti saveNoti, Principal principal){
-        saveNotiService.saveNoti(saveNoti, principal.getName());
-        CustomResponse customResponse=new CustomResponse(200);
-        return customResponse.httpResponse();
-    }
 
     @Autowired
     private GetNotiService getNotiService;
 
-    @GetMapping(value = "/apis/noti",produces = "application/json")
-    public ResponseEntity getNoti(Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
+    @GetMapping(value = "/api/noti",produces = "application/json")
+    public ResponseEntity getNoti(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
-        CustomResponse customResponse=new CustomResponse(200,getNotiService.getNoti(principal.getName(),pagination),pagination);
+        CustomResponse customResponse=new CustomResponse(200,getNotiService.getNoti(pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
 

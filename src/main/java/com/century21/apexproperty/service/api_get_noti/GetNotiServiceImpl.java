@@ -15,10 +15,8 @@ public class GetNotiServiceImpl implements GetNotiService {
     @Autowired
     private GetNofiRepo getNofiRepo;
     @Override
-    public List<GetNoti> getNoti(String email, Pagination pagination) {
-        Integer userID=getNofiRepo.getUserID(email);
-        if(userID==null) throw new CustomRuntimeException(404,"USER NOT FOUND.");
-        List<GetNoti> getNotiList=getNofiRepo.getNoti(userID);
+    public List<GetNoti> getNoti(Pagination pagination) {
+        List<GetNoti> getNotiList=getNofiRepo.getNoti(pagination.getLimit(),pagination.getOffset());
         if(getNotiList==null || getNotiList.size()<1) throw new CustomRuntimeException(404,"NO RESULT");
         for(int i=0;i<getNotiList.size();i++){
             if(getNotiList.get(i).getType().equalsIgnoreCase("project")) {
@@ -36,7 +34,7 @@ public class GetNotiServiceImpl implements GetNotiService {
                     getNotiList.get(i).setImage(thumbnail);
             }
         }
-        pagination.setTotalItem(getNofiRepo.getNotiCount(userID));
+        pagination.setTotalItem(getNofiRepo.getNotiCount());
         return getNotiList;
     }
 }

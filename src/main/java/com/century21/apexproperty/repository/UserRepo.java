@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +17,29 @@ import java.util.regex.Pattern;
 
 @Repository
 public interface UserRepo {
+    @Select("select 'project' as type,name as title,id from project where id = #{id}")
+    ContactProp findProjectContact(@Param("id")int id);
+
+    @Select("select 'property' as type,title,id from property where id= #{id}")
+    ContactProp findPropertyContact(int id);
+
+    @Select("SELECT * " +
+            "from contact " +
+            "where id=#{id} ")
+    @Results({
+            @Result(property = "createAt",column = "created_at"),
+            @Result(property = "projectID",column = "project_id"),
+            @Result(property = "propertyID",column = "property_id")
+    })
+    Contact findOneContact(int id);
+
+    @Update("UPDATE mail SET email=#{email},password=#{password} " +
+            "WHERE email ilike #{email}")
+    int updateMailAccount(String email,String password);
+
+    @Select("SELECT email,password from " +
+            "mail limit 1")
+    MailAccount findOneMailAccount();
 
     @Select("SELECT * " +
             "FROM contact " +
@@ -44,7 +69,10 @@ public interface UserRepo {
 
     @SelectProvider(type = UserUtil.class,method = "findAllContact")
     @Results({
-            @Result(property = "createAt",column = "created_at")
+            @Result(property = "createAt",column = "created_at"),
+            @Result(property = "prop.id",column = "pid"),
+            @Result(property = "prop.type",column = "type"),
+            @Result(property = "prop.title",column = "ptitle")
     })
     List<Contact> findAllContact(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset);
 
@@ -173,20 +201,20 @@ public interface UserRepo {
         public String findAllContact(@Param("filter")ContactFilter filter,@Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset){
             String contactofProperty,contactofProject;
             if(roleType.equalsIgnoreCase("admin")){
-                contactofProject="select contact.* from contact " +
+                contactofProject="select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
                         "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
-                contactofProperty="select contact.* from contact " +
+                contactofProperty="select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
                         "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
             }else if(roleType.equalsIgnoreCase("agent")){
-                contactofProject="select contact.* from contact " +
+                contactofProject="select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
                         "where contact.issue is null and users.id = #{userID}";
-                contactofProperty="select contact.* from contact " +
+                contactofProperty="select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
                         "where contact.issue is null and users.id = #{userID}";
@@ -321,11 +349,16 @@ public interface UserRepo {
 
     class Contact{
         private int id;
+        @JsonIgnore
+        private Integer projectID;
+        @JsonIgnore
+        private Integer propertyID;
         private String name;
         private String phone;
         private String email;
         @JsonProperty("created_at")
         private Date createAt;
+        private ContactProp prop;
 
         public int getId() {
             return id;
@@ -333,6 +366,22 @@ public interface UserRepo {
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public Integer getProjectID() {
+            return projectID;
+        }
+
+        public void setProjectID(Integer projectID) {
+            this.projectID = projectID;
+        }
+
+        public Integer getPropertyID() {
+            return propertyID;
+        }
+
+        public void setPropertyID(Integer propertyID) {
+            this.propertyID = propertyID;
         }
 
         public String getName() {
@@ -367,83 +416,42 @@ public interface UserRepo {
             this.createAt = createAt;
         }
 
-
-        class Property{
-            private int id;
-            private String title;
-            private String description;
-            private String url;
-
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
-
-            public String getTitle() {
-                return title;
-            }
-
-            public void setTitle(String title) {
-                this.title = title;
-            }
-
-            public String getDescription() {
-                return description;
-            }
-
-            public void setDescription(String description) {
-                this.description = description;
-            }
-
-            public String getUrl() {
-                return url;
-            }
-
-            public void setUrl(String url) {
-                this.url = url;
-            }
+        public ContactProp getProp() {
+            return prop;
         }
 
-        class Project{
-            private int id;
-            private String title;
-            private String description;
-            private String url;
+        public void setProp(ContactProp prop) {
+            this.prop = prop;
+        }
+    }
 
-            public int getId() {
-                return id;
-            }
+    class ContactProp{
+        private Integer id;
+        private String type;
+        private String title;
 
-            public void setId(int id) {
-                this.id = id;
-            }
+        public Integer getId() {
+            return id;
+        }
 
-            public String getTitle() {
-                return title;
-            }
+        public void setId(Integer id) {
+            this.id = id;
+        }
 
-            public void setTitle(String title) {
-                this.title = title;
-            }
+        public String getType() {
+            return type;
+        }
 
-            public String getDescription() {
-                return description;
-            }
+        public void setType(String type) {
+            this.type = type;
+        }
 
-            public void setDescription(String description) {
-                this.description = description;
-            }
+        public String getTitle() {
+            return title;
+        }
 
-            public String getUrl() {
-                return url;
-            }
-
-            public void setUrl(String url) {
-                this.url = url;
-            }
+        public void setTitle(String title) {
+            this.title = title;
         }
     }
 
@@ -613,6 +621,52 @@ public interface UserRepo {
 
         public void setRole(String role) {
             this.role = role;
+        }
+    }
+
+    class MailAccountRequest{
+        private String email;
+        private String password;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    class MailAccount{
+        private String email;
+        @NotNull
+        @NotEmpty
+        @NotBlank
+        @JsonIgnore
+        private String password;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 }

@@ -9,11 +9,6 @@ import java.util.List;
 
 @Repository
 public interface GetNofiRepo {
-    @Select("SELECT id " +
-            "FROM users " +
-            "WHERE email ILIKE #{email}")
-    Integer getUserID(String email);
-
     @Select("SELECT banner " +
             "FROM events " +
             "WHERE id=#{eventID}")
@@ -32,16 +27,14 @@ public interface GetNofiRepo {
 
     @Select("SELECT * " +
             "FROM noti " +
-            "WHERE user_id = #{userID}")
+            "ORDER BY id DESC limit #{limit} offset #{offset}")
     @Results({
             @Result(property = "refID",column = "ref_id"),
-            @Result(property = "userID",column = "user_id"),
             @Result(property = "date",column = "created_at")
     })
-    List<GetNoti> getNoti(int userID);
+    List<GetNoti> getNoti(int limit,int offset);
 
     @Select("SELECT count(id) " +
-            "FROM noti " +
-            "WHERE user_id = #{userID}")
-    int getNotiCount(int userID);
+            "FROM noti ")
+    int getNotiCount();
 }

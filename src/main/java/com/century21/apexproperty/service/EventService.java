@@ -11,7 +11,7 @@ public interface EventService {
 
     EventRepo.EventResponse findOneEvent(int eventID);
 
-    void changeEventStatus(int eventID, boolean status, HttpServletRequest header);
+    void changeEventStatus(int eventID, boolean status);
 
     EventRepo.EventResponse insertEvent(EventRepo.EventRequest eventRequest);
 }

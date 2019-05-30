@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface SaveNotiRepo {
     @Insert("INSERT INTO noti(title,message,user_id,type,ref_id) " +
             "VALUES (#{n.title},#{n.message},#{userID},#{n.type},#{n.refID})")
-    Integer SaveNoti(@Param("n") SaveNoti saveNoti, @Param("userID") int userID);
+    Integer SaveNoti(@Param("n") SaveNoti saveNoti, @Param("userID") Integer userID);
 
-    @Select("SELECT id " +
-            "FROM users " +
-            "WHERE email like #{email}")
-    Integer getUserID(@Param("email") String email);
 }

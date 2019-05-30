@@ -149,7 +149,7 @@ public class PropertyServiceImpl implements PropertyService{
 
         propertyRepo.updateStatus(propertyID,status);
         if(status && !propertyNoti.isStatus()) {
-            myNotification.sendToAllSubscriber(propertyNoti.getTitle(), propertyNoti.getDescription(), Url.propertyGalleryUrl + propertyNoti.getImage(), httpServletRequest.getHeader("Authorization"), "property", propertyID);
+            myNotification.sendToAllSubscriber(propertyNoti.getTitle(), propertyNoti.getDescription(), Url.propertyGalleryUrl + propertyNoti.getImage(), "property", propertyID);
         }
         userLogRepo.insertUserLog("enable property to "+status,userRepo.findUserIDByEmail(principal.getName()));
     }

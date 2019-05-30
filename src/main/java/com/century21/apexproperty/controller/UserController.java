@@ -311,4 +311,18 @@ public class UserController {
         CustomResponse customResponse=new CustomResponse(200,userService.findQuestions(pagination),pagination);
         return customResponse.httpResponse("result","paging");
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/apis/mail-account")
+    public ResponseEntity mailAccount(){
+        CustomResponse customResponse=new CustomResponse(200,userService.findOneMailAccount());
+        return customResponse.httpResponse("result");
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/apis/mail-account")
+    public ResponseEntity updateMailAccount(@RequestBody UserRepo.MailAccountRequest request){
+        CustomResponse customResponse=new CustomResponse(200,userService.updateMailAccount(request));
+        return customResponse.httpResponse("result");
+    }
 }

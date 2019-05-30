@@ -34,26 +34,18 @@ public class UserServiceImpl implements UserService {
         int code = (int)(Math.random()*89999)+10000;
 
         String mailTemplate="" +
-            "<div style=\"height:100px\"><img style=\"height:100px; width:100px; float:right;\" src=\""+ Url.bannerUrl +"icon.jpg\"/></div>"+
-
+            "<div style=\"height:100px\"><img style=\"height:100px; width:100px; float:right;\" src=\"https://app.c21apex.com/api/event/banner/c21apex-icon.png\"/></div>"+
             "<div>"+
                 "<p>Dear "+user.getFirstName()+" "+user.getLastName()+",</p>"+
-                "<p>You recently requested a password reset for your C21 Apex Property account.</p>"+
-
+                "<br/></br><p>You recently requested a password reset for your C21 Apex Property account.To complete the process, enter the code below on the app.</p>"+
                 "<h1>"+code+"</h1>"+
-                "<p>This code will expire 60 minutes after this email was sent.</p>"+
-                "<b>Why you received this email.</b>"+
-                "<br>"+
-                "<p style=\"display:inline\">C21 Apex Property requires verification whenever an email address is selected as an C21 Apex Property account. Your C21 Apex Property account cannot be used until you verify it</p>"+
-
-                "<p>If you did not make this request, you can ignore this email. No C21 Apex Property account will be created without verification.</p>"+
-
-                "<p>C21 Apex Property</p>"+
+                "<p>If you did not make this request, you can ignore this email or if you believe an unauthorized person has accessed your account, please contact C21 Apex Property support. </p>"+
+                "<br/></br><p>C21 Apex Property</p>"+
             "</div>";
 
 //        //send mail to email
 //        mailTemplate+=code+"</h1><h6>NOTE: This CODE will be invalid after 2 minutes then u require to request code again.</h6><p>If you don't register for user account with CENTURY 21 CAMBODIA,simply ignore this email. No action will be taken.<h1></h1> Take care.<h1></h1>CENTURY 21 CAMBODIA</p></body></html>";
-        mailService.sendMail(email,mailTemplate);
+        mailService.sendMail("CENTURY 21 APEX PROPERTY",email,mailTemplate);
         userRepo.insertVerification(email,code);
     }
 
@@ -127,5 +119,16 @@ public class UserServiceImpl implements UserService {
         if(questions==null && questions.size()<1) throw new CustomRuntimeException(404,"zero result.");
         pagination.setTotalItem(userRepo.findQuestionsCount());
         return questions;
+    }
+
+    @Override
+    public UserRepo.MailAccount findOneMailAccount() {
+        return userRepo.findOneMailAccount();
+    }
+
+    @Override
+    public UserRepo.MailAccount updateMailAccount(UserRepo.MailAccountRequest request) {
+        userRepo.updateMailAccount(request.getEmail(),request.getPassword());
+        return userRepo.findOneMailAccount();
     }
 }

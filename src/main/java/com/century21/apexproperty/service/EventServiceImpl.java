@@ -57,12 +57,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void changeEventStatus(int eventID, boolean status, HttpServletRequest header) {
+    public void changeEventStatus(int eventID, boolean status) {
         EventRepo.EventResponse event = eventRepo.findOneEvent(eventID);
         if (event == null) throw new CustomRuntimeException(404, "ZERO RESULT");
         eventRepo.changeEventStatus(eventID, status);
         if (!event.isStatus() && status) {
-            myNotification.sendToAllSubscriber(event.getTitle(), event.getMessage(), event.getBanner(), header.getHeader("Authorization"), "event", eventID);
+            myNotification.sendToAllSubscriber(event.getTitle(), event.getMessage(), event.getBanner(), "event", eventID);
         }
 
     }
