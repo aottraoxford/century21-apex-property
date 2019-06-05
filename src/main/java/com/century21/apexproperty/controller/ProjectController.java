@@ -20,12 +20,20 @@ import com.century21.apexproperty.service.search.SearchService;
 import com.century21.apexproperty.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class ProjectController {
@@ -56,17 +64,20 @@ public class ProjectController {
     @Autowired
     private VisibleProjectService visibleProjectService;
     //@ApiOperation("(BACK END)visible project")
-    @PutMapping(value = "/api/visible-project",produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping(value = "/apis/visible-project",produces = "application/json")
     public ResponseEntity visibleProject(@ModelAttribute Noti noti ,@RequestParam("status")boolean status, @RequestParam("projectID")int projectID){
         visibleProjectService.visibleProject(noti,status,projectID);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
 
+
     @Autowired
     private AddSliderService addSliderService;
     //@ApiOperation("(BACK END) add more slide ")
-    @PostMapping("/api/slider/add")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @PostMapping("/apis/slider/add")
     public ResponseEntity addSlider(@RequestParam("title")String name,@RequestPart MultipartFile file){
         String fileName= fileUploadService.storeImage(file,fileUploadProperty.getSlider());
         Integer id=addSliderService.addSlider(name,fileName);
@@ -78,7 +89,8 @@ public class ProjectController {
     @Autowired
     private SliderUpdateService sliderUpdateService;
     //@ApiOperation("(BACK END) update slide ")
-    @PostMapping("/api/slider/update")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @PostMapping("/apis/slider/update")
     public ResponseEntity updateSliders(@RequestParam(value = "enable",defaultValue = "true")boolean enable,@RequestParam("sliderID")int sliderID,@RequestPart(value = "file",required = false)MultipartFile file){
         CustomResponse customResponse=new CustomResponse(200,sliderUpdateService.updateSlider(enable,sliderID,file));
         return customResponse.httpResponse("result");
@@ -87,7 +99,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectStatisticService projectStatisticService;
-    @GetMapping("/api/project/statistic")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @GetMapping("/apis/project/statistic")
     public ResponseEntity projectStatistic(){
         CustomResponse customResponse=new CustomResponse(200,projectStatisticService.statistic());
         return customResponse.httpResponse("result");
@@ -187,19 +200,35 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
-    @PostMapping("/api/project/insert")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @PostMapping("/apis/project/insert")
     public ResponseEntity insertProject(@RequestBody ProjectRepo.ProjectRequest project,Principal principal){
         CustomResponse customResponse=new CustomResponse(200,projectService.insertProject(project,principal));
         return customResponse.httpResponse("result");
     }
 
-    @PostMapping(value = "/api/project/image/upload",produces = "application/json", consumes = "multipart/form-data")
+    @PostMapping(value = "/apis/test",consumes = "multipart/form-data")
+    public ResponseEntity test(@RequestPart(required = false) MultipartFile file,@RequestPart(required = false) MultipartFile[] files){
+        Map map=new HashMap<>();
+        if(file!=null)
+            map.put("file",file.getOriginalFilename());
+        if(files!=null && files.length>0)
+            for (MultipartFile f : files) {
+                map.put("files",f.getOriginalFilename());
+            }
+        CustomResponse customResponse=new CustomResponse(200,map);
+        return customResponse.httpResponse("result");
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @PostMapping(value = "/apis/project/image/upload",produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity uploadProjectImage(@RequestParam("projectID")int projectID, @RequestPart(value = "thumbnail",required = false) MultipartFile thumbnail,@RequestPart(value = "galleries",required = false) MultipartFile[] galleries){
         CustomResponse customResponse=new CustomResponse(200,projectService.uploadProjectImage(thumbnail,galleries,projectID));
         return customResponse.httpResponse("result");
     }
 
-    @DeleteMapping(value = "/api/project/image/upload",produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @DeleteMapping(value = "/apis/project/image/upload",produces = "application/json")
     public ResponseEntity deleteProjectImage(@RequestParam("projectID")int projectID,@RequestParam(value = "gallery",required = false)String galleryName){
         CustomResponse customResponse=new CustomResponse(200,projectService.deleteImage(projectID,galleryName));
         return customResponse.httpResponse("result");
@@ -224,7 +253,8 @@ public class ProjectController {
         return customResponse.httpResponse("result");
     }
 
-    @PutMapping("/api/project/update")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
+    @PutMapping("/apis/project/update")
     public ResponseEntity updateProject(@RequestBody ProjectRepo.ProjectRequest projectRequest){
         CustomResponse customResponse=new CustomResponse(200,projectService.updateProject(projectRequest));
         return customResponse.httpResponse("result");

@@ -18,9 +18,9 @@ public class SignUp {
     //@ApiModelProperty(position = 2)
     @JsonProperty("last_name")
     private String lastName;
-    @NotBlank
-    @NotNull
-    @NotEmpty
+//    @NotBlank
+//    @NotNull
+//    @NotEmpty
     //@ApiModelProperty(position = 3)
     private String gender;
     @NotBlank

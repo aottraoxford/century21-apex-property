@@ -10,7 +10,6 @@ public class GetNoti {
     @JsonIgnore
     private int userID;
     private String type;
-    @JsonIgnore
     private int refID;
     private String title;
     private String message;

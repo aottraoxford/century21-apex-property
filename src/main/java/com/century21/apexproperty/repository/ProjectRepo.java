@@ -227,11 +227,11 @@ public interface ProjectRepo {
 
     @Update("UPDATE tower_type " +
             "SET type=#{ty.type} " +
-            "WHERE id=#{ty.id}")
+            "WHERE id=#{ty.id} and project_id=#{proID}")
     Integer updateTowerType(@Param("ty")TowerType towerType,@Param("proID")int projectID);
 
     @Delete("DELETE FROM tower_type " +
-            "WHERE id=#{id}")
+            "WHERE id=#{id} and project_id=#{proID}")
     void removeTowerType(@Param("id")int id,@Param("proID")int projectID);
 
     class ProjectUtil {
@@ -320,7 +320,7 @@ public interface ProjectRepo {
             return new SQL(){
                 {
                     UPDATE("project");
-                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},sqm_price=#{pro.sqmPrice},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.status},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
+                    SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},sqm_price=#{pro.sqmPrice},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.rentOrBuy},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
                     WHERE("id=#{pro.id}");
                 }
             }.toString();

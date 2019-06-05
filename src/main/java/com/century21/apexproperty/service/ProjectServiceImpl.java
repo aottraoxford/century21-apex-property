@@ -87,8 +87,9 @@ public class ProjectServiceImpl implements ProjectService {
             idFromDB = projectRepo.findAllTowerTypeID(projectRequest.getId());
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {
                 ProjectRepo.TowerType towerType = projectRequest.getTowerTypes().get(i);
-                if (projectRepo.updateTowerType(towerType,projectRequest.getId()) < 1)
+                if (projectRepo.updateTowerType(towerType,projectRequest.getId()) < 1) {
                     projectRepo.insertTowerType(towerType.getType(), projectRequest.getId());
+                }
                 idFromRequest.add(towerType.getId());
             }
             idFromDB.addAll(idFromRequest);
