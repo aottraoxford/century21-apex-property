@@ -59,7 +59,7 @@ public class PropertyController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
-    @DeleteMapping(value = "/apis/property/file_uploads",consumes = "multipart/form-data")
+    @DeleteMapping(value = "/apis/property/file_uploads")
     public ResponseEntity fileUploads(@RequestParam int propertyID,@RequestParam(required = false) String gallName,@RequestParam(required = false) String docName,Principal principal){
         propertyService.removeFile(propertyID,gallName,docName,principal);
         CustomResponse customResponse=new CustomResponse(200);
