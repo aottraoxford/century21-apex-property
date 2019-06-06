@@ -3,6 +3,7 @@ package com.century21.apexproperty.repository;
 import com.century21.apexproperty.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
@@ -142,8 +143,8 @@ public interface UserRepo {
     int checkAccount(String email);
 
     @Update("UPDATE verification SET enable = TRUE " +
-            "WHERE code = #{code}")
-    Integer updateEnable(int code);
+            "WHERE code = #{code} and name ilike #{email}")
+    Integer updateEnable(int code,String email);
 
     @Select("SELECT id " +
             "FROM users " +
@@ -456,6 +457,7 @@ public interface UserRepo {
     }
 
     class ContactFilter{
+        @ApiModelProperty(allowableValues = "all,project,property")
         private String type;
 
         public String getType() {
@@ -604,6 +606,8 @@ public interface UserRepo {
     class AssignRoleRequest{
         @JsonProperty("user_id")
         private int userID;
+
+        @ApiModelProperty(allowableValues = "admin,agent,user")
         @JsonProperty("change_to")
         private String role;
 

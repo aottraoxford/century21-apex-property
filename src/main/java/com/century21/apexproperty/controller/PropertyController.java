@@ -34,7 +34,7 @@ public class PropertyController {
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PutMapping("/apis/property/update")
-    public ResponseEntity updateProperty(@RequestBody PropertyRepo.Property property, Principal principal){
+    public ResponseEntity updateProperty(@RequestBody PropertyRepo.PropertyUpdate property, @ApiIgnore Principal principal){
         CustomResponse customResponse=new CustomResponse(200,propertyService.updateProperty(property,principal));
         return customResponse.httpResponse("result");
     }

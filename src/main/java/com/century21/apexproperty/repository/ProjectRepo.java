@@ -5,6 +5,7 @@ import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepo {
+
     @Select("SELECT name,description,thumbnail,isdisplay " +
             "FROM project " +
             "WHERE id = #{proID} ")
@@ -1039,6 +1041,7 @@ public interface ProjectRepo {
         private int id;
         @JsonIgnore
         private int projectID;
+        @ApiModelProperty(example = "Tower A")
         private String type;
 
         public int getId() {
@@ -1093,12 +1096,19 @@ public interface ProjectRepo {
 
     class PropertyType {
         private int id;
+        @ApiModelProperty(example = "Flat E0")
         private String type;
+        @ApiModelProperty(example = "2")
         private Integer floor;
+        @ApiModelProperty(example = "20")
         private Double width;
+        @ApiModelProperty(example = "40")
         private Double height;
+        @ApiModelProperty(example = "2")
         private Integer bedroom;
+        @ApiModelProperty(example = "1")
         private Integer bathroom;
+        @ApiModelProperty(example = "1")
         private Integer parking;
 
         public int getId() {
@@ -1169,7 +1179,9 @@ public interface ProjectRepo {
 
     class ProjectIntroduction {
         private int id;
+        @ApiModelProperty(example = "金融核心：玛卡拉区")
         private String name;
+        @ApiModelProperty(example = "<div id=\"xmjs\" class=\"lease_intro_con\" style=\"margin: 0px; padding: 0px; border: 0px; vertical-align: baseline; color: rgb(83, 83, 83); font-family: &quot;Microsoft YaHei&quot;;\"><div class=\"intro_con_item\" style=\"margin: 0px; padding: 0px 0px 20px; border: 0px; vertical-align: baseline; line-height: 25px;\"><div id=\"xmjs\" class=\"lease_intro_con\" style=\"margin: 0px; padding: 0px; border: 0px; vertical-align: baseline;\"><div class=\"intro_con_item\" style=\"margin: 0px; padding: 0px 0px 20px; border: 0px; vertical-align: baseline; line-height: 25px;\"><ul style=\"margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none; letter-spacing: 1px; line-height: 20px;\"><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\"><span style=\"font-size: 14px;\">金边市12个行政区内面积最小的一个，却是整个金边心脏地区，首相府坐落其中，生活配套最为完善！地区外资机构云集，外国工作人员较多，深受外国投资客青睐！出租公寓紧缺。</span></p><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\">&nbsp;</p><ul style=\"margin-right: 0px; margin-left: 0px; padding: 0px; border: 0px; font-size: 14px; vertical-align: baseline; list-style: none; color: rgb(83, 83, 83); letter-spacing: normal;\"><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none; color: rgb(83, 83, 83); letter-spacing: 1px; line-height: 20px; text-align: center;\"><img src=\"http://www.shitonghk.com/d/file/2017/09/10/646da3c9d924e0ed273bd923020e17d6.jpg\" alt=\"2.jpg\" width=\"790\" height=\"380\" style=\"margin: 0px; padding: 0px; vertical-align: baseline;\"></li></ul><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\">&nbsp;</p><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\"><span style=\"font-size: 14px;\">玛卡拉区域内大型购物商场、传统市场并存，购物消费等生活配套完整，区内还有国际级的大型运动公园、高级外语学校（包含新加坡国际学校及中文学校等）及甲级的崭新办公大楼及住宅大楼，在治安部分，区内分别有古巴及德国大使馆等外使馆，治安十分严谨。</span></p><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\"><span style=\"font-size: 14px;\"><br></span></p><p style=\"margin-bottom: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; color: rgb(83, 83, 83); line-height: 20px;\"><span style=\"font-size: 14px;\"><br></span></p><ul style=\"margin-right: 0px; margin-left: 0px; padding: 0px; border: 0px; vertical-align: baseline; list-style: none; color: rgb(83, 83, 83); line-height: 20px;\"><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">总理府坐落其中</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">银行云集，柬埔寨的金融区</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">云集多国大使馆</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">旅游局</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">拥有大型购物商场、传统市场</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">国际级的大型运动公园</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">多所国际级学校</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">火车站以及金边国际机场</span></li><li style=\"margin: 0px; padding: 0px; border: 0px; font-size: 16px; vertical-align: baseline; list-style: none;\"><span style=\"font-size: 14px;\">A级崭新写字楼及公寓</span></li></ul></li></ul></div></div></div></div>")
         private String description;
 
         public int getId() {
@@ -1200,46 +1212,57 @@ public interface ProjectRepo {
 
     class ProjectRequest {
         private int id;
+        @ApiModelProperty(example = "New Project Available")
         @JsonProperty("title")
         private String name;
+        @ApiModelProperty(example = "2019-03-15")
         @JsonProperty("built_date")
         private Date builtDate;
+        @ApiModelProperty(example = "2020-03-15")
         @JsonProperty("completed_date")
         private Date completedDate;
+        @ApiModelProperty(example="1",value = "1")
         @JsonProperty("project_type_id")
         private Integer projectTypeID;
+        @JsonIgnore
         @JsonProperty("project_type")
         private String projectType;
+        @JsonIgnore
+        @ApiModelProperty(example = "Cambodia")
         @JsonProperty("country")
         private String country;
         @NotNull
+        @ApiModelProperty(example = "0.5")
         private double grr;
+        @ApiModelProperty(example = "5000")
         @JsonProperty("down_payment")
         private String downPayment;
+        @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">Recent falls in house prices in major capital cities appear to have plateaued according to&nbsp;RBA Governor Philip Lowe.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“…in some markets the rate of price decline has slowed and auction clearance rates have increased,” he says.</p><div id=\"outstream_holder_news\" style=\"color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; margin: auto;\"></div><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Mortgage rates remain low and there is strong competition for borrowers of high credit quality.”</p>")
         private String description;
+        @ApiModelProperty(example = "1",value = "1")
         @NotNull
         @JsonProperty("country_id")
         private int countryID;
+        @ApiModelProperty(example = "#50, Corner of St. 516 and St. 335, Sangkat Boeung Kak 1, Khan Tuol Kouk, Phnom Penh, Cambodia.")
         @JsonProperty("address_1")
         private String addressOne;
+        @ApiModelProperty(example = "#50, Corner of St. 516 and St. 335, Sangkat Boeung Kak 1, Khan Tuol Kouk, Phnom Penh, Cambodia.")
         @JsonProperty("address_2")
         private String addressTwo;
-        @NotNull
-        @NotEmpty
-        private String status;
-        @NotNull
-        @NotEmpty
+        @ApiModelProperty(example = "Phnom Penh")
         private String city;
-        @NotNull
+        @ApiModelProperty(example = "600000")
         private double price;
-        @NotNull
+        @ApiModelProperty(example = "2000")
         @JsonProperty("avg_annual_rent_from")
         private double avgRentFrom;
+        @ApiModelProperty(example = "Rent",allowableValues = "rent,buy")
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
-        @NotNull
+        @ApiModelProperty(example = "5000")
         @JsonProperty("avg_annual_rent_to")
         private double avgRentTo;
+        @ApiModelProperty(example = "200")
         @JsonProperty("sqm_price")
         private double sqmPrice;
         @JsonProperty("introductions")
@@ -1367,14 +1390,6 @@ public interface ProjectRepo {
 
         public void setAddressTwo(String addressTwo) {
             this.addressTwo = addressTwo;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
         }
 
         public String getCity() {

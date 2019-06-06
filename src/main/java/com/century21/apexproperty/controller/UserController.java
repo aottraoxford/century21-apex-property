@@ -36,6 +36,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -137,8 +138,8 @@ public class UserController {
 
     //@ApiOperation("sign in with facebook,gmail,wechat")
     @PostMapping(value="/api/social-sign-in",produces = "application/json")
-    public ResponseEntity socialSignIn(HttpServletRequest httpServletRequest){
-        return socialSignInService.socialSignIn(httpServletRequest.getHeader("x-auth"));
+    public ResponseEntity socialSignIn(@RequestHeader("x-auth")String xAuth, HttpServletRequest httpServletRequest){
+        return socialSignInService.socialSignIn(xAuth);
     }
 
     //@ApiOperation("refresh token")
@@ -200,9 +201,8 @@ public class UserController {
     private UserUploadImageService userUploadImageService;
     @Autowired
     private UserUploadImageRepo userUploadImageRepo;
-    //@ApiOperation("user upload image")
     @PostMapping(value="/apis/user-upload-image",produces = "application/json")
-    public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam(value = "userID",required = false)Integer userID,Principal principal){
+    public ResponseEntity userUploadImage(@RequestParam("userImage")MultipartFile file,@RequestParam(value = "userID",required = false)Integer userID,@ApiIgnore Principal principal){
         if(userID==null){
             userID=userUploadImageRepo.getIDByEmail(principal.getName());
             if(userID==null) throw new CustomRuntimeException(404,"USER NOT EXIST");
@@ -224,14 +224,14 @@ public class UserController {
     @Autowired
     private FavoriteService favoriteService;
     @PostMapping("/apis/favorite_on")
-    public ResponseEntity projectFavorite(@RequestBody FavoriteRepo.FavoriteOn favoriteOn, Principal principal){
+    public ResponseEntity projectFavorite(@RequestBody FavoriteRepo.FavoriteOn favoriteOn, @ApiIgnore Principal principal){
         CustomResponse customResponse=new CustomResponse(200,favoriteService.favorite(favoriteOn.getProjectID(),favoriteOn.getPropertyID(),principal));
         return customResponse.httpResponse("favorite");
     }
 
 
     @GetMapping("/apis/user/favorite/{type}")
-    public ResponseEntity userFavorite(@PathVariable String type,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
+    public ResponseEntity userFavorite(@ApiParam(value = "favorite on project or property",required = true,allowableValues = "project,property") @PathVariable String type,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value = "limit",defaultValue = "10")int limit,Principal principal){
         Pagination pagination=new Pagination(page,limit);
         if(type.equalsIgnoreCase("property")) {
             CustomResponse customResponse = new CustomResponse(200, favoriteService.propertyFavorite(principal, pagination), pagination);
@@ -260,8 +260,8 @@ public class UserController {
     }
 
     @PatchMapping("/api/user/forgotpass/verification")
-    public ResponseEntity codeVerification(@RequestParam int code){
-        userService.verification(code);
+    public ResponseEntity codeVerification(@RequestBody EnableEmail enableEmail){
+        userService.verification(enableEmail);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
     }
@@ -275,7 +275,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/apis/admin/role/assign")
-    public ResponseEntity assignRole(@RequestBody UserRepo.AssignRoleRequest roleRequest,Principal principal){
+    public ResponseEntity assignRole(@RequestBody UserRepo.AssignRoleRequest roleRequest,@ApiIgnore Principal principal){
         userService.assignRole(roleRequest.getUserID(),roleRequest.getRole(),principal);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
@@ -283,7 +283,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @GetMapping("/apis/agents")
-    public ResponseEntity agents(String name,Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+    public ResponseEntity agents(@ApiParam("search by name") String name,@ApiIgnore Principal principal,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userService.agents(name,principal,pagination),pagination);
         return customResponse.httpResponse("result","paging");
@@ -291,7 +291,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/apis/users")
-    public ResponseEntity users(@RequestParam(required = false)String name,@RequestParam(required = false)String role,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
+    public ResponseEntity users(@ApiParam(value = "search user by name") @RequestParam(required = false)String name, @RequestParam(required = false)String role, @RequestParam(value = "page",defaultValue = "1")int page, @RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userService.findUsers(name,role,pagination),pagination);
         return customResponse.httpResponse("result","paging");
@@ -299,13 +299,14 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping("/apis/contacts")
-    public ResponseEntity contacts(@RequestBody UserRepo.ContactFilter filter,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,Principal principal){
+    public ResponseEntity contacts(@RequestBody UserRepo.ContactFilter filter,@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit,@ApiIgnore Principal principal){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userService.findContacts(filter,pagination,principal),pagination);
         return customResponse.httpResponse("result","paging");
     }
 
     @GetMapping("/apis/questions")
+
     public ResponseEntity questions(@RequestParam(value = "page",defaultValue = "1")int page,@RequestParam(value="limit",defaultValue = "10")int limit){
         Pagination pagination=new Pagination(page,limit);
         CustomResponse customResponse=new CustomResponse(200,userService.findQuestions(pagination),pagination);

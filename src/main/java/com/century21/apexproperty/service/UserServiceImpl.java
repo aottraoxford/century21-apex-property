@@ -2,9 +2,9 @@ package com.century21.apexproperty.service;
 
 import com.century21.apexproperty.exception.CustomRuntimeException;
 import com.century21.apexproperty.model.Pagination;
+import com.century21.apexproperty.model.request.EnableEmail;
 import com.century21.apexproperty.util.MailService;
 import com.century21.apexproperty.repository.UserRepo;
-import com.century21.apexproperty.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +19,11 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
 
     @Override
-    public void verification(int code) {
-        if(userRepo.updateEnable(code)<1){
+    public void verification(EnableEmail enableEmail) {
+        if(userRepo.updateEnable(enableEmail.getCode(),enableEmail.getEmail())<1){
             throw new CustomRuntimeException(401,"VERIFY CODE NOT MATCH.");
         }
+        userRepo.removeEmail(enableEmail.getEmail());
     }
 
     @Override

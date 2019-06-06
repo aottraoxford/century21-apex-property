@@ -1,7 +1,7 @@
 package com.century21.apexproperty.service.api_visible_project;
 
-import com.century21.apexproperty.controller.ProjectController;
+import com.century21.apexproperty.model.request.Notification;
 
 public interface VisibleProjectService {
-    void visibleProject(ProjectController.Noti noti, boolean status, int projectID);
+    void visibleProject(Notification noti, boolean status, int projectID);
 }

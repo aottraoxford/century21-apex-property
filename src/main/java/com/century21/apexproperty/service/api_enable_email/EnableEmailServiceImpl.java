@@ -16,5 +16,6 @@ public class EnableEmailServiceImpl implements EnableEmailService {
     public void enableEmail(String email, int code) {
         userRepo.removeCode();
         if(enableEmailRepo.enableEmail(email,code)<1) throw new CustomRuntimeException(404,"code not match");
+        else enableEmailRepo.removeVerifiesByEmail(email);
     }
 }

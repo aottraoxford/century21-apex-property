@@ -167,7 +167,8 @@ public class PropertyServiceImpl implements PropertyService{
     }
 
     @Override
-    public PropertyRepo.Property updateProperty(PropertyRepo.Property property, Principal principal) {
+    public PropertyRepo.Property updateProperty(PropertyRepo.PropertyUpdate property, Principal principal) {
+        if(propertyRepo.isExist(property.getId())==0) throw new CustomRuntimeException(404,"Property id not found.");
         Integer userID=userRepo.findUserIDByEmail(principal.getName());
         Integer ownerID=propertyRepo.findOwnerID(property.getId());
         boolean isOwner=true;

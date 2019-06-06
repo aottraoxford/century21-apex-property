@@ -2,7 +2,9 @@ package com.century21.apexproperty.repository;
 
 import com.century21.apexproperty.model.ID;
 import com.century21.apexproperty.util.Url;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
@@ -10,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepo {
+
+    @Select("SELECT count(id) FROM property where id=#{proID} ")
+    int isExist(Integer proID);
 
     @Select("SELECT user_id " +
             "FROM property WHERE id = #{proID}")
@@ -49,7 +54,7 @@ public interface PropertyRepo {
     int updateNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
 
     @UpdateProvider(type = PropertyUtil.class,method = "updateProperty")
-    int updateProperty(@Param("pro")Property property);
+    int updateProperty(@Param("pro")PropertyUpdate property);
 
     @Insert("INSERT INTO property_neighborhood(property_id,address,distance) " +
             "VALUES(#{proID},#{nbh.address},#{nbh.distance})")
@@ -318,7 +323,7 @@ public interface PropertyRepo {
             }.toString();
         }
 
-        public String updateProperty(@Param("pro")Property property){
+        public String updateProperty(@Param("pro")PropertyUpdate property){
             return new SQL(){
                 {
                     UPDATE("property");
@@ -671,58 +676,460 @@ public interface PropertyRepo {
             this.status = status;
         }
     }
-    class Property{
+    class PropertyUpdate{
         private int id;
+        @ApiModelProperty(example = "0",position = 1)
         @JsonProperty("project_id")
         private Integer projectID;
+        @ApiModelProperty(example = "2")
         private int bedroom;
+        @ApiModelProperty(example = "2")
         private int bathroom;
+        @ApiModelProperty(example = "4")
         @JsonProperty("living_room")
         private int livingRoom;
+        @ApiModelProperty(example = "1")
         @JsonProperty("dinning_room")
         private int dinningRoom;
+        @ApiModelProperty(example = "1")
         private int kitchen;
+        @ApiModelProperty(example = "4")
         @JsonProperty("air_conditioner")
         private int airConditioner;
+        @ApiModelProperty(example = "1")
         private int parking;
+        @ApiModelProperty(example = "1")
         private int balcony;
+        @ApiModelProperty(example = "2")
         @JsonProperty("floor_no")
         private int floorNo;
+        @ApiModelProperty(example = "1")
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
+        @ApiModelProperty(example = "New Property Available")
         private String title;
+        @ApiModelProperty(allowableValues = "rent,buy")
         @JsonProperty("rent_or_buy")
         private String rentOrSell;
+        @ApiModelProperty(example = "flat E1")
         private String type;
+        @ApiModelProperty(example = "Phnom Penh")
         private String city;
+        @ApiModelProperty(example = "Mean Chey")
         private String district;
+        @ApiModelProperty(example = "Beong Tom Pun")
         private String commune;
+        @ApiModelProperty(example = "Sonsom Kosol")
         private String village;
+        @ApiModelProperty(example = "123")
         @JsonProperty("house_no")
         private String houseNo;
+        @ApiModelProperty(example = "271")
         @JsonProperty("street_no")
         private String streetNo;
+        @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">Recent falls in house prices in major capital cities appear to have plateaued according to&nbsp;RBA Governor Philip Lowe.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“…in some markets the rate of price decline has slowed and auction clearance rates have increased,” he says.</p><div id=\"outstream_holder_news\" style=\"color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; margin: auto;\"></div><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Mortgage rates remain low and there is strong competition for borrowers of high credit quality.”</p>")
         private String description;
+        @ApiModelProperty(example = "25")
         @JsonProperty("private_area")
         private double privateArea;
+        @ApiModelProperty(example = "5")
         @JsonProperty("common_area")
         private double commonArea;
+        @ApiModelProperty(example = "50000")
         @JsonProperty("unit_price")
         private double unitPrice;
+        @ApiModelProperty(example = "200")
         @JsonProperty("sqm_price")
         private double sqmPrice;
+        @ApiModelProperty(example = "11.11")
         private double lat;
+        @ApiModelProperty(example = "111.111")
         private double lng;
+        @ApiModelProperty(example = "222.1")
         @JsonProperty("total_land_area")
         private double totalLandArea;
+        @ApiModelProperty(example = "20.2")
         @JsonProperty("building_width")
         private double width;
+        @ApiModelProperty(example = "50.1")
         @JsonProperty("building_height")
         private double height;
+        @ApiModelProperty(example = "20.22")
         @JsonProperty("land_width")
         private double landWidth;
+        @ApiModelProperty(example = "40.33")
         @JsonProperty("land_length")
         private double landLength;
+        @ApiModelProperty(example = "80.40")
+        @JsonProperty("total_area")
+        private double totalArea;
+        List<Neighborhood> neighborhoods;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public Integer getProjectID() {
+            return projectID;
+        }
+
+        public void setProjectID(Integer projectID) {
+            this.projectID = projectID;
+        }
+
+        public int getBedroom() {
+            return bedroom;
+        }
+
+        public void setBedroom(int bedroom) {
+            this.bedroom = bedroom;
+        }
+
+        public int getBathroom() {
+            return bathroom;
+        }
+
+        public void setBathroom(int bathroom) {
+            this.bathroom = bathroom;
+        }
+
+        public int getLivingRoom() {
+            return livingRoom;
+        }
+
+        public void setLivingRoom(int livingRoom) {
+            this.livingRoom = livingRoom;
+        }
+
+        public int getDinningRoom() {
+            return dinningRoom;
+        }
+
+        public void setDinningRoom(int dinningRoom) {
+            this.dinningRoom = dinningRoom;
+        }
+
+        public int getKitchen() {
+            return kitchen;
+        }
+
+        public void setKitchen(int kitchen) {
+            this.kitchen = kitchen;
+        }
+
+        public int getAirConditioner() {
+            return airConditioner;
+        }
+
+        public void setAirConditioner(int airConditioner) {
+            this.airConditioner = airConditioner;
+        }
+
+        public int getParking() {
+            return parking;
+        }
+
+        public void setParking(int parking) {
+            this.parking = parking;
+        }
+
+        public int getBalcony() {
+            return balcony;
+        }
+
+        public void setBalcony(int balcony) {
+            this.balcony = balcony;
+        }
+
+        public int getFloorNo() {
+            return floorNo;
+        }
+
+        public void setFloorNo(int floorNo) {
+            this.floorNo = floorNo;
+        }
+
+        public int getMezzanineFloor() {
+            return mezzanineFloor;
+        }
+
+        public void setMezzanineFloor(int mezzanineFloor) {
+            this.mezzanineFloor = mezzanineFloor;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRentOrSell() {
+            return rentOrSell;
+        }
+
+        public void setRentOrSell(String rentOrSell) {
+            this.rentOrSell = rentOrSell;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getDistrict() {
+            return district;
+        }
+
+        public void setDistrict(String district) {
+            this.district = district;
+        }
+
+        public String getCommune() {
+            return commune;
+        }
+
+        public void setCommune(String commune) {
+            this.commune = commune;
+        }
+
+        public String getVillage() {
+            return village;
+        }
+
+        public void setVillage(String village) {
+            this.village = village;
+        }
+
+        public String getHouseNo() {
+            return houseNo;
+        }
+
+        public void setHouseNo(String houseNo) {
+            this.houseNo = houseNo;
+        }
+
+        public String getStreetNo() {
+            return streetNo;
+        }
+
+        public void setStreetNo(String streetNo) {
+            this.streetNo = streetNo;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public double getPrivateArea() {
+            return privateArea;
+        }
+
+        public void setPrivateArea(double privateArea) {
+            this.privateArea = privateArea;
+        }
+
+        public double getCommonArea() {
+            return commonArea;
+        }
+
+        public void setCommonArea(double commonArea) {
+            this.commonArea = commonArea;
+        }
+
+        public double getUnitPrice() {
+            return unitPrice;
+        }
+
+        public void setUnitPrice(double unitPrice) {
+            this.unitPrice = unitPrice;
+        }
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+        public double getLng() {
+            return lng;
+        }
+
+        public void setLng(double lng) {
+            this.lng = lng;
+        }
+
+        public double getTotalLandArea() {
+            return totalLandArea;
+        }
+
+        public void setTotalLandArea(double totalLandArea) {
+            this.totalLandArea = totalLandArea;
+        }
+
+        public double getWidth() {
+            return width;
+        }
+
+        public void setWidth(double width) {
+            this.width = width;
+        }
+
+        public double getHeight() {
+            return height;
+        }
+
+        public void setHeight(double height) {
+            this.height = height;
+        }
+
+        public double getLandWidth() {
+            return landWidth;
+        }
+
+        public void setLandWidth(double landWidth) {
+            this.landWidth = landWidth;
+        }
+
+        public double getLandLength() {
+            return landLength;
+        }
+
+        public void setLandLength(double landLength) {
+            this.landLength = landLength;
+        }
+
+        public double getTotalArea() {
+            return totalArea;
+        }
+
+        public void setTotalArea(double totalArea) {
+            this.totalArea = totalArea;
+        }
+
+        public List<Neighborhood> getNeighborhoods() {
+            return neighborhoods;
+        }
+
+        public void setNeighborhoods(List<Neighborhood> neighborhoods) {
+            this.neighborhoods = neighborhoods;
+        }
+    }
+    class Property{
+        private int id;
+        @ApiModelProperty(example = "0")
+        @JsonProperty("project_id")
+        private Integer projectID;
+        @ApiModelProperty(example = "2")
+        private int bedroom;
+        @ApiModelProperty(example = "2")
+        private int bathroom;
+        @ApiModelProperty(example = "4")
+        @JsonProperty("living_room")
+        private int livingRoom;
+        @ApiModelProperty(example = "1")
+        @JsonProperty("dinning_room")
+        private int dinningRoom;
+        @ApiModelProperty(example = "1")
+        private int kitchen;
+        @ApiModelProperty(example = "4")
+        @JsonProperty("air_conditioner")
+        private int airConditioner;
+        @ApiModelProperty(example = "1")
+        private int parking;
+        @ApiModelProperty(example = "1")
+        private int balcony;
+        @ApiModelProperty(example = "2")
+        @JsonProperty("floor_no")
+        private int floorNo;
+        @ApiModelProperty(example = "1")
+        @JsonProperty("mezzanine_floor")
+        private int mezzanineFloor;
+        @ApiModelProperty(example = "New Property Available")
+        private String title;
+        @ApiModelProperty(allowableValues = "rent,buy")
+        @JsonProperty("rent_or_buy")
+        private String rentOrSell;
+        @ApiModelProperty(example = "flat E1")
+        private String type;
+        @ApiModelProperty(example = "Phnom Penh")
+        private String city;
+        @ApiModelProperty(example = "Mean Chey")
+        private String district;
+        @ApiModelProperty(example = "Beong Tom Pun")
+        private String commune;
+        @ApiModelProperty(example = "Sonsom Kosol")
+        private String village;
+        @ApiModelProperty(example = "123")
+        @JsonProperty("house_no")
+        private String houseNo;
+        @ApiModelProperty(example = "271")
+        @JsonProperty("street_no")
+        private String streetNo;
+        @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">Recent falls in house prices in major capital cities appear to have plateaued according to&nbsp;RBA Governor Philip Lowe.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“…in some markets the rate of price decline has slowed and auction clearance rates have increased,” he says.</p><div id=\"outstream_holder_news\" style=\"color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; margin: auto;\"></div><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Mortgage rates remain low and there is strong competition for borrowers of high credit quality.”</p>")
+        private String description;
+        @ApiModelProperty(example = "25")
+        @JsonProperty("private_area")
+        private double privateArea;
+        @ApiModelProperty(example = "5")
+        @JsonProperty("common_area")
+        private double commonArea;
+        @ApiModelProperty(example = "50000")
+        @JsonProperty("unit_price")
+        private double unitPrice;
+        @ApiModelProperty(example = "200")
+        @JsonProperty("sqm_price")
+        private double sqmPrice;
+        @ApiModelProperty(example = "11.11")
+        private double lat;
+        @ApiModelProperty(example = "111.111")
+        private double lng;
+        @ApiModelProperty(example = "222.1")
+        @JsonProperty("total_land_area")
+        private double totalLandArea;
+        @ApiModelProperty(example = "20.2")
+        @JsonProperty("building_width")
+        private double width;
+        @ApiModelProperty(example = "50.1")
+        @JsonProperty("building_height")
+        private double height;
+        @ApiModelProperty(example = "20.22")
+        @JsonProperty("land_width")
+        private double landWidth;
+        @ApiModelProperty(example = "40.33")
+        @JsonProperty("land_length")
+        private double landLength;
+        @ApiModelProperty(example = "80.40")
         @JsonProperty("total_area")
         private double totalArea;
         private boolean status;
@@ -1098,7 +1505,9 @@ public interface PropertyRepo {
         private int id;
         @JsonProperty("property_id")
         private int propertyID;
+        @ApiModelProperty(example = "Phnom Penh International Airport")
         private String address;
+        @ApiModelProperty(example = "3.4")
         private double distance;
 
         public int getPropertyID() {

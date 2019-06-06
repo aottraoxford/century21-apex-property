@@ -1,12 +1,12 @@
 package com.century21.apexproperty.controller;
 
+import com.century21.apexproperty.model.request.Notification;
 import com.century21.apexproperty.service.api_visible_project.VisibleProjectService;
 import com.century21.apexproperty.configuration.upload.FileUploadProperty;
 import com.century21.apexproperty.configuration.upload.FileUploadService;
 import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.model.response.CustomResponse;
 import com.century21.apexproperty.repository.ProjectRepo;
-import com.century21.apexproperty.repository.api_save_noti.SaveNoti;
 import com.century21.apexproperty.service.ProjectService;
 import com.century21.apexproperty.service.api_allcity.CityService;
 import com.century21.apexproperty.service.api_get_noti.GetNotiService;
@@ -18,25 +18,20 @@ import com.century21.apexproperty.service.api_slider_update.SliderUpdateService;
 import com.century21.apexproperty.service.api_type_country_project.TypeCountryProjectService;
 import com.century21.apexproperty.service.search.SearchService;
 import com.century21.apexproperty.util.Url;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
+@Api(value = "project restful api")
 @RestController
-public class ProjectController {
+public class ProjectController{
     @Autowired
     private SearchService searchService;
     @Autowired
@@ -44,29 +39,15 @@ public class ProjectController {
     @Autowired
     private FileUploadProperty fileUploadProperty;
 
-    public class Noti{
-        private String message;
-
-        public Noti(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            if(message==null ) return "New Project Available.";
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-    }
 
     @Autowired
     private VisibleProjectService visibleProjectService;
-    //@ApiOperation("(BACK END)visible project")
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/apis/visible-project",produces = "application/json")
-    public ResponseEntity visibleProject(@ModelAttribute Noti noti ,@RequestParam("status")boolean status, @RequestParam("projectID")int projectID){
+    public ResponseEntity visibleProject(@ModelAttribute Notification noti ,
+                                         @ApiParam(value = "display project if select true")
+                                         @RequestParam("status")boolean status,
+                                         @RequestParam(value = "projectID")int projectID){
         visibleProjectService.visibleProject(noti,status,projectID);
         CustomResponse customResponse=new CustomResponse(200);
         return customResponse.httpResponse();
@@ -202,21 +183,8 @@ public class ProjectController {
     private ProjectService projectService;
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AGENT')")
     @PostMapping("/apis/project/insert")
-    public ResponseEntity insertProject(@RequestBody ProjectRepo.ProjectRequest project,Principal principal){
+    public ResponseEntity insertProject(@RequestBody ProjectRepo.ProjectRequest project,@ApiIgnore Principal principal){
         CustomResponse customResponse=new CustomResponse(200,projectService.insertProject(project,principal));
-        return customResponse.httpResponse("result");
-    }
-
-    @PostMapping(value = "/apis/test",consumes = "multipart/form-data")
-    public ResponseEntity test(@RequestPart(required = false) MultipartFile file,@RequestPart(required = false) MultipartFile[] files){
-        Map map=new HashMap<>();
-        if(file!=null)
-            map.put("file",file.getOriginalFilename());
-        if(files!=null && files.length>0)
-            for (MultipartFile f : files) {
-                map.put("files",f.getOriginalFilename());
-            }
-        CustomResponse customResponse=new CustomResponse(200,map);
         return customResponse.httpResponse("result");
     }
 
