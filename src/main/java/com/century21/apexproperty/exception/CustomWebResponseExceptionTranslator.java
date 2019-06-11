@@ -8,7 +8,7 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
 
     @Override
     public ResponseEntity translate(Exception ex) throws Exception {
-        CustomResponse customResponse=new CustomResponse(401);
+        CustomResponse customResponse = new CustomResponse(401);
         customResponse.setStatus(ex.getMessage());
         return customResponse.httpResponse();
     }

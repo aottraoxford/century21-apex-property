@@ -12,10 +12,11 @@ public class EnableEmailServiceImpl implements EnableEmailService {
     private EnableEmailRepo enableEmailRepo;
     @Autowired
     private UserRepo userRepo;
+
     @Override
     public void enableEmail(String email, int code) {
         userRepo.removeCode();
-        if(enableEmailRepo.enableEmail(email,code)<1) throw new CustomRuntimeException(404,"code not match");
+        if (enableEmailRepo.enableEmail(email, code) < 1) throw new CustomRuntimeException(404, "code not match");
         else enableEmailRepo.removeVerifiesByEmail(email);
     }
 }

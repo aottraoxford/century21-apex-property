@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserUploadImageService {
     String findImageName(int userID);
+
     void saveUserImage(int userID, String filename);
 }

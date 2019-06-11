@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
@@ -23,7 +24,7 @@ public interface PropertyRepo {
     @Select("SELECT parent_id " +
             "FROM property " +
             "INNER JOIN users ON users.id=property.user_id " +
-            "WHERE property.id=#{proID}" )
+            "WHERE property.id=#{proID}")
     Integer findAdminID(int proID);
 
     @Select("SELECT count(id) " +
@@ -51,68 +52,68 @@ public interface PropertyRepo {
 
     @Update("UPDATE property_neighborhood SET distance=#{nbh.distance},address=#{nbh.address} " +
             "WHERE id=#{nbh.id} AND property_id=#{proID}")
-    int updateNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
+    int updateNeighborhood(@Param("nbh") Neighborhood neighborhood, @Param("proID") int proID);
 
-    @UpdateProvider(type = PropertyUtil.class,method = "updateProperty")
-    int updateProperty(@Param("pro")PropertyUpdate property);
+    @UpdateProvider(type = PropertyUtil.class, method = "updateProperty")
+    int updateProperty(@Param("pro") PropertyUpdate property);
 
     @Insert("INSERT INTO property_neighborhood(property_id,address,distance) " +
             "VALUES(#{proID},#{nbh.address},#{nbh.distance})")
-    int insertNeighborhood(@Param("nbh")Neighborhood neighborhood,@Param("proID")int proID);
+    int insertNeighborhood(@Param("nbh") Neighborhood neighborhood, @Param("proID") int proID);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAgentProperties")
+    @SelectProvider(type = PropertyUtil.class, method = "findAgentProperties")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "unitPrice",column = "unit_price"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "unitPrice", column = "unit_price"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "galleries", column = "id", many = @Many(select = "findGalleries")),
+            @Result(property = "user", column = "user_id", one = @One(select = "findOneUser"))
     })
-    List<Properties> findAgentProperties(int userID,String status,int limit,int offset);
+    List<Properties> findAgentProperties(int userID, String status, int limit, int offset);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAgentPropertiesCount")
-    int findAgentPropertiesCount(int userID,String status);
+    @SelectProvider(type = PropertyUtil.class, method = "findAgentPropertiesCount")
+    int findAgentPropertiesCount(int userID, String status);
 
     @Update("UPDATE property SET status = #{status} " +
             "WHERE id = #{proID}")
-    int updateStatus(@Param("proID")int projectID,@Param("status") boolean status);
+    int updateStatus(@Param("proID") int projectID, @Param("status") boolean status);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilter")
+    @SelectProvider(type = PropertyUtil.class, method = "findAllPropertyByFilter")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "unitPrice",column = "unit_price"),
-            @Result(property = "rentOrBuy",column = "rent_or_sell"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "unitPrice", column = "unit_price"),
+            @Result(property = "rentOrBuy", column = "rent_or_sell"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "galleries", column = "id", many = @Many(select = "findGalleries")),
+            @Result(property = "user", column = "user_id", one = @One(select = "findOneUser"))
     })
-    List<Properties> findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset);
+    List<Properties> findAllPropertyByFilter(@Param("filter") PropertyFilter filter, @Param("limit") int limit, @Param("offset") int offset);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyByFilterCount")
-    int findAllPropertyByFilterCount(@Param("filter")PropertyFilter filter);
+    @SelectProvider(type = PropertyUtil.class, method = "findAllPropertyByFilterCount")
+    int findAllPropertyByFilterCount(@Param("filter") PropertyFilter filter);
 
     @Delete("DELETE FROM property_files WHERE property_id=#{proID} AND name = #{name}")
-    void removeFile(@Param("proID")int proID,@Param("name")String name);
+    void removeFile(@Param("proID") int proID, @Param("name") String name);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAllPropertyCount")
-    int findAllPropertyCount(@Param("title")String title,@Param("status")String status);
+    @SelectProvider(type = PropertyUtil.class, method = "findAllPropertyCount")
+    int findAllPropertyCount(@Param("title") String title, @Param("status") String status);
 
-    @SelectProvider(type = PropertyUtil.class,method = "findAllProperty")
+    @SelectProvider(type = PropertyUtil.class, method = "findAllProperty")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "unitPrice",column = "unit_price"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "rentOrBuy",column = "rent_or_sell"),
-            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "unitPrice", column = "unit_price"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "rentOrBuy", column = "rent_or_sell"),
+            @Result(property = "galleries", column = "id", many = @Many(select = "findGalleries")),
+            @Result(property = "user", column = "user_id", one = @One(select = "findOneUser"))
     })
-    List<Properties> findAllProperty(@Param("title")String title,@Param("status")String status,@Param("limit")int limit,@Param("offset")int offset);
+    List<Properties> findAllProperty(@Param("title") String title, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset);
 
     @Select("SELECT id,name " +
             "FROM property_files " +
             "WHERE type = 'image' AND property_id=#{id}")
     @Results({
-            @Result(property = "gallery",column = "name")
+            @Result(property = "gallery", column = "name")
     })
     List<Gallery> findGalleries();
 
@@ -120,39 +121,39 @@ public interface PropertyRepo {
             "WHERE property_id=#{id} AND type = 'doc'")
     List<PropertyFile> findDocs();
 
-    @SelectProvider(type = PropertyUtil.class,method = "findOneProperty")
+    @SelectProvider(type = PropertyUtil.class, method = "findOneProperty")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "projectID",column = "project_id"),
-            @Result(property = "livingRoom",column = "living_room"),
-            @Result(property = "dinningRoom",column = "dinning_room"),
-            @Result(property = "airConditioner",column = "air_conditioner"),
-            @Result(property = "mezzanineFloor",column = "mezzanine_floor"),
-            @Result(property = "rentOrSell",column = "rent_or_sell"),
-            @Result(property = "houseNo",column = "house_no"),
-            @Result(property = "streetNo",column = "street_no"),
-            @Result(property = "privateArea",column = "private_area"),
-            @Result(property = "commonArea",column = "common_area"),
-            @Result(property = "unitPrice",column = "unit_price"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "totalLandArea",column = "total_land_area"),
-            @Result(property = "landWidth",column = "land_width"),
-            @Result(property = "landLength",column = "land_length"),
-            @Result(property = "totalArea",column = "total_area"),
-            @Result(property = "showMap",column = "show_map"),
-            @Result(property = "galleries",column = "id",many = @Many(select = "findGalleries")),
-            @Result(property = "docs",column = "id",many = @Many(select = "findDocs")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser")),
-            @Result(property = "floorNo",column = "floor_no"),
-            @Result(property = "neighborhoods",column = "id",many = @Many(select = "findNeighborhoods"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "projectID", column = "project_id"),
+            @Result(property = "livingRoom", column = "living_room"),
+            @Result(property = "dinningRoom", column = "dinning_room"),
+            @Result(property = "airConditioner", column = "air_conditioner"),
+            @Result(property = "mezzanineFloor", column = "mezzanine_floor"),
+            @Result(property = "rentOrSell", column = "rent_or_sell"),
+            @Result(property = "houseNo", column = "house_no"),
+            @Result(property = "streetNo", column = "street_no"),
+            @Result(property = "privateArea", column = "private_area"),
+            @Result(property = "commonArea", column = "common_area"),
+            @Result(property = "unitPrice", column = "unit_price"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "totalLandArea", column = "total_land_area"),
+            @Result(property = "landWidth", column = "land_width"),
+            @Result(property = "landLength", column = "land_length"),
+            @Result(property = "totalArea", column = "total_area"),
+            @Result(property = "showMap", column = "show_map"),
+            @Result(property = "galleries", column = "id", many = @Many(select = "findGalleries")),
+            @Result(property = "docs", column = "id", many = @Many(select = "findDocs")),
+            @Result(property = "user", column = "user_id", one = @One(select = "findOneUser")),
+            @Result(property = "floorNo", column = "floor_no"),
+            @Result(property = "neighborhoods", column = "id", many = @Many(select = "findNeighborhoods"))
     })
-    Property findOneProperty(@Param("proID")int proID);
+    Property findOneProperty(@Param("proID") int proID);
 
     @Select("SELECT * " +
             "FROM property_neighborhood " +
             "WHERE property_id=#{id}")
     @Results({
-            @Result(property = "propertyID",column = "property_id")
+            @Result(property = "propertyID", column = "property_id")
     })
     List<Neighborhood> findNeighborhoods();
 
@@ -160,50 +161,50 @@ public interface PropertyRepo {
             "FROM users " +
             "WHERE id=#{user_id}")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name"),
-            @Result(property = "phoneNumber",column = "phone_number"),
-            @Result(property = "accountType",column = "account_type")
+            @Result(property = "id", column = "id"),
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "accountType", column = "account_type")
     })
     UserRepo.User findOneUser();
 
     @Insert("INSERT into property_files(name,type,property_id) " +
             "VALUES(#{name},#{type},#{proID}) ")
-    Integer insertFiles(@Param("name")String name,@Param("type")String type,@Param("proID")int proID);
+    Integer insertFiles(@Param("name") String name, @Param("type") String type, @Param("proID") int proID);
 
-    @InsertProvider(type = PropertyUtil.class,method = "insertProperty")
+    @InsertProvider(type = PropertyUtil.class, method = "insertProperty")
     @SelectKey(statement = "select nextval('property_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
-    Integer insertProperty(@Param("id")ID id,@Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID);
+    Integer insertProperty(@Param("id") ID id, @Param("ppt") PropertyRequest propertyRequest, @Param("userID") int userID);
 
-    class PropertyUtil{
+    class PropertyUtil {
 
-        public String findAgentPropertiesCount(int userID,String status){
-            return new SQL(){
+        public String findAgentPropertiesCount(int userID, String status) {
+            return new SQL() {
                 {
                     SELECT("count(id)");
                     FROM("property");
                     WHERE("user_id=#{userID}");
-                    if(status!=null && status.trim().length()>0){
-                        if(status.equalsIgnoreCase("false"))
+                    if (status != null && status.trim().length() > 0) {
+                        if (status.equalsIgnoreCase("false"))
                             WHERE("status is false");
-                        else if(status.equalsIgnoreCase("true"))
+                        else if (status.equalsIgnoreCase("true"))
                             WHERE("status is true");
                     }
                 }
             }.toString();
         }
 
-        public String findAgentProperties(int userID,String status,int limit,int offset){
-            return new SQL(){
+        public String findAgentProperties(int userID, String status, int limit, int offset) {
+            return new SQL() {
                 {
                     SELECT("lat,lng,id,project_id,user_id,title,unit_price,sqm_price,country,type,status");
                     FROM("property");
                     WHERE("user_id=#{userID}");
-                    if(status!=null && status.trim().length()>0){
-                        if(status.equalsIgnoreCase("false"))
+                    if (status != null && status.trim().length() > 0) {
+                        if (status.equalsIgnoreCase("false"))
                             WHERE("status is false");
-                        else if(status.equalsIgnoreCase("true"))
+                        else if (status.equalsIgnoreCase("true"))
                             WHERE("status is true");
                     }
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
@@ -211,101 +212,115 @@ public interface PropertyRepo {
             }.toString();
         }
 
-        public String findAllPropertyByFilter(@Param("filter")PropertyFilter filter,@Param("limit")int limit,@Param("offset")int offset){
-            return new SQL(){
+        public String findAllPropertyByFilter(@Param("filter") PropertyFilter filter, @Param("limit") int limit, @Param("offset") int offset) {
+            return new SQL() {
                 {
                     SELECT("substring(property.description,1,200)||'.....' as description,lat,lng,property.id,property.project_id,property.user_id,property.title,property.unit_price,property.sqm_price,property.country,property.type,property.status,rent_or_sell");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
-                    if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0) WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
-                    if(filter.getCity()!=null && filter.getCity().length()>0) WHERE("property.city ilike #{filter.city}");
-                    if(filter.getDistrict()!=null && filter.getDistrict().length()>0) WHERE("property.district ilike #{filter.district}");
-                    if(filter.getCommune()!=null && filter.getCommune().length()>0) WHERE("property.commune ilike #{filter.commune}");
-                    if(filter.getType()!=null && filter.getType().length()>0) WHERE("property.type ilike #{filter.type}");
-                    if(filter.getStatus()!=null && filter.getStatus().length()>0) {
-                        if(filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
+                    if (filter.getTitle() != null && filter.getTitle().length() > 0)
+                        WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
+                    if (filter.getRentOrBuy() != null && filter.getRentOrBuy().length() > 0)
+                        WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
+                    if (filter.getCity() != null && filter.getCity().length() > 0)
+                        WHERE("property.city ilike #{filter.city}");
+                    if (filter.getDistrict() != null && filter.getDistrict().length() > 0)
+                        WHERE("property.district ilike #{filter.district}");
+                    if (filter.getCommune() != null && filter.getCommune().length() > 0)
+                        WHERE("property.commune ilike #{filter.commune}");
+                    if (filter.getType() != null && filter.getType().length() > 0)
+                        WHERE("property.type ilike #{filter.type}");
+                    if (filter.getStatus() != null && filter.getStatus().length() > 0) {
+                        if (filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
                         else WHERE("property.status IS FALSE");
                     }
-                    if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
-                    if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
-                    if(filter.getToPrice()>0 && filter.getFromPrice()>0) WHERE("property.unit_price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    else if(filter.getFromPrice()>0) WHERE("property.unit_price > #{filter.fromPrice}");
-                    else if(filter.getToPrice()>0) WHERE("property.unit_price < #{filter.toPrice}");
-                    if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
-                        if(filter.getSortType().equalsIgnoreCase("price"))
+                    if (filter.getBedroom() > 0) WHERE("property.bedroom = #{filter.bedroom}");
+                    if (filter.getBathroom() > 0) WHERE("property.bathroom = #{filter.bathroom}");
+                    if (filter.getToPrice() > 0 && filter.getFromPrice() > 0)
+                        WHERE("property.unit_price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if (filter.getFromPrice() > 0) WHERE("property.unit_price > #{filter.fromPrice}");
+                    else if (filter.getToPrice() > 0) WHERE("property.unit_price < #{filter.toPrice}");
+                    if (filter.getSortType() != null && filter.getSortType().length() > 0) {
+                        if (filter.getSortType().equalsIgnoreCase("price"))
                             ORDER_BY("unit_price limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("price-desc"))
+                        else if (filter.getSortType().equalsIgnoreCase("price-desc"))
                             ORDER_BY("unit_price DESC limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("title"))
+                        else if (filter.getSortType().equalsIgnoreCase("title"))
                             ORDER_BY("name limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("title-desc"))
+                        else if (filter.getSortType().equalsIgnoreCase("title-desc"))
                             ORDER_BY("name DESC limit #{limit} offset #{offset}");
-                    }else ORDER_BY("property.id DESC limit #{limit} offset #{offset}");
+                    } else ORDER_BY("property.id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();
         }
 
-        public String findAllPropertyByFilterCount(@Param("filter")PropertyFilter filter){
-            return new SQL(){
+        public String findAllPropertyByFilterCount(@Param("filter") PropertyFilter filter) {
+            return new SQL() {
                 {
                     SELECT("count(property.id)");
                     FROM("property");
                     LEFT_OUTER_JOIN("project ON project.id=property.project_id");
-                    if(filter.getTitle()!=null && filter.getTitle().length()>0) WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0) WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
-                    if(filter.getCity()!=null && filter.getCity().length()>0) WHERE("property.city ilike #{filter.city}");
-                    if(filter.getDistrict()!=null && filter.getDistrict().length()>0) WHERE("property.district ilike #{filter.district}");
-                    if(filter.getCommune()!=null && filter.getCommune().length()>0) WHERE("property.commune ilike #{filter.commune}");
-                    if(filter.getType()!=null && filter.getType().length()>0) WHERE("property.type ilike #{filter.type}");
-                    if(filter.getStatus()!=null && filter.getStatus().length()>0) {
-                        if(filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
+                    if (filter.getTitle() != null && filter.getTitle().length() > 0)
+                        WHERE("property.title ILIKE '%'||#{filter.title}||'%'");
+                    if (filter.getRentOrBuy() != null && filter.getRentOrBuy().length() > 0)
+                        WHERE("property.rent_or_sell ilike #{filter.rentOrBuy}");
+                    if (filter.getCity() != null && filter.getCity().length() > 0)
+                        WHERE("property.city ilike #{filter.city}");
+                    if (filter.getDistrict() != null && filter.getDistrict().length() > 0)
+                        WHERE("property.district ilike #{filter.district}");
+                    if (filter.getCommune() != null && filter.getCommune().length() > 0)
+                        WHERE("property.commune ilike #{filter.commune}");
+                    if (filter.getType() != null && filter.getType().length() > 0)
+                        WHERE("property.type ilike #{filter.type}");
+                    if (filter.getStatus() != null && filter.getStatus().length() > 0) {
+                        if (filter.getStatus().equalsIgnoreCase("true")) WHERE("property.status IS TRUE");
                         else WHERE("property.status IS FALSE");
                     }
-                    if(filter.getBedroom()>0) WHERE("property.bedroom = #{filter.bedroom}");
-                    if(filter.getBathroom()>0) WHERE("property.bathroom = #{filter.bathroom}");
-                    if(filter.getToPrice()>0 && filter.getFromPrice()>0) WHERE("property.unit_price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    else if(filter.getFromPrice()>0) WHERE("property.unit_price > #{filter.fromPrice}");
-                    else if(filter.getToPrice()>0) WHERE("property.unit_price < #{filter.toPrice}");
+                    if (filter.getBedroom() > 0) WHERE("property.bedroom = #{filter.bedroom}");
+                    if (filter.getBathroom() > 0) WHERE("property.bathroom = #{filter.bathroom}");
+                    if (filter.getToPrice() > 0 && filter.getFromPrice() > 0)
+                        WHERE("property.unit_price between #{filter.fromPrice} AND #{filter.toPrice}");
+                    else if (filter.getFromPrice() > 0) WHERE("property.unit_price > #{filter.fromPrice}");
+                    else if (filter.getToPrice() > 0) WHERE("property.unit_price < #{filter.toPrice}");
                 }
             }.toString();
         }
 
-        public String findAllPropertyCount(@Param("title")String title,@Param("status")String status){
-            return new SQL(){
+        public String findAllPropertyCount(@Param("title") String title, @Param("status") String status) {
+            return new SQL() {
                 {
                     SELECT("count(id)");
                     FROM("property");
                     WHERE("status IS TRUE");
-                    if(title!=null && title.trim().length()>0)
+                    if (title != null && title.trim().length() > 0)
                         WHERE("title ilike '%'||#{title}||'%'");
-                    if(status!=null && status.trim().length()>0){
-                        if(status.equalsIgnoreCase("true")) WHERE("status is true");
-                        else if(status.equalsIgnoreCase("false")) WHERE("status is false");
+                    if (status != null && status.trim().length() > 0) {
+                        if (status.equalsIgnoreCase("true")) WHERE("status is true");
+                        else if (status.equalsIgnoreCase("false")) WHERE("status is false");
                     }
                 }
             }.toString();
         }
 
-        public String findAllProperty(@Param("title")String title,@Param("status")String status,@Param("limit")int limit,@Param("offset")int offset){
-            return new SQL(){
+        public String findAllProperty(@Param("title") String title, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset) {
+            return new SQL() {
                 {
                     SELECT("substring(property.description,1,200)||'.....' as description,lat,lng,id,user_id,title,unit_price,sqm_price,country,type,status,rent_or_sell");
                     FROM("property");
                     WHERE("status IS TRUE");
-                    if(title!=null && title.trim().length()>0)
+                    if (title != null && title.trim().length() > 0)
                         WHERE("title ilike '%'||#{title}||'%'");
-                    if(status!=null && status.trim().length()>0){
-                        if(status.equalsIgnoreCase("true")) WHERE("status is true");
-                        else if(status.equalsIgnoreCase("false")) WHERE("status is false");
+                    if (status != null && status.trim().length() > 0) {
+                        if (status.equalsIgnoreCase("true")) WHERE("status is true");
+                        else if (status.equalsIgnoreCase("false")) WHERE("status is false");
                     }
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();
         }
 
-        public String findOneProperty(@Param("proID")int proID){
-            return new SQL(){
+        public String findOneProperty(@Param("proID") int proID) {
+            return new SQL() {
                 {
                     SELECT("*");
                     FROM("property");
@@ -313,8 +328,9 @@ public interface PropertyRepo {
                 }
             }.toString();
         }
-        public String insertProperty(@Param("id") ID id, @Param("ppt")PropertyRequest propertyRequest,@Param("userID")int userID){
-            return new SQL(){
+
+        public String insertProperty(@Param("id") ID id, @Param("ppt") PropertyRequest propertyRequest, @Param("userID") int userID) {
+            return new SQL() {
                 {
                     INSERT_INTO("property");
                     VALUES("user_id,id,project_id,bedroom,floor_no,bathroom,living_room,dinning_room,kitchen,air_conditioner,parking,balcony,mezzanine_floor,title,rent_or_sell,type,city,district,commune,village,house_no,street_no,description,private_area,common_area,unit_price,sqm_price,lat,lng,width,height,total_area,land_width,land_length,total_land_area,status,show_map",
@@ -323,8 +339,8 @@ public interface PropertyRepo {
             }.toString();
         }
 
-        public String updateProperty(@Param("pro")PropertyUpdate property){
-            return new SQL(){
+        public String updateProperty(@Param("pro") PropertyUpdate property) {
+            return new SQL() {
                 {
                     UPDATE("property");
                     SET("bedroom=#{pro.bedroom},floor_no=#{pro.floorNo},living_room=#{pro.livingRoom},dinning_room=#{pro.dinningRoom},kitchen=#{pro.kitchen},air_conditioner=#{pro.airConditioner},parking=#{pro.parking},balcony=#{pro.balcony},mezzanine_floor=#{pro.mezzanineFloor}" +
@@ -336,7 +352,7 @@ public interface PropertyRepo {
         }
     }
 
-    class AgentPropertiesStatistic{
+    class AgentPropertiesStatistic {
         private int enable;
         private int disable;
         private int total;
@@ -367,7 +383,7 @@ public interface PropertyRepo {
 
     }
 
-    class PropertyNoti{
+    class PropertyNoti {
         private String title;
         private String image;
         private String description;
@@ -390,7 +406,7 @@ public interface PropertyRepo {
         }
 
         public String getImage() {
-            if(image!=null) return Url.propertyGalleryUrl+image;
+            if (image != null) return Url.propertyGalleryUrl + image;
             return image;
         }
 
@@ -407,7 +423,7 @@ public interface PropertyRepo {
         }
     }
 
-    class PropertyFilter{
+    class PropertyFilter {
         private String title;
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
@@ -531,7 +547,7 @@ public interface PropertyRepo {
         }
     }
 
-    class Gallery{
+    class Gallery {
         private int id;
         @JsonProperty("url")
         private String gallery;
@@ -545,7 +561,7 @@ public interface PropertyRepo {
         }
 
         public String getGallery() {
-            if(gallery!=null) return Url.propertyGalleryUrl+gallery;
+            if (gallery != null) return Url.propertyGalleryUrl + gallery;
             return gallery;
         }
 
@@ -554,23 +570,23 @@ public interface PropertyRepo {
         }
     }
 
-    class Properties{
-       private int id;
-       private String title;
-       private String country;
-       private String type;
-       @JsonProperty("rent_or_buy")
-       private String rentOrBuy;
-       private String description;
-       @JsonProperty("unit_price")
-       private double unitPrice;
-       @JsonProperty("sqm_price")
-       private double sqmPrice;
-       private double lat;
-       private double lng;
-       private boolean status;
-       private UserRepo.User user;
-       private List<Gallery> galleries;
+    class Properties {
+        private int id;
+        private String title;
+        private String country;
+        private String type;
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
+        private String description;
+        @JsonProperty("unit_price")
+        private double unitPrice;
+        @JsonProperty("sqm_price")
+        private double sqmPrice;
+        private double lat;
+        private double lng;
+        private boolean status;
+        private UserRepo.User user;
+        private List<Gallery> galleries;
 
         public String getDescription() {
             return description;
@@ -676,9 +692,10 @@ public interface PropertyRepo {
             this.status = status;
         }
     }
-    class PropertyUpdate{
+
+    class PropertyUpdate {
         private int id;
-        @ApiModelProperty(example = "0",position = 1)
+        @ApiModelProperty(example = "0", position = 1)
         @JsonProperty("project_id")
         private Integer projectID;
         @ApiModelProperty(example = "2")
@@ -1045,7 +1062,8 @@ public interface PropertyRepo {
             this.neighborhoods = neighborhoods;
         }
     }
-    class Property{
+
+    class Property {
         private int id;
         @ApiModelProperty(example = "0")
         @JsonProperty("project_id")
@@ -1469,7 +1487,8 @@ public interface PropertyRepo {
             this.docs = docs;
         }
     }
-    class PropertyFile{
+
+    class PropertyFile {
         private int id;
         private String name;
         private String type;
@@ -1483,9 +1502,9 @@ public interface PropertyRepo {
         }
 
         public String getName() {
-            if(name!=null)
-                if(type.equals("image")) return Url.propertyGalleryUrl+name;
-                else if(type.equals("doc")) return Url.propertyDocsUrl+name;
+            if (name != null)
+                if (type.equals("image")) return Url.propertyGalleryUrl + name;
+                else if (type.equals("doc")) return Url.propertyDocsUrl + name;
             return name;
         }
 
@@ -1501,7 +1520,8 @@ public interface PropertyRepo {
             this.type = type;
         }
     }
-    class Neighborhood{
+
+    class Neighborhood {
         private int id;
         @JsonProperty("property_id")
         private int propertyID;
@@ -1542,61 +1562,95 @@ public interface PropertyRepo {
             this.distance = distance;
         }
     }
-    class PropertyRequest{
+
+    class PropertyRequest {
         private int id;
+        @ApiModelProperty(example = "0")
         @JsonProperty("project_id")
         private Integer projectID;
+        @ApiModelProperty(example = "2")
         private int bedroom;
+        @ApiModelProperty(example = "2")
         private int bathroom;
+        @ApiModelProperty(example = "4")
         @JsonProperty("living_room")
         private int livingRoom;
+        @ApiModelProperty(example = "1")
         @JsonProperty("dinning_room")
         private int dinningRoom;
+        @ApiModelProperty(example = "1")
         private int kitchen;
+        @ApiModelProperty(example = "2")
         @JsonProperty("air_conditioner")
         private int airConditioner;
+        @ApiModelProperty(example = "1")
         private int parking;
+        @ApiModelProperty(example = "1")
         private int balcony;
+        @ApiModelProperty(example = "2")
         @JsonProperty("floor_no")
         private int floorNo;
+        @ApiModelProperty(example = "1")
         @JsonProperty("mezzanine_floor")
         private int mezzanineFloor;
+        @ApiModelProperty(example = "New Property Available")
         private String title;
         @JsonProperty("rent_or_sell")
         private String rentOrSell;
+        @ApiModelProperty(example = "Apartment")
         private String type;
+        @ApiModelProperty(example = "Phnom Penh")
         private String city;
+        @ApiModelProperty(example = "Mean Chey")
         private String district;
+        @ApiModelProperty(example = "Beong Tompun")
         private String commune;
+        @ApiModelProperty(example = "Sonsom Kosol")
         private String village;
+        @ApiModelProperty(example = "17")
         @JsonProperty("house_no")
         private String houseNo;
+        @ApiModelProperty(example = "271")
         @JsonProperty("street_no")
         private String streetNo;
+        @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“The NSW rental market has traditionally been more competitive than other markets due to the challenges with housing affordability being more profound in that market,” says&nbsp;Kul Singh, REA Group Executive Manager – Rent.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Whilst property prices have reduced in some pockets, they are still unaffordable for many renters and therefore competition is still high driving lower days on market.</p>")
         private String description;
+        @ApiModelProperty(example = "5.40")
         @JsonProperty("private_area")
         private double privateArea;
+        @ApiModelProperty(example = "20.40")
         @JsonProperty("common_area")
         private double commonArea;
+        @ApiModelProperty(example = "200000.40")
         @JsonProperty("unit_price")
         private double unitPrice;
+        @ApiModelProperty(example = "300.40")
         @JsonProperty("sqm_price")
         private double sqmPrice;
+        @ApiModelProperty(example = "11.11")
         private double lat;
+        @ApiModelProperty(example = "111.11")
         private double lng;
+        @ApiModelProperty(example = "110.40")
         @JsonProperty("total_land_area")
         private double totalLandArea;
+        @ApiModelProperty(example = "15.40")
         @JsonProperty("building_width")
         private double width;
+        @ApiModelProperty(example = "20.40")
         @JsonProperty("building_height")
         private double height;
+        @ApiModelProperty(example = "20.40")
         @JsonProperty("land_width")
         private double landWidth;
+        @ApiModelProperty(example = "40.40")
         @JsonProperty("land_length")
         private double landLength;
+        @ApiModelProperty(example = "80.40")
         @JsonProperty("total_area")
         private double totalArea;
         private boolean status;
+        @ApiModelProperty(value = "true")
         @JsonProperty("show_map")
         private boolean showMap;
         private List<Neighborhood> neighborhood;
@@ -1650,7 +1704,7 @@ public interface PropertyRepo {
         }
 
         public Integer getProjectID() {
-            if(projectID==0) return null;
+            if (projectID == 0) return null;
             return projectID;
         }
 

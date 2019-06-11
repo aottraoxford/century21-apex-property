@@ -17,7 +17,7 @@ public class ProjectRelatedServiceImpl implements ProjectRelatedService {
     public List<Project> getProjects(int countryID, int projectTypeID) {
         List<Project> relatedProjects = projectRelatedRepo.projectsRelated(countryID, projectTypeID);
         if (relatedProjects.size() < 1)
-            throw new CustomRuntimeException(404,"ZERO RESULT");
+            throw new CustomRuntimeException(404, "ZERO RESULT");
         return relatedProjects;
     }
 }

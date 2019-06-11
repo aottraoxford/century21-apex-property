@@ -16,17 +16,18 @@ public class UserQuestionServiceImpl implements UserQuestionService {
     private MailService mailService;
     @Autowired
     private UserRepo userRepo;
+
     @Override
     public void saveUserQuestion(UserQuestion userQuestion) {
         int i = userQuestionRepo.saveUserQuestion(userQuestion);
-        if(i<1){
-            throw new CustomRuntimeException(500,"Can not save.");
+        if (i < 1) {
+            throw new CustomRuntimeException(500, "Can not save.");
         }
-        UserRepo.MailAccount mailAccount=userRepo.findOneMailAccount();
-        String template =   "<p>Name : "+userQuestion.getName()+"</p>" +
-                            "<p>From : "+userQuestion.getCountry()+"</p>" +
-                            "<p>Phone : "+userQuestion.getPhone()+"</p>" +
-                            "<p>Issue : "+userQuestion.getIssue()+"</p>";
-        mailService.sendMail("INQUIRY from client",mailAccount.getEmail(),template);
+        UserRepo.MailAccount mailAccount = userRepo.findOneMailAccount();
+        String template = "<p>Name : " + userQuestion.getName() + "</p>" +
+                "<p>From : " + userQuestion.getCountry() + "</p>" +
+                "<p>Phone : " + userQuestion.getPhone() + "</p>" +
+                "<p>Issue : " + userQuestion.getIssue() + "</p>";
+        mailService.sendMail("INQUIRY from client", mailAccount.getEmail(), template);
     }
 }

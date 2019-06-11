@@ -15,19 +15,19 @@ public interface TypeCountryProjectRepo {
             "INNER JOIN country ON project.country_id=country.id " +
             "WHERE isdisplay IS TRUE ")
     @Results({
-            @Result(property = "countryID",column = "id"),
-            @Result(property = "countryName",column = "name"),
-            @Result(property = "types",column = "id",many = @Many(select = "findProjectTypes"))
+            @Result(property = "countryID", column = "id"),
+            @Result(property = "countryName", column = "name"),
+            @Result(property = "types", column = "id", many = @Many(select = "findProjectTypes"))
     })
     List<TypeCountryProject> typeCP();
 
     @Select("SELECT DISTINCT project_type.name,project_type.id " +
             "FROM project_type " +
             "INNER JOIN project ON project.project_type_id=project_type.id " +
-            "WHERE project.country_id=#{id}" )
+            "WHERE project.country_id=#{id}")
     @Results({
-            @Result(property = "projectID",column = "id"),
-            @Result(property = "typeName",column = "name")
+            @Result(property = "projectID", column = "id"),
+            @Result(property = "typeName", column = "name")
     })
     List<ProjectType> findProjectTypes();
 

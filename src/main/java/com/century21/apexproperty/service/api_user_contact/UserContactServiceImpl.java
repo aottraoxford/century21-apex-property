@@ -16,21 +16,28 @@ public class UserContactServiceImpl implements UserContactService {
     private MailService mailService;
     @Autowired
     private UserRepo userRepo;
+
     @Override
     public void saveUserContact(UserContact userContact) {
-        if(userContact.getProjectID()!=null && userContact.getPropertyID()!=null) throw new CustomRuntimeException(400,"project id or property id ,one of them must not use.");
+        if (userContact.getProjectID() == null && userContact.getPropertyID() == null)
+            throw new CustomRuntimeException(400, "project id or property id required.");
+        if (userContact.getProjectID() < 1) userContact.setProjectID(null);
+        else if (userContact.getPropertyID() < 1) userContact.setPropertyID(null);
+        if (userContact.getProjectID() != null && userContact.getPropertyID() != null)
+            throw new CustomRuntimeException(400, "project id or property id ,one of them must be 0 values");
+
         int id = userContactRepo.saveUserContact(userContact);
-        UserRepo.Contact contact=userRepo.findOneContact(id);
-        UserRepo.MailAccount mailAccount=userRepo.findOneMailAccount();
-        if(contact.getProjectID()!=null){
+        UserRepo.Contact contact = userRepo.findOneContact(id);
+        UserRepo.MailAccount mailAccount = userRepo.findOneMailAccount();
+        if (contact.getProjectID() != null) {
             contact.setProp(userRepo.findProjectContact(contact.getProjectID()));
-        }else if(contact.getPropertyID()!=null){
+        } else if (contact.getPropertyID() != null) {
             contact.setProp(userRepo.findPropertyContact(contact.getPropertyID()));
         }
-        String template =   "<p>User name : "+userContact.getName()+"</p>" +
-                "<p>Phone : "+userContact.getPhone()+"</p>" +
-                "<p>Email : "+userContact.getEmail()+"</p>" +
-                "<p>Contact on "+contact.getProp().getType()+" name : "+contact.getProp().getTitle();
-        mailService.sendMail("Client Contact Information",mailAccount.getEmail(),template);
+        String template = "<p>User name : " + userContact.getName() + "</p>" +
+                "<p>Phone : " + userContact.getPhone() + "</p>" +
+                "<p>Email : " + userContact.getEmail() + "</p>" +
+                "<p>Contact on " + contact.getProp().getType() + " name : " + contact.getProp().getTitle();
+        mailService.sendMail("Client Contact Information", mailAccount.getEmail(), template);
     }
 }

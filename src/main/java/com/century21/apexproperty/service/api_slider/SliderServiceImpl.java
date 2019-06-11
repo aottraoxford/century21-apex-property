@@ -13,10 +13,11 @@ import java.util.List;
 public class SliderServiceImpl implements SliderService {
     @Autowired
     private SliderRepo sliderRepo;
+
     @Override
     public List<Slider> getSlider(String enable, Pagination pagination) {
-        List<Slider> slider=sliderRepo.getSlider(enable);
-        if(slider==null || slider.size()<1) throw new CustomRuntimeException(404,"ZERO RECORD");
+        List<Slider> slider = sliderRepo.getSlider(enable);
+        if (slider == null || slider.size() < 1) throw new CustomRuntimeException(404, "ZERO RECORD");
         pagination.setTotalItem(sliderRepo.getSliderCount(enable));
         return slider;
     }

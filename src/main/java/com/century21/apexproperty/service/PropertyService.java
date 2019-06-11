@@ -11,12 +11,20 @@ import java.util.Map;
 
 public interface PropertyService {
     int insertProperty(PropertyRepo.PropertyRequest propertyRequest, Principal principal);
+
     PropertyRepo.Property updateProperty(PropertyRepo.PropertyUpdate property, Principal principal);
-    Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] doc,Principal principal);
-    PropertyRepo.Property findOneProperty(int proID,Principal principal);
-    List<PropertyRepo.Properties> findAllProperty(String title,String status,Pagination pagination,Principal principal);
-    void removeFile(int propertyID,String gallName,String docName,Principal principal);
-    List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter,Pagination pagination);
+
+    Map fileUploads(int propertyID, MultipartFile[] galleries, MultipartFile[] doc, Principal principal);
+
+    PropertyRepo.Property findOneProperty(int proID, Principal principal);
+
+    List<PropertyRepo.Properties> findAllProperty(String title, String status, Pagination pagination, Principal principal);
+
+    void removeFile(int propertyID, String gallName, String docName, Principal principal);
+
+    List<PropertyRepo.Properties> findAllPropertyByFilter(PropertyRepo.PropertyFilter filter, Pagination pagination);
+
     void updateStatus(int propertyID, boolean status, Principal principal, HttpServletRequest httpServletRequest);
+
     List<PropertyRepo.Properties> findAgentProperties(int userID, String status, Pagination pagination, PropertyRepo.AgentPropertiesStatistic agentPropertiesStatistic);
 }

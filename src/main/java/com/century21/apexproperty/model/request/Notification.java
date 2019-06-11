@@ -11,7 +11,7 @@ public class Notification {
     }
 
     public String getMessage() {
-        if(message==null ) return "New Project Available.";
+        if (message == null) return "New Project Available.";
         return message;
     }
 

@@ -1,6 +1,6 @@
 package com.century21.apexproperty.repository.api_project_statistic;
 
-public class Type{
+public class Type {
     private String type;
     private int total;
 

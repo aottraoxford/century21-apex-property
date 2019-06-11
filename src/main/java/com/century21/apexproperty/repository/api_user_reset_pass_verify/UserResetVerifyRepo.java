@@ -10,7 +10,7 @@ public interface UserResetVerifyRepo {
     @Select("INSERT INTO verification(password,name) " +
             "VALUES (#{password},#{email}) " +
             "RETURNING uuid")
-    String storeCode(@Param("password")String password,@Param("email") String email);
+    String storeCode(@Param("password") String password, @Param("email") String email);
 
     @Select("SELECT count(id) " +
             "FROM users " +

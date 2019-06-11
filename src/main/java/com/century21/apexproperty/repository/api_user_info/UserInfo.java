@@ -93,15 +93,15 @@ public class UserInfo {
     }
 
     public String getEmail() {
-        swapEmail=email;
-        if(email.contains("|")) {
+        swapEmail = email;
+        if (email.contains("|")) {
             String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
             Pattern pattern;
             Matcher matcher;
-            pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-            email=email.split("\\|")[0];
-            matcher=pattern.matcher(email);
-            if(!matcher.matches()) return null;
+            pattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+            email = email.split("\\|")[0];
+            matcher = pattern.matcher(email);
+            if (!matcher.matches()) return null;
         }
         return email;
     }

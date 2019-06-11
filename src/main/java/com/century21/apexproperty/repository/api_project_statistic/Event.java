@@ -10,7 +10,7 @@ public class Event {
     private int totalDisable;
 
     public int getTotal() {
-        return totalEnable+totalDisable;
+        return totalEnable + totalDisable;
     }
 
     public void setTotal(int total) {
@@ -18,7 +18,7 @@ public class Event {
     }
 
     public int total() {
-        return totalEnable+totalDisable;
+        return totalEnable + totalDisable;
     }
 
     public int getTotalEnable() {

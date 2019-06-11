@@ -8,12 +8,12 @@ import java.util.List;
 
 @Repository
 public interface ProjectRelatedRepo {
-    @SelectProvider(type= ProjectRelatedUtil.class,method = "getProjectsRelated")
+    @SelectProvider(type = ProjectRelatedUtil.class, method = "getProjectsRelated")
     @Results({
-            @Result(property = "status",column = "isdisplay"),
-            @Result(property = "rentOrBuy",column = "rent_or_buy"),
-            @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+            @Result(property = "status", column = "isdisplay"),
+            @Result(property = "rentOrBuy", column = "rent_or_buy"),
+            @Result(property = "country", column = "country_id", one = @One(select = "projectCountry")),
+            @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType"))
     })
     List<Project> projectsRelated(@Param("cid") int cid, @Param("pid") int pid);
 

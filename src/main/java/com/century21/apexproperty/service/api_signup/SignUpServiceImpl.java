@@ -15,20 +15,20 @@ public class SignUpServiceImpl implements SignUpService {
     private SignUpRepo signupRepo;
 
     @Autowired
-    public SignUpServiceImpl(SignUpRepo signUpRepo){
-        this.signupRepo=signUpRepo;
+    public SignUpServiceImpl(SignUpRepo signUpRepo) {
+        this.signupRepo = signUpRepo;
     }
 
     @Override
     public void signUp(SignUp signUp) {
-        if(signupRepo.countEmailByEmail(signUp.getEmail())>0){
-            throw new CustomRuntimeException(409,"Email already exists");
+        if (signupRepo.countEmailByEmail(signUp.getEmail()) > 0) {
+            throw new CustomRuntimeException(409, "Email already exists");
         }
-        if(signupRepo.isEmailVerify(signUp.getEmail())<1){
-            throw new CustomRuntimeException(401,"Your email not yet verify");
+        if (signupRepo.isEmailVerify(signUp.getEmail()) < 1) {
+            throw new CustomRuntimeException(401, "Your email not yet verify");
         }
-        if(signupRepo.signUp(signUp)<1){
-            throw new CustomRuntimeException(500,"ERROR CODE");
+        if (signupRepo.signUp(signUp) < 1) {
+            throw new CustomRuntimeException(500, "ERROR CODE");
         }
     }
 

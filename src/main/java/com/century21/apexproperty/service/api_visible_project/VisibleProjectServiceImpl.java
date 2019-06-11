@@ -17,12 +17,14 @@ public class VisibleProjectServiceImpl implements VisibleProjectService {
     private MyNotification myNotification;
     @Autowired
     private ProjectRepo projectRepo;
+
     @Override
     public void visibleProject(Notification noti, boolean status, int projectID) {
-        ProjectRepo.ProjectNoti projectNoti=projectRepo.projectNoti(projectID);
-        if(visibleProjectRepo.visibleProject(status,projectID)<1) throw new CustomRuntimeException(404,"project not found.");
-        if(status && !projectNoti.isIsdisplay()) {
-            myNotification.sendToAllSubscriber(projectNoti.getName(), noti.getMessage(),projectNoti.getThumbnail(),"project",projectID );
+        ProjectRepo.ProjectNoti projectNoti = projectRepo.projectNoti(projectID);
+        if (visibleProjectRepo.visibleProject(status, projectID) < 1)
+            throw new CustomRuntimeException(404, "project not found.");
+        if (status && !projectNoti.isIsdisplay()) {
+            myNotification.sendToAllSubscriber(projectNoti.getName(), noti.getMessage(), projectNoti.getThumbnail(), "project", projectID);
         }
     }
 }

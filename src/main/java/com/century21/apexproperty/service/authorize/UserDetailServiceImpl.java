@@ -25,18 +25,18 @@ public class UserDetailServiceImpl implements UserDetailsService {
         String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
         Pattern pattern;
         Matcher matcher;
-        pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-        matcher=pattern.matcher(email);
-        if(!matcher.matches()) {
-            SocialAccount socialAccount=socialSignInRepo.socialAccount(email);
-            List<Authority> authorities=socialAccount.getAuthorities();
-            User user=new User(socialAccount.getEmail(),socialAccount.getSocialId(),authorities);
+        pattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            SocialAccount socialAccount = socialSignInRepo.socialAccount(email);
+            List<Authority> authorities = socialAccount.getAuthorities();
+            User user = new User(socialAccount.getEmail(), socialAccount.getSocialId(), authorities);
             return user;
-        }else {
+        } else {
             UserAccount userAccount = signInRepo.signIn(email);
             List<Authority> authorities = userAccount.getAuthorities();
             User user = new User(userAccount.getEmail(), userAccount.getPassword(), authorities);
             return user;
-       }
+        }
     }
 }

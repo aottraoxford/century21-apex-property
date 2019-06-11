@@ -73,13 +73,13 @@ public class GetNoti {
     }
 
     public String getImage() {
-        if(image!=null){
-            if(type.equalsIgnoreCase("project"))
-                return Url.projectThumbnailUrl+image;
-            else if(type.equalsIgnoreCase("property"))
-                return Url.propertyGalleryUrl+image;
-            else if(type.equalsIgnoreCase("event"))
-                return Url.bannerUrl+image;
+        if (image != null) {
+            if (type.equalsIgnoreCase("project"))
+                return Url.projectThumbnailUrl + image;
+            else if (type.equalsIgnoreCase("property"))
+                return Url.propertyGalleryUrl + image;
+            else if (type.equalsIgnoreCase("event"))
+                return Url.bannerUrl + image;
         }
         return image;
     }

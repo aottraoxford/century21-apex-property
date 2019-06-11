@@ -23,7 +23,7 @@ import java.util.*;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-//    @Bean
+    //    @Bean
 //    public Docket api() {
 //        return new Docket(DocumentationType.SWAGGER_2)
 //                .useDefaultResponseMessages(false)
@@ -84,7 +84,7 @@ public class SwaggerConfig {
 //    private SecurityContext securityContext() {
 //        return SecurityContext.builder().securityReferences(defaultAuth()).build();
 //    }
-public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String DEFAULT_INCLUDE_PATTERN = "/apis/.*";
 
 
@@ -135,7 +135,7 @@ public static final String AUTHORIZATION_HEADER = "Authorization";
                 .apis(RequestHandlerSelectors.basePackage("com.century21.apexproperty.controller"))
                 .paths(PathSelectors.regex("/api.*"))
                 .build();
-                //.globalOperationParameters(parameters);
+        //.globalOperationParameters(parameters);
         return docket;
     }
 

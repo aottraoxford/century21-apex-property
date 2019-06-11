@@ -8,7 +8,9 @@ import java.security.Principal;
 import java.util.List;
 
 public interface FavoriteService {
-    boolean favorite(int projectID,int propertyID, Principal principal);
+    boolean favorite(int projectID, int propertyID, Principal principal);
+
     List<PropertyRepo.Properties> propertyFavorite(Principal principal, Pagination pagination);
+
     List<ProjectRepo.ProjectListingResponse> projectFavorite(Principal principal, Pagination pagination);
 }

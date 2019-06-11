@@ -15,10 +15,10 @@ public interface UserFavoriteRepo {
             "WHERE favorite.user_id=#{userID} " +
             "ORDER BY id DESC limit #{limit} offset #{offset}")
     @Results({
-            @Result(property = "startPrice",column = "start_price"),
-            @Result(property = "endPrice",column = "end_price"),
-            @Result(property = "country",column = "country_id",one = @One(select = "projectCountry")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+            @Result(property = "startPrice", column = "start_price"),
+            @Result(property = "endPrice", column = "end_price"),
+            @Result(property = "country", column = "country_id", one = @One(select = "projectCountry")),
+            @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType"))
     })
     List<Project> favorites(@Param("userID") int userID, @Param("limit") int limit, @Param("offset") int offset);
 

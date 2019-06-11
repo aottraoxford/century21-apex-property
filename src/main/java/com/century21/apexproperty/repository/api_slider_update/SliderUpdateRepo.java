@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SliderUpdateRepo {
-    @SelectProvider(type= SliderUpdateUtil.class,method = "updateSlider")
+    @SelectProvider(type = SliderUpdateUtil.class, method = "updateSlider")
     Integer sliderUpdate(@Param("enable") boolean enable, @Param("image") String image, @Param("sliderID") int sliderID);
 
     @Select("SELECT COUNT(id) " +

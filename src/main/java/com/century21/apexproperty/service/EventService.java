@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventService {
-    List<EventRepo.EventResponse> findAllEvent(String title,String status, Pagination pagination);
+    List<EventRepo.EventResponse> findAllEvent(String title, String status, Pagination pagination);
 
     EventRepo.EventResponse findOneEvent(int eventID);
 
     void changeEventStatus(int eventID, boolean status);
 
     EventRepo.EventResponse insertEvent(EventRepo.EventRequest eventRequest);
+
+    void removeEventById(Integer id);
 }

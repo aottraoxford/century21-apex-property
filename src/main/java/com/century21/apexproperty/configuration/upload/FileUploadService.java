@@ -25,35 +25,38 @@ import java.util.UUID;
 @Service
 public class FileUploadService {
 
-    public String storeImage(MultipartFile file,String fileProperty){
-        if(!fileProperty.contains("doc"))
-            if (!ImageUtil.imageValidate(file.getOriginalFilename())) throw new CustomRuntimeException(400, "IMAGE INVALID");
+    public String storeImage(MultipartFile file, String fileProperty) {
+        if (!fileProperty.contains("doc"))
+            if (!ImageUtil.imageValidate(file.getOriginalFilename()))
+                throw new CustomRuntimeException(400, "IMAGE INVALID");
 
         Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
         File directory = new File(path.toString());
-        if(!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdirs();
         }
-        String fileName = UUID.randomUUID()+file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + file.getOriginalFilename();
         try {
-            Files.copy(file.getInputStream(),path.resolve(fileName),StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new CustomRuntimeException(500,e.getMessage());
+            throw new CustomRuntimeException(500, e.getMessage());
         }
         return fileName;
     }
-    public List<String> storeImages(MultipartFile[] file,String fileProperty){
-        Path path = Paths.get(fileProperty) .toAbsolutePath().normalize();
+
+    public List<String> storeImages(MultipartFile[] file, String fileProperty) {
+        Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
         File directory = new File(path.toString());
-        List<String> fileName=new ArrayList<>();
-        if(!directory.exists()){
+        List<String> fileName = new ArrayList<>();
+        if (!directory.exists()) {
             directory.mkdirs();
         }
         try {
             for (int i = 0; i < file.length; i++) {
-                if(!fileProperty.contains("doc"))
-                    if(!ImageUtil.imageValidate(file[i].getOriginalFilename())) throw new CustomRuntimeException(400,"IMAGE INVALID");
-                String fn = UUID.randomUUID()+file[i].getOriginalFilename();
+                if (!fileProperty.contains("doc"))
+                    if (!ImageUtil.imageValidate(file[i].getOriginalFilename()))
+                        throw new CustomRuntimeException(400, "IMAGE INVALID");
+                String fn = UUID.randomUUID() + file[i].getOriginalFilename();
                 fileName.add(fn);
                 Files.copy(file[i].getInputStream(), path.resolve(fn), StandardCopyOption.REPLACE_EXISTING);
             }
@@ -62,8 +65,9 @@ public class FileUploadService {
         }
         return fileName;
     }
-    public boolean removeImage(String fileName,String fileProperty){
-        Path path = Paths.get(fileProperty) .toAbsolutePath().normalize();
+
+    public boolean removeImage(String fileName, String fileProperty) {
+        Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
         Path filePath = path.resolve(fileName).normalize();
         File file = new File(filePath.toString());
         if (file.exists())
@@ -71,7 +75,8 @@ public class FileUploadService {
         else
             return false;
     }
-    public ResponseEntity<Resource> loadFile(String fileName, String fileProperty, HttpServletRequest request){
+
+    public ResponseEntity<Resource> loadFile(String fileName, String fileProperty, HttpServletRequest request) {
         try {
             Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
             Path filePath = path.resolve(fileName).normalize();
@@ -80,20 +85,20 @@ public class FileUploadService {
             resource.contentLength();
 
             String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            if(contentType==null){
-                throw new CustomRuntimeException(500,"Invalid file type.");
+            if (contentType == null) {
+                throw new CustomRuntimeException(500, "Invalid file type.");
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .body(resource);
         } catch (MalformedURLException e) {
-            throw new CustomRuntimeException(500,e.getMessage());
-        }catch (IOException e) {
-            throw new CustomRuntimeException(404,"File not found.");
+            throw new CustomRuntimeException(500, e.getMessage());
+        } catch (IOException e) {
+            throw new CustomRuntimeException(404, "File not found.");
         }
     }
 
-    public ResponseEntity<Resource> downloadFile(String fileName, String fileProperty, HttpServletRequest request){
+    public ResponseEntity<Resource> downloadFile(String fileName, String fileProperty, HttpServletRequest request) {
         try {
             Path path = Paths.get(fileProperty).toAbsolutePath().normalize();
             Path filePath = path.resolve(fileName).normalize();
@@ -101,17 +106,17 @@ public class FileUploadService {
 
             resource.contentLength();
             String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            if(contentType==null){
-                throw new CustomRuntimeException(500,"Invalid file type.");
+            if (contentType == null) {
+                throw new CustomRuntimeException(500, "Invalid file type.");
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
         } catch (MalformedURLException e) {
-            throw new CustomRuntimeException(500,e.getMessage());
-        }catch (IOException e) {
-            throw new CustomRuntimeException(404,"File not found.");
+            throw new CustomRuntimeException(500, e.getMessage());
+        } catch (IOException e) {
+            throw new CustomRuntimeException(404, "File not found.");
         }
     }
 

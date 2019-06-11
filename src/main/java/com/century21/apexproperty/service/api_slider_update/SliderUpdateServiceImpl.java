@@ -20,18 +20,19 @@ public class SliderUpdateServiceImpl implements SliderUpdateService {
     @Override
     public Slider updateSlider(boolean enable, int sliderID, MultipartFile file) {
         int id = sliderUpdateRepo.checkID(sliderID);
-        if(id<1)
-            throw new CustomRuntimeException(404,"invalid ID");
-        String fileName=null;
-        if(file!=null) {
+        if (id < 1)
+            throw new CustomRuntimeException(404, "invalid ID");
+        String fileName = null;
+        if (file != null) {
             fileUploadService.removeImage(file.getOriginalFilename(), fileUploadProperty.getSlider());
             fileName = fileUploadService.storeImage(file, fileUploadProperty.getSlider());
-        }else {
+        } else {
             fileName = sliderUpdateRepo.findImage(sliderID);
         }
-        sliderUpdateRepo.sliderUpdate(enable,fileName,sliderID);
-        Slider slider=new Slider();
-        slider.setId(sliderID);slider.setSlider(fileName);
+        sliderUpdateRepo.sliderUpdate(enable, fileName, sliderID);
+        Slider slider = new Slider();
+        slider.setId(sliderID);
+        slider.setSlider(fileName);
         return slider;
     }
 

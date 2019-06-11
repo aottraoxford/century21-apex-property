@@ -17,10 +17,10 @@ public class UserFavoriteServiceImpl implements UserFavoriteService {
 
     @Override
     public List<Project> favorite(Principal principal, Pagination pagination) {
-        Integer userID=userFavoriteRepo.getUserIDByEmail(principal.getName());
-        if(userID==null) throw new CustomRuntimeException(404,"email not valid.");
-        List<Project> projects=userFavoriteRepo.favorites(userID,pagination.getLimit(),pagination.getOffset());
-        if(projects==null || projects.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        Integer userID = userFavoriteRepo.getUserIDByEmail(principal.getName());
+        if (userID == null) throw new CustomRuntimeException(404, "email not valid.");
+        List<Project> projects = userFavoriteRepo.favorites(userID, pagination.getLimit(), pagination.getOffset());
+        if (projects == null || projects.size() < 1) throw new CustomRuntimeException(404, "ZERO RESULT");
         pagination.setTotalItem(userFavoriteRepo.countFavorites(userID));
         return projects;
     }

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 public class AddSliderServiceImpl implements AddSliderService {
     @Autowired
     private AddSliderRepo addSliderRepo;
+
     @Override
     public Integer addSlider(String name, String image) {
-        Integer result = addSliderRepo.addSlider(name,image);
-        if(result==null) throw new CustomRuntimeException(400,"CAN NOT ADD SLIDER");
+        Integer result = addSliderRepo.addSlider(name, image);
+        if (result == null) throw new CustomRuntimeException(400, "CAN NOT ADD SLIDER");
         return result;
     }
 }

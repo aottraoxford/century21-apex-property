@@ -13,13 +13,15 @@ import java.util.List;
 public class TypeCountryProjectServiceImpl implements TypeCountryProjectService {
     @Autowired
     private TypeCountryProjectRepo typeCountryProjectRepo;
+
     @Override
     public List<TypeCountryProject> typeCP() {
-        List<TypeCountryProject> typeCountryProjects=typeCountryProjectRepo.typeCP();
-        if(typeCountryProjects==null || typeCountryProjects.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
-        for(int i=0;i<typeCountryProjects.size();i++){
-            if(typeCountryProjects.get(i).getCountryID()==1){
-                ProjectType projectType=new ProjectType();
+        List<TypeCountryProject> typeCountryProjects = typeCountryProjectRepo.typeCP();
+        if (typeCountryProjects == null || typeCountryProjects.size() < 1)
+            throw new CustomRuntimeException(404, "ZERO RESULT");
+        for (int i = 0; i < typeCountryProjects.size(); i++) {
+            if (typeCountryProjects.get(i).getCountryID() == 1) {
+                ProjectType projectType = new ProjectType();
                 projectType.setProjectID(99);
                 projectType.setTypeName("General");
                 typeCountryProjects.get(i).getTypes().add(typeCountryProjects.get(i).getTypes().size(), projectType);

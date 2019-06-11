@@ -22,8 +22,7 @@ public class AJPConfig {
     public TomcatServletWebServerFactory servletContainer() {
 
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-        if (tomcatAjpEnabled)
-        {
+        if (tomcatAjpEnabled) {
             Connector ajpConnector = new Connector("AJP/1.3");
             ajpConnector.setPort(ajpPort);
             ajpConnector.setSecure(false);

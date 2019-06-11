@@ -33,8 +33,8 @@ public class Slider {
     }
 
     public String getSlider() {
-        if(slider!=null)
-            return Url.sliderUrl+slider;
+        if (slider != null)
+            return Url.sliderUrl + slider;
         return slider;
     }
 

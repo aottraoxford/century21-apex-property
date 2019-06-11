@@ -7,7 +7,7 @@ public class ProjectType {
     //@ApiModelProperty(position = 1)
     @JsonProperty("id")
     private int projectID;
-   // @ApiModelProperty (position = 2)
+    // @ApiModelProperty (position = 2)
     @JsonProperty("type")
     private String typeName;
 

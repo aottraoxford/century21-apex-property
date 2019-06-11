@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserContactRepo {
-    @Select("INSERT into contact(name,phone,email,project_id,property_id) " +
-            "VALUES (#{userContact.name},#{userContact.phone},#{userContact.email},#{userContact.projectID},#{userContact.propertyID}) returning id")
+    @Select("INSERT into contact(name,phone,email,project_id,property_id,type) " +
+            "VALUES (#{userContact.name},#{userContact.phone},#{userContact.email},#{userContact.projectID},#{userContact.propertyID},'contact') returning id")
     int saveUserContact(@Param("userContact") UserContact userContact);
 }

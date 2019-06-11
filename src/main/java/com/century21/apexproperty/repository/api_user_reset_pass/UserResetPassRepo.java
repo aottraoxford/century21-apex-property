@@ -18,9 +18,9 @@ public interface UserResetPassRepo {
             "FROM verification " +
             "WHERE uuid=#{uuid} AND code IS NULL")
     @Results({
-            @Result(property = "pass",column = "password"),
-            @Result(property = "email",column = "name")
+            @Result(property = "pass", column = "password"),
+            @Result(property = "email", column = "name")
     })
-    Auth userPass(@Param("uuid")String uuid);
+    Auth userPass(@Param("uuid") String uuid);
 
 }

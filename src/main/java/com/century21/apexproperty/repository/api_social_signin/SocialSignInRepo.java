@@ -24,11 +24,12 @@ public interface SocialSignInRepo {
             "FROM users " +
             "WHERE appid=#{email} AND enable IS true")
     @Results({
-            @Result(property = "phoneNumber",column = "phone_number"),
-            @Result(property = "socialId",column = "password"),
-            @Result(property = "authorities",column = "id",many = @Many(select="authorities"))
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "socialId", column = "password"),
+            @Result(property = "authorities", column = "id", many = @Many(select = "authorities"))
     })
     SocialAccount socialAccount(@Param("email") String email);
+
     @Select("SELECT authority.role " +
             "FROM authority " +
             "INNER JOIN authorizations ON authority.id=authorizations.authority_id " +

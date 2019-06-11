@@ -13,7 +13,7 @@ public interface SignInRepo {
             "FROM users " +
             "WHERE users.email=#{email} AND enable IS true AND account_type='origin'")
     @Results({
-            @Result(property = "authorities",column = "id",many = @Many(select="authorities"))
+            @Result(property = "authorities", column = "id", many = @Many(select = "authorities"))
     })
     UserAccount signIn(@Param("email") String email);
 

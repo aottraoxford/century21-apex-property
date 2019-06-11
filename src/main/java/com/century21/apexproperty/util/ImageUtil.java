@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class ImageUtil {
 
-    public static boolean imageValidate(String fileName){
+    public static boolean imageValidate(String fileName) {
 //        if(fileName==null || fileName.length()<5){
 //            return false;
 //        }

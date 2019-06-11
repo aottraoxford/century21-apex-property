@@ -12,10 +12,11 @@ import java.util.List;
 public class CityServiceImpl implements CityService {
     @Autowired
     private CityRepo cityRepo;
+
     @Override
     public List<Country> allCity() {
         List<Country> cities = cityRepo.countries();
-        if(cities.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        if (cities.size() < 1) throw new CustomRuntimeException(404, "ZERO RESULT");
         return cities;
     }
 }

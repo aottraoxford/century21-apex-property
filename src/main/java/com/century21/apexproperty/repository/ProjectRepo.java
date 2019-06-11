@@ -2,6 +2,7 @@ package com.century21.apexproperty.repository;
 
 import com.century21.apexproperty.model.ID;
 import com.century21.apexproperty.model.Pagination;
+import com.century21.apexproperty.repository.api_slider.Slider;
 import com.century21.apexproperty.util.Url;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,41 +11,56 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface ProjectRepo {
+    @Select("DELETE FROM project " +
+            "WHERE id=#{id} returning id")
+    Integer removeProjectById(Integer id);
+
+    @Select("DELETE FROM events " +
+            "WHERE type ilike 'slider' AND id=#{id} RETURNING banner,id")
+    @Results({
+            @Result(property = "slider", column = "banner")
+    })
+    Slider removeSliderById(Integer id);
+
+    @Select("insert into project_type(name) values (#{name}) returning id")
+    Integer insertProjectType(String name);
+
+    @Select("INSERT INTO country(name) VALUES (#{name}) RETURNING id")
+    Integer insertCountry(String name);
 
     @Select("SELECT name,description,thumbnail,isdisplay " +
             "FROM project " +
             "WHERE id = #{proID} ")
     ProjectNoti projectNoti(int proID);
 
-    @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilterCount")
-    int findAllProjectByFilterCount(@Param("filter")FilterRequest filter);
+    @SelectProvider(type = ProjectUtil.class, method = "findAllProjectByFilterCount")
+    int findAllProjectByFilterCount(@Param("filter") FilterRequest filter);
 
-    @SelectProvider(type = ProjectUtil.class,method = "findAllProjectByFilter")
+    @SelectProvider(type = ProjectUtil.class, method = "findAllProjectByFilter")
     @Results({
-            @Result(property = "status",column = "isdisplay"),
-            @Result(property = "rentOrBuy",column = "rent_or_buy"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "country",column = "country_id",one = @One(select = "country")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+            @Result(property = "status", column = "isdisplay"),
+            @Result(property = "rentOrBuy", column = "rent_or_buy"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "country", column = "country_id", one = @One(select = "country")),
+            @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType"))
     })
-    List<ProjectListingResponse> findAllProjectByFilter(@Param("filter")FilterRequest filterRequest,@Param("limit")int limit,@Param("offset")int offset);
+    List<ProjectListingResponse> findAllProjectByFilter(@Param("filter") FilterRequest filterRequest, @Param("limit") int limit, @Param("offset") int offset);
 
     @Select("SELECT id,first_name,last_name,email,gender,phone_number,image,account_type " +
             "FROM users " +
             "WHERE id=#{user_id}")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name"),
-            @Result(property = "phoneNumber",column = "phone_number"),
-            @Result(property = "accountType",column = "account_type")
+            @Result(property = "id", column = "id"),
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "accountType", column = "account_type")
     })
     UserRepo.User findOneUser();
 
@@ -56,11 +72,11 @@ public interface ProjectRepo {
     @Update("UPDATE project_intro " +
             "SET name=#{pi.name},description=#{pi.description} " +
             "WHERE project_id=#{proID} AND id=#{pi.id}")
-    Integer updateProjectIntro(@Param("pi")ProjectIntroduction projectIntroduction,@Param("proID")int proID);
+    Integer updateProjectIntro(@Param("pi") ProjectIntroduction projectIntroduction, @Param("proID") int proID);
 
     @Delete("DELETE FROM project_intro " +
             "WHERE id=#{id} AND project_id=#{proID}")
-    Integer removeProjectIntro(@Param("id")int id,@Param("proID")int projectID);
+    Integer removeProjectIntro(@Param("id") int id, @Param("proID") int projectID);
 
     @Select("SELECT id " +
             "FROM country " +
@@ -73,14 +89,14 @@ public interface ProjectRepo {
     Integer findProjectTypeIDByName(String name);
 
     @Select("SELECT DISTINCT(country.name),country.id " +
-        "FROM country " +
-        "INNER JOIN project ON project.country_id=country.id " +
-        "WHERE project.isdisplay IS TRUE " +
-        "ORDER BY country.id ")
+            "FROM country " +
+            "INNER JOIN project ON project.country_id=country.id " +
+            "WHERE project.isdisplay IS TRUE " +
+            "ORDER BY country.id ")
     @Results({
-            @Result(property = "projectTypeForWebList",column = "id",many = @Many(select = "getProjectTypeForWeb")),
-            @Result(property = "countryName",column = "name"),
-            @Result(property = "countryID",column = "id")
+            @Result(property = "projectTypeForWebList", column = "id", many = @Many(select = "getProjectTypeForWeb")),
+            @Result(property = "countryName", column = "name"),
+            @Result(property = "countryID", column = "id")
     })
     List<CountryForWeb> getCountryForWeb();
 
@@ -91,7 +107,7 @@ public interface ProjectRepo {
             "ORDER BY project_type.id")
     @Results({
             //@Result(property = "projectList",column = "{cid=country_id,pid=id}",many = @Many(select = "getProjectForWeb")),
-            @Result(property = "type",column = "name")
+            @Result(property = "type", column = "name")
     })
     List<ProjectTypeForWeb> getProjectTypeForWeb();
 
@@ -108,23 +124,23 @@ public interface ProjectRepo {
 
     @Delete("DELETE FROM project_gallery " +
             "WHERE url=#{name} AND type='image' ")
-    void removeOneGallery(@Param("name")String name);
+    void removeOneGallery(@Param("name") String name);
 
-    @SelectProvider(type = ProjectUtil.class,method = "findAllProject")
+    @SelectProvider(type = ProjectUtil.class, method = "findAllProject")
     @Results({
-            @Result(property = "status",column = "isdisplay"),
-            @Result(property = "country",column = "country_id",one = @One(select = "country")),
-            @Result(property = "projectType",column = "project_type_id",one = @One(select = "projectType"))
+            @Result(property = "status", column = "isdisplay"),
+            @Result(property = "country", column = "country_id", one = @One(select = "country")),
+            @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType"))
     })
-    List<ProjectListingResponse> findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset);
+    List<ProjectListingResponse> findAllProject(@Param("title") String title, @Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset);
 
-    @SelectProvider(type = ProjectUtil.class,method = "findAllProjectCount")
-    int findAllProjectCount(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status);
+    @SelectProvider(type = ProjectUtil.class, method = "findAllProjectCount")
+    int findAllProjectCount(@Param("title") String title, @Param("cid") int cid, @Param("pid") int pid, @Param("status") String status);
 
     @Select("SELECT thumbnail " +
             "FROM project " +
             "WHERE id=#{proID}")
-    String findOneThumbnail(@Param("proID")int projectID);
+    String findOneThumbnail(@Param("proID") int projectID);
 
     @InsertProvider(type = ProjectUtil.class, method = "insertGallery")
     void insertGallery(@Param("gall") String galleries, @Param("proID") int projectID);
@@ -134,7 +150,7 @@ public interface ProjectRepo {
 
     @SelectProvider(type = ProjectUtil.class, method = "findOneProject")
     @Results(value = {
-            @Result(property = "id",column = "id"),
+            @Result(property = "id", column = "id"),
             @Result(property = "builtDate", column = "built_date"),
             @Result(property = "completedDate", column = "completed_date"),
             @Result(property = "title", column = "name"),
@@ -143,16 +159,16 @@ public interface ProjectRepo {
             @Result(property = "averageAnnualRentFrom", column = "avg_rent_from"),
             @Result(property = "averageAnnualRentTo", column = "avg_rent_to"),
             @Result(property = "downPayment", column = "down_payment"),
-            @Result(property = "status",column = "isdisplay"),
-            @Result(property = "sqmPrice",column = "sqm_price"),
-            @Result(property = "rentOrBuy",column = "rent_or_buy"),
+            @Result(property = "status", column = "isdisplay"),
+            @Result(property = "sqmPrice", column = "sqm_price"),
+            @Result(property = "rentOrBuy", column = "rent_or_buy"),
             @Result(property = "country", column = "country_id", one = @One(select = "country")),
             @Result(property = "projectType", column = "project_type_id", one = @One(select = "projectType")),
             @Result(property = "projectIntro", column = "id", many = @Many(select = "projectIntro")),
             @Result(property = "projectGalleries", column = "id", many = @Many(select = "projectGalleries")),
             @Result(property = "propertyTypes", column = "id", many = @Many(select = "propertyTypes")),
             @Result(property = "towerTypes", column = "id", many = @Many(select = "towerTypes")),
-            @Result(property = "user",column = "user_id",one = @One(select = "findOneUser"))
+            @Result(property = "user", column = "user_id", one = @One(select = "findOneUser"))
     })
     Project findOneProject(@Param("proID") int projectID);
 
@@ -193,11 +209,11 @@ public interface ProjectRepo {
     List<TowerType> towerTypes();
 
     @UpdateProvider(type = ProjectUtil.class, method = "updateProject")
-    void updateProject(@Param("pro")ProjectRequest projectRequest);
+    void updateProject(@Param("pro") ProjectRequest projectRequest);
 
     @InsertProvider(type = ProjectUtil.class, method = "insertProject")
     @SelectKey(statement = "select nextval('project_id_seq') ", resultType = int.class, before = true, keyProperty = "id.id")
-    int insertProject(@Param("id") ID id,@Param("userID")int userID, @Param("project") ProjectRequest project);
+    int insertProject(@Param("id") ID id, @Param("userID") int userID, @Param("project") ProjectInsertRequest project);
 
     @InsertProvider(type = ProjectUtil.class, method = "insertProjectIntro")
     int insertProjectIntro(@Param("intro") ProjectIntroduction intro, @Param("proID") int projectID);
@@ -206,120 +222,133 @@ public interface ProjectRepo {
     int insertPropertyType(@Param("pt") PropertyType propertyType, @Param("proID") int projectID);
 
     @SelectProvider(type = ProjectUtil.class, method = "insertTowerType")
-    void insertTowerType(@Param("type")String type,@Param("proID") int projectID);
+    void insertTowerType(@Param("type") String type, @Param("proID") int projectID);
 
     @Select("SELECT id " +
             "FROM property_type " +
             "WHERE project_id=#{proID}")
-    List<Integer> findAllPropertyTypeID(@Param("proID")int proID);
+    List<Integer> findAllPropertyTypeID(@Param("proID") int proID);
 
     @Update("UPDATE property_type " +
             "SET name=#{pt.type},bedroom=#{pt.bedroom},floor=#{pt.floor},width=#{pt.width},height=#{pt.height},bathroom=#{pt.bathroom},parking=#{pt.parking} " +
             "WHERE id = #{pt.id} AND project_id=#{proID}")
-    Integer updatePropertyType(@Param("pt")PropertyType propertyType,@Param("proID")int projectID);
+    Integer updatePropertyType(@Param("pt") PropertyType propertyType, @Param("proID") int projectID);
 
     @Delete("DELETE FROM property_type " +
             "WHERE id=#{id}")
-    void removePropertyType(@Param("id")int id,@Param("proID")int projectID);
+    void removePropertyType(@Param("id") int id, @Param("proID") int projectID);
 
     @Select("SELECT id " +
             "FROM tower_type " +
             "WHERE project_id=#{proID}")
-    List<Integer> findAllTowerTypeID(@Param("proID")int projectID);
+    List<Integer> findAllTowerTypeID(@Param("proID") int projectID);
 
     @Update("UPDATE tower_type " +
             "SET type=#{ty.type} " +
             "WHERE id=#{ty.id} and project_id=#{proID}")
-    Integer updateTowerType(@Param("ty")TowerType towerType,@Param("proID")int projectID);
+    Integer updateTowerType(@Param("ty") TowerType towerType, @Param("proID") int projectID);
 
     @Delete("DELETE FROM tower_type " +
             "WHERE id=#{id} and project_id=#{proID}")
-    void removeTowerType(@Param("id")int id,@Param("proID")int projectID);
+    void removeTowerType(@Param("id") int id, @Param("proID") int projectID);
 
     class ProjectUtil {
-        public String findAllProjectByFilterCount(@Param("filter")FilterRequest filter){
-            return new SQL(){
+        public String findAllProjectByFilterCount(@Param("filter") FilterRequest filter) {
+            return new SQL() {
                 {
                     SELECT("count(project.id)");
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
-                    if(filter.getRoom()>0)
+                    if (filter.getRoom() > 0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
-                    if(filter.getTitle()!=null && filter.getTitle().length()>0)
+                    if (filter.getTitle() != null && filter.getTitle().length() > 0)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getCity()!=null && filter.getCity().length()>0 )
+                    if (filter.getCity() != null && filter.getCity().length() > 0)
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
-                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
-                        if(filter.getStatus().equalsIgnoreCase("true"))
+                    if (filter.getStatus() != null && filter.getStatus().length() > 0)
+                        if (filter.getStatus().equalsIgnoreCase("true"))
                             WHERE("isdisplay IS TRUE");
-                        else if(filter.getStatus().equalsIgnoreCase("false"))
+                        else if (filter.getStatus().equalsIgnoreCase("false"))
                             WHERE("isdisplay IS FALSE");
-                    if(filter.getCountryID()>0)
+                    if (filter.getCountryID() > 0)
                         WHERE("project.country_id=#{filter.countryID}");
-                    if(filter.getProjectTypeID()>0)
+                    if (filter.getProjectTypeID() > 0)
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
-                    if(filter.getRoom()>0)
+                    if (filter.getRoom() > 0)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getToPrice()>0 && filter.getFromPrice()>0)
+                    else if (filter.getRoom() > 7)
+                        WHERE("bedroom > 7");
+                    if (filter.getToPrice() > 0 && filter.getFromPrice() > 0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    else if(filter.getToPrice()>0) WHERE("price < #{filter.toPrice}");
-                    else if(filter.getFromPrice()>0) WHERE("price <");
-                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
-                        WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
+                    else if (filter.getToPrice() > 0) WHERE("price < #{filter.toPrice}");
+                    else if (filter.getFromPrice() > 0) WHERE("price < #{filter.fromPrice}");
+                    if (filter.getRentOrBuy() != null && filter.getRentOrBuy().length() > 0) {
+                        if (filter.getRentOrBuy().equalsIgnoreCase("rent") || filter.getRentOrBuy().equalsIgnoreCase("buy")) {
+                            WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
+                        }
+                    }
                 }
             }.toString();
         }
 
-        public String findAllProjectByFilter(@Param("filter")FilterRequest filter,@Param("limit")int limit,@Param("offset")int offset){
-            return new SQL(){
+        public String findAllProjectByFilter(@Param("filter") FilterRequest filter, @Param("limit") int limit, @Param("offset") int offset) {
+            return new SQL() {
                 {
                     SELECT("substring(project.description,1,200)||'.....' as description,rent_or_buy,project.id,project.name,price,project.sqm_price,grr,country_id,project_type_id,country.name,project_type.name,thumbnail,isdisplay");
                     FROM("project");
                     INNER_JOIN("country ON country.id=project.country_id");
                     INNER_JOIN("project_type ON project_type.id=project.project_type_id");
-                    if(filter.getRoom()>0)
+                    if (filter.getRoom() > 0)
                         INNER_JOIN("property_type on project.id=property_type.project_id");
-                    if(filter.getTitle()!=null && filter.getTitle().length()>0)
+                    if (filter.getTitle() != null && filter.getTitle().length() > 0)
                         WHERE("project.name ILIKE '%'||#{filter.title}||'%'");
-                    if(filter.getCity()!=null && filter.getCity().length()>0 )
+                    if (filter.getCity() != null && filter.getCity().length() > 0)
                         WHERE("city ILIKE '%'||#{filter.city}||'%'");
-                    if(filter.getStatus()!=null && filter.getStatus().length()>0)
-                        if(filter.getStatus().equalsIgnoreCase("true"))
+                    if (filter.getStatus() != null && filter.getStatus().length() > 0)
+                        if (filter.getStatus().equalsIgnoreCase("true"))
                             WHERE("isdisplay IS TRUE");
-                        else if(filter.getStatus().equalsIgnoreCase("false"))
+                        else if (filter.getStatus().equalsIgnoreCase("false"))
                             WHERE("isdisplay IS FALSE");
-                    if(filter.getCountryID()>0)
+                    if (filter.getCountryID() > 0)
                         WHERE("project.country_id=#{filter.countryID}");
-                    if(filter.getProjectTypeID()>0)
+                    if (filter.getProjectTypeID() > 0)
                         WHERE("project.project_type_id=#{filter.projectTypeID}");
-                    if(filter.getRoom()>0)
+                    if (filter.getRoom() > 0 && filter.getRoom() < 9)
                         WHERE("bedroom = #{filter.room}");
-                    if(filter.getToPrice()>0 && filter.getFromPrice()>0)
+                    else if (filter.getRoom() > 7)
+                        WHERE("bedroom > 7");
+                    if (filter.getToPrice() > 0 && filter.getFromPrice() > 0)
                         WHERE("price between #{filter.fromPrice} AND #{filter.toPrice}");
-                    else if(filter.getToPrice()>0) WHERE("price < #{filter.toPrice}");
-                    else if(filter.getFromPrice()>0) WHERE("price <");
-                    if(filter.getRentOrBuy()!=null && filter.getRentOrBuy().length()>0)
-                        WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
-                    if(filter.getSortType()!=null && filter.getSortType().length()>0 ){
-                        if(filter.getSortType().equalsIgnoreCase("grr"))
+                    else if (filter.getToPrice() > 0) WHERE("price < #{filter.toPrice}");
+                    else if (filter.getFromPrice() > 0) WHERE("price < #{filter.fromPrice}");
+                    if (filter.getRentOrBuy() != null && filter.getRentOrBuy().length() > 0) {
+                        if (filter.getRentOrBuy().equalsIgnoreCase("rent") || filter.getRentOrBuy().equalsIgnoreCase("buy")) {
+                            WHERE("rent_or_buy ILIKE #{filter.rentOrBuy}");
+                        }
+                    }
+                    if (filter.getSortType() != null && filter.getSortType().length() > 0) {
+                        if (filter.getSortType().equalsIgnoreCase("grr"))
                             ORDER_BY("grr limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("grr-desc"))
+                        else if(filter.getSortType().equalsIgnoreCase("id"))
+                            ORDER_BY("project.id DESC limit #{limit} offset #{offset}");
+                        else if (filter.getSortType().equalsIgnoreCase("grr-desc"))
                             ORDER_BY("grr DESC limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("price"))
+                        else if (filter.getSortType().equalsIgnoreCase("price"))
                             ORDER_BY("price limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("price-desc"))
+                        else if (filter.getSortType().equalsIgnoreCase("price-desc"))
                             ORDER_BY("price DESC limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("title"))
-                            ORDER_BY("name limit #{limit} offset #{offset}");
-                        else if(filter.getSortType().equalsIgnoreCase("title-desc"))
-                            ORDER_BY("name DESC limit #{limit} offset #{offset}");
-                    }else ORDER_BY("project.id DESC limit #{limit} offset #{offset}");
+                        else if (filter.getSortType().equalsIgnoreCase("title"))
+                            ORDER_BY("project.name limit #{limit} offset #{offset}");
+                        else if (filter.getSortType().equalsIgnoreCase("title-desc"))
+                            ORDER_BY("project.name DESC limit #{limit} offset #{offset}");
+                    } else ORDER_BY("project.id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();
         }
-        public String updateProject(@Param("pro")ProjectRequest projectRequest){
-            return new SQL(){
+
+        public String updateProject(@Param("pro") ProjectRequest projectRequest) {
+            return new SQL() {
                 {
                     UPDATE("project");
                     SET("city=#{pro.city},name=#{pro.name},grr=#{pro.grr},country_id=#{pro.countryID},project_type_id=#{pro.projectTypeID},completed_date=#{pro.completedDate},built_date=#{pro.builtDate},description=#{pro.description},price=#{pro.price},sqm_price=#{pro.sqmPrice},avg_rent_from=#{pro.avgRentFrom},avg_rent_to=#{pro.avgRentTo},down_payment=#{pro.downPayment},rent_or_buy=#{pro.rentOrBuy},address_1=#{pro.addressOne},address_2=#{pro.addressTwo}");
@@ -327,47 +356,50 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String findAllProject(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit,@Param("offset")int offset){
-            return new SQL(){
+
+        public String findAllProject(@Param("title") String title, @Param("cid") int cid, @Param("pid") int pid, @Param("status") String status, @Param("limit") int limit, @Param("offset") int offset) {
+            return new SQL() {
                 {
                     SELECT("substring(project.description,1,200)||'.....' as description,id,name,price,sqm_price,grr,country_id,project_type_id,thumbnail,isdisplay");
                     FROM("project");
-                    if(cid>0)
+                    if (cid > 0)
                         WHERE("country_id=#{cid}");
-                    if(title!=null && title.trim().length()>0) {
+                    if (title != null && title.trim().length() > 0) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
-                    if(status.equalsIgnoreCase("true"))
+                    if (status.equalsIgnoreCase("true"))
                         WHERE("isdisplay IS TRUE");
-                    else if(status.equalsIgnoreCase("false"))
+                    else if (status.equalsIgnoreCase("false"))
                         WHERE("isdisplay IS false");
-                    if(pid>0)
+                    if (pid > 0)
                         WHERE("project_type_id=#{pid}");
                     ORDER_BY("id DESC LIMIT #{limit} OFFSET #{offset}");
                 }
             }.toString();
         }
-        public String findAllProjectCount(@Param("title")String title,@Param("cid") int cid, @Param("pid") int pid, @Param("status") String status){
-            return new SQL(){
+
+        public String findAllProjectCount(@Param("title") String title, @Param("cid") int cid, @Param("pid") int pid, @Param("status") String status) {
+            return new SQL() {
                 {
                     SELECT("COUNT(id)");
                     FROM("project");
-                    if(title!=null && title.trim().length()>0) {
+                    if (title != null && title.trim().length() > 0) {
                         WHERE("name ilike '%'||#{title}||'%'");
                     }
-                    if(status.equalsIgnoreCase("true"))
+                    if (status.equalsIgnoreCase("true"))
                         WHERE("isdisplay IS TRUE");
-                    else if(status.equalsIgnoreCase("false"))
+                    else if (status.equalsIgnoreCase("false"))
                         WHERE("isdisplay IS false");
-                    if(cid>0)
+                    if (cid > 0)
                         WHERE("country_id=#{cid}");
-                    if(pid>0)
+                    if (pid > 0)
                         WHERE("project_type_id=#{pid}");
                 }
             }.toString();
         }
-        public String updateThumbnail(@Param("thumbnail") String thumbnail, @Param("proID") int projectID){
-            return new SQL(){
+
+        public String updateThumbnail(@Param("thumbnail") String thumbnail, @Param("proID") int projectID) {
+            return new SQL() {
                 {
                     UPDATE("project");
                     SET("thumbnail = #{thumbnail}");
@@ -375,14 +407,16 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String insertGallery(@Param("gall") String galleries, @Param("proID") int projectID){
-            return new SQL(){
+
+        public String insertGallery(@Param("gall") String galleries, @Param("proID") int projectID) {
+            return new SQL() {
                 {
                     INSERT_INTO("project_gallery");
-                    VALUES("url,type,project_id","#{gall},'image',#{proID}");
+                    VALUES("url,type,project_id", "#{gall},'image',#{proID}");
                 }
             }.toString();
         }
+
         public String findOneProject(@Param("proID") int projectID) {
             return new SQL() {
                 {
@@ -393,7 +427,8 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String insertProject(@Param("id") ID id,@Param("userID")int userID,@Param("project") ProjectRequest project) {
+
+        public String insertProject(@Param("id") ID id, @Param("userID") int userID, @Param("project") ProjectInsertRequest project) {
             return new SQL() {
                 {
                     INSERT_INTO("project");
@@ -401,6 +436,7 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
+
         public String insertProjectIntro(@Param("intro") ProjectIntroduction intro, @Param("proID") int projectID) {
             return new SQL() {
                 {
@@ -409,6 +445,7 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
+
         public String insertPropertyType(@Param("pt") PropertyType propertyType, @Param("proID") int projectID) {
             return new SQL() {
                 {
@@ -417,7 +454,8 @@ public interface ProjectRepo {
                 }
             }.toString();
         }
-        public String insertTowerType(@Param("type")String type,@Param("proID") int projectID) {
+
+        public String insertTowerType(@Param("type") String type, @Param("proID") int projectID) {
             return new SQL() {
                 {
                     INSERT_INTO("tower_type");
@@ -427,7 +465,7 @@ public interface ProjectRepo {
         }
     }
 
-    class ProjectNoti{
+    class ProjectNoti {
         @JsonProperty("title")
         private String name;
         private String description;
@@ -461,7 +499,7 @@ public interface ProjectRepo {
         }
 
         public String getThumbnail() {
-            if(thumbnail!=null) return Url.projectThumbnailUrl+thumbnail;
+            if (thumbnail != null) return Url.projectThumbnailUrl + thumbnail;
             return thumbnail;
         }
 
@@ -470,21 +508,31 @@ public interface ProjectRepo {
         }
     }
 
-    class FilterRequest{
+    class FilterRequest {
+        @ApiModelProperty(example = "project 1")
         private String title;
+        @ApiModelProperty(example = "all", allowableValues = "all,rent,buy")
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
+        @ApiModelProperty(example = "id", allowableValues = "id,grr,grr-desc,price,price-desc,title,title-desc")
         @JsonProperty("sort_type")
         private String sortType;
+        @ApiModelProperty(example = "phnom penh")
         private String city;
+        @ApiModelProperty(example = "all", allowableValues = "all,true,false")
         private String status;
+        @ApiModelProperty(example = "0")
         @JsonProperty("project_type_id")
         private int projectTypeID;
+        @ApiModelProperty(example = "1")
         @JsonProperty("country_id")
         private int countryID;
+        @ApiModelProperty(example = "0")
         private int room;
+        @ApiModelProperty(example = "0")
         @JsonProperty("from_price")
         private double fromPrice;
+        @ApiModelProperty(example = "0")
         @JsonProperty("to_price")
         private double toPrice;
 
@@ -497,7 +545,7 @@ public interface ProjectRepo {
         }
 
         public String getTitle() {
-            if(title!=null) {
+            if (title != null) {
                 if (title.equals("")) setTitle(null);
                 else setTitle(title.trim().replaceAll(" ", "%"));
             }
@@ -509,8 +557,8 @@ public interface ProjectRepo {
         }
 
         public String getRentOrBuy() {
-            if(rentOrBuy!=null)
-                if(rentOrBuy.equals("")) setRentOrBuy(null);
+            if (rentOrBuy != null)
+                if (rentOrBuy.equals("")) setRentOrBuy(null);
             return rentOrBuy;
         }
 
@@ -519,8 +567,8 @@ public interface ProjectRepo {
         }
 
         public String getSortType() {
-            if(sortType!=null)
-                if(sortType.equals("")) setSortType(null);
+            if (sortType != null)
+                if (sortType.equals("")) setSortType(null);
             return sortType;
         }
 
@@ -529,9 +577,9 @@ public interface ProjectRepo {
         }
 
         public String getCity() {
-            if(city!=null)
-                if(city.equals("")) setCity(null);
-                else setCity(city.trim().replaceAll(" ","%"));
+            if (city != null)
+                if (city.equals("")) setCity(null);
+                else setCity(city.trim().replaceAll(" ", "%"));
             return city;
         }
 
@@ -654,7 +702,7 @@ public interface ProjectRepo {
         }
     }
 
-    class ProjectListingResponse{
+    class ProjectListingResponse {
         private int id;
         private String name;
         private double price;
@@ -751,7 +799,7 @@ public interface ProjectRepo {
         }
 
         public String getThumbnail() {
-            if(thumbnail!=null) return Url.projectThumbnailUrl+thumbnail;
+            if (thumbnail != null) return Url.projectThumbnailUrl + thumbnail;
             return thumbnail;
         }
 
@@ -761,11 +809,12 @@ public interface ProjectRepo {
 
     }
 
-    class ProjectListingRequest{
+    class ProjectListingRequest {
         @JsonProperty("country_id")
         private int countryID;
         @JsonProperty("project_type_id")
         private int projectTypID;
+        @ApiModelProperty(allowableValues = "all,true,false")
         private String status;
 
         public int getCountryID() {
@@ -843,8 +892,8 @@ public interface ProjectRepo {
         }
 
         public String getThumbnail() {
-            if(thumbnail!=null)
-                return Url.projectThumbnailUrl+thumbnail;
+            if (thumbnail != null)
+                return Url.projectThumbnailUrl + thumbnail;
             return thumbnail;
         }
 
@@ -1037,7 +1086,7 @@ public interface ProjectRepo {
         }
     }
 
-    class TowerType{
+    class TowerType {
         private int id;
         @JsonIgnore
         private int projectID;
@@ -1210,7 +1259,7 @@ public interface ProjectRepo {
 
     }
 
-    class ProjectRequest {
+    class ProjectInsertRequest {
         private int id;
         @ApiModelProperty(example = "New Project Available")
         @JsonProperty("title")
@@ -1221,16 +1270,16 @@ public interface ProjectRepo {
         @ApiModelProperty(example = "2020-03-15")
         @JsonProperty("completed_date")
         private Date completedDate;
-        @ApiModelProperty(example="1",value = "1")
+
         @JsonProperty("project_type_id")
         private Integer projectTypeID;
+
         @JsonIgnore
-        @JsonProperty("project_type")
         private String projectType;
-        @JsonIgnore
-        @ApiModelProperty(example = "Cambodia")
+
         @JsonProperty("country")
         private String country;
+
         @NotNull
         @ApiModelProperty(example = "0.5")
         private double grr;
@@ -1239,8 +1288,6 @@ public interface ProjectRepo {
         private String downPayment;
         @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">Recent falls in house prices in major capital cities appear to have plateaued according to&nbsp;RBA Governor Philip Lowe.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“…in some markets the rate of price decline has slowed and auction clearance rates have increased,” he says.</p><div id=\"outstream_holder_news\" style=\"color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; margin: auto;\"></div><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Mortgage rates remain low and there is strong competition for borrowers of high credit quality.”</p>")
         private String description;
-        @ApiModelProperty(example = "1",value = "1")
-        @NotNull
         @JsonProperty("country_id")
         private int countryID;
         @ApiModelProperty(example = "#50, Corner of St. 516 and St. 335, Sangkat Boeung Kak 1, Khan Tuol Kouk, Phnom Penh, Cambodia.")
@@ -1256,7 +1303,242 @@ public interface ProjectRepo {
         @ApiModelProperty(example = "2000")
         @JsonProperty("avg_annual_rent_from")
         private double avgRentFrom;
-        @ApiModelProperty(example = "Rent",allowableValues = "rent,buy")
+        @ApiModelProperty(example = "Rent", allowableValues = "rent,buy")
+        @JsonProperty("rent_or_buy")
+        private String rentOrBuy;
+        @ApiModelProperty(example = "5000")
+        @JsonProperty("avg_annual_rent_to")
+        private double avgRentTo;
+        @ApiModelProperty(example = "200")
+        @JsonProperty("sqm_price")
+        private double sqmPrice;
+        @JsonProperty("introductions")
+        private List<ProjectIntroduction> projectIntroductions;
+        @JsonProperty("property_types")
+        private List<PropertyType> propertyTypes;
+        @JsonProperty("tower_types")
+        private List<TowerType> towerTypes;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Date getBuiltDate() {
+            return builtDate;
+        }
+
+        public void setBuiltDate(Date builtDate) {
+            this.builtDate = builtDate;
+        }
+
+        public Date getCompletedDate() {
+            return completedDate;
+        }
+
+        public void setCompletedDate(Date completedDate) {
+            this.completedDate = completedDate;
+        }
+
+        public Integer getProjectTypeID() {
+            return projectTypeID;
+        }
+
+        public void setProjectTypeID(Integer projectTypeID) {
+            this.projectTypeID = projectTypeID;
+        }
+
+        public String getProjectType() {
+            return projectType;
+        }
+
+        public void setProjectType(String projectType) {
+            this.projectType = projectType;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public double getGrr() {
+            return grr;
+        }
+
+        public void setGrr(double grr) {
+            this.grr = grr;
+        }
+
+        public String getDownPayment() {
+            return downPayment;
+        }
+
+        public void setDownPayment(String downPayment) {
+            this.downPayment = downPayment;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public int getCountryID() {
+            return countryID;
+        }
+
+        public void setCountryID(int countryID) {
+            this.countryID = countryID;
+        }
+
+        public String getAddressOne() {
+            return addressOne;
+        }
+
+        public void setAddressOne(String addressOne) {
+            this.addressOne = addressOne;
+        }
+
+        public String getAddressTwo() {
+            return addressTwo;
+        }
+
+        public void setAddressTwo(String addressTwo) {
+            this.addressTwo = addressTwo;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public double getAvgRentFrom() {
+            return avgRentFrom;
+        }
+
+        public void setAvgRentFrom(double avgRentFrom) {
+            this.avgRentFrom = avgRentFrom;
+        }
+
+        public String getRentOrBuy() {
+            return rentOrBuy;
+        }
+
+        public void setRentOrBuy(String rentOrBuy) {
+            this.rentOrBuy = rentOrBuy;
+        }
+
+        public double getAvgRentTo() {
+            return avgRentTo;
+        }
+
+        public void setAvgRentTo(double avgRentTo) {
+            this.avgRentTo = avgRentTo;
+        }
+
+        public double getSqmPrice() {
+            return sqmPrice;
+        }
+
+        public void setSqmPrice(double sqmPrice) {
+            this.sqmPrice = sqmPrice;
+        }
+
+        public List<ProjectIntroduction> getProjectIntroductions() {
+            return projectIntroductions;
+        }
+
+        public void setProjectIntroductions(List<ProjectIntroduction> projectIntroductions) {
+            this.projectIntroductions = projectIntroductions;
+        }
+
+        public List<PropertyType> getPropertyTypes() {
+            return propertyTypes;
+        }
+
+        public void setPropertyTypes(List<PropertyType> propertyTypes) {
+            this.propertyTypes = propertyTypes;
+        }
+
+        public List<TowerType> getTowerTypes() {
+            return towerTypes;
+        }
+
+        public void setTowerTypes(List<TowerType> towerTypes) {
+            this.towerTypes = towerTypes;
+        }
+    }
+
+    class ProjectRequest {
+        private int id;
+        @ApiModelProperty(example = "New Project Available")
+        @JsonProperty("title")
+        private String name;
+        @ApiModelProperty(example = "2019-03-15")
+        @JsonProperty("built_date")
+        private Date builtDate;
+        @ApiModelProperty(example = "2020-03-15")
+        @JsonProperty("completed_date")
+        private Date completedDate;
+        @JsonIgnore
+        private Integer projectTypeID;
+        @ApiModelProperty(example = "Borey")
+        @JsonProperty("project_type")
+        private String projectType;
+        @ApiModelProperty(example = "Cambodia")
+        @JsonProperty("country")
+        private String country;
+        @NotNull
+        @ApiModelProperty(example = "0.5")
+        private double grr;
+        @ApiModelProperty(example = "5000")
+        @JsonProperty("down_payment")
+        private String downPayment;
+        @ApiModelProperty(example = "<p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">Recent falls in house prices in major capital cities appear to have plateaued according to&nbsp;RBA Governor Philip Lowe.</p><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“…in some markets the rate of price decline has slowed and auction clearance rates have increased,” he says.</p><div id=\"outstream_holder_news\" style=\"color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px; margin: auto;\"></div><p style=\"margin-bottom: 1.25em; color: rgb(51, 63, 72); font-family: Museo-Sans-300, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 16px;\">“Mortgage rates remain low and there is strong competition for borrowers of high credit quality.”</p>")
+        private String description;
+        @JsonIgnore
+        private int countryID;
+        @ApiModelProperty(example = "#50, Corner of St. 516 and St. 335, Sangkat Boeung Kak 1, Khan Tuol Kouk, Phnom Penh, Cambodia.")
+        @JsonProperty("address_1")
+        private String addressOne;
+        @ApiModelProperty(example = "#50, Corner of St. 516 and St. 335, Sangkat Boeung Kak 1, Khan Tuol Kouk, Phnom Penh, Cambodia.")
+        @JsonProperty("address_2")
+        private String addressTwo;
+        @ApiModelProperty(example = "Phnom Penh")
+        private String city;
+        @ApiModelProperty(example = "600000")
+        private double price;
+        @ApiModelProperty(example = "2000")
+        @JsonProperty("avg_annual_rent_from")
+        private double avgRentFrom;
+        @ApiModelProperty(example = "Rent", allowableValues = "rent,buy")
         @JsonProperty("rent_or_buy")
         private String rentOrBuy;
         @ApiModelProperty(example = "5000")

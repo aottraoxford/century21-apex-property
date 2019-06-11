@@ -20,7 +20,7 @@ public class SearchParam {
     private double endPrice;
 
     public String getTitle() {
-        if(title!=null) {
+        if (title != null) {
             title = title.trim();
             if (title.length() < 1)
                 return null;
@@ -33,7 +33,7 @@ public class SearchParam {
     }
 
     public String getRentOrBuy() {
-        if(rentOrBuy!=null) {
+        if (rentOrBuy != null) {
             rentOrBuy = rentOrBuy.trim();
             if (rentOrBuy.length() < 1)
                 return null;
@@ -46,7 +46,7 @@ public class SearchParam {
     }
 
     public String getSort() {
-        if(sort!=null) {
+        if (sort != null) {
             sort = sort.trim();
             if (sort.length() < 1)
                 return null;
@@ -59,7 +59,7 @@ public class SearchParam {
     }
 
     public String getCity() {
-        if(city!=null) {
+        if (city != null) {
             city = city.trim();
             if (city.length() < 1)
                 return null;

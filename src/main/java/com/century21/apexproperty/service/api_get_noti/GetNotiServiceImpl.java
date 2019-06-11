@@ -14,23 +14,23 @@ import java.util.List;
 public class GetNotiServiceImpl implements GetNotiService {
     @Autowired
     private GetNofiRepo getNofiRepo;
+
     @Override
     public List<GetNoti> getNoti(Pagination pagination) {
-        List<GetNoti> getNotiList=getNofiRepo.getNoti(pagination.getLimit(),pagination.getOffset());
-        if(getNotiList==null || getNotiList.size()<1) throw new CustomRuntimeException(404,"NO RESULT");
-        for(int i=0;i<getNotiList.size();i++){
-            if(getNotiList.get(i).getType().equalsIgnoreCase("project")) {
-                String thumnail=getNofiRepo.getThumbnail(getNotiList.get(i).getRefID());
-                if(thumnail!=null)
+        List<GetNoti> getNotiList = getNofiRepo.getNoti(pagination.getLimit(), pagination.getOffset());
+        if (getNotiList == null || getNotiList.size() < 1) throw new CustomRuntimeException(404, "NO RESULT");
+        for (int i = 0; i < getNotiList.size(); i++) {
+            if (getNotiList.get(i).getType().equalsIgnoreCase("project")) {
+                String thumnail = getNofiRepo.getThumbnail(getNotiList.get(i).getRefID());
+                if (thumnail != null)
                     getNotiList.get(i).setImage(thumnail);
-            }
-            else if(getNotiList.get(i).getType().equalsIgnoreCase("event")){
+            } else if (getNotiList.get(i).getType().equalsIgnoreCase("event")) {
                 String banner = getNofiRepo.getBanner(getNotiList.get(i).getRefID());
-                if(banner!=null)
+                if (banner != null)
                     getNotiList.get(i).setImage(banner);
-            }else if(getNotiList.get(i).getType().equalsIgnoreCase("property")){
+            } else if (getNotiList.get(i).getType().equalsIgnoreCase("property")) {
                 String thumbnail = getNofiRepo.getPropertyThumbnail(getNotiList.get(i).getRefID());
-                if(thumbnail!=null)
+                if (thumbnail != null)
                     getNotiList.get(i).setImage(thumbnail);
             }
         }

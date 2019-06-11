@@ -12,11 +12,12 @@ import java.util.List;
 public class SearchServiceImpl implements SearchService {
     @Autowired
     private SearchRepo searchRepo;
+
     @Override
     public List<Project> search(SearchParam searchParam, Pagination pagination) {
-        List<Project> projects=searchRepo.search(searchParam,pagination.getLimit(),pagination.getOffset());
-        if(projects.size()<1){
-            throw new CustomRuntimeException(404,"ZERO RECORD");
+        List<Project> projects = searchRepo.search(searchParam, pagination.getLimit(), pagination.getOffset());
+        if (projects.size() < 1) {
+            throw new CustomRuntimeException(404, "ZERO RECORD");
         }
         pagination.setTotalItem(searchRepo.countSearch(searchParam));
         return projects;
@@ -24,16 +25,16 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<ProjectType> projectTypes() {
-        List<ProjectType> projectTypes=searchRepo.projectTypes();
-        if(projectTypes.size()<1)
-            throw new CustomRuntimeException(404,"ZERO RESULT");
+        List<ProjectType> projectTypes = searchRepo.projectTypes();
+        if (projectTypes.size() < 1)
+            throw new CustomRuntimeException(404, "ZERO RESULT");
         return projectTypes;
     }
 
     @Override
     public List<Countries> countries() {
         List<Countries> countries = searchRepo.countries();
-        if(countries.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        if (countries.size() < 1) throw new CustomRuntimeException(404, "ZERO RESULT");
         return searchRepo.countries();
     }
 }

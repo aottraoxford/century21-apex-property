@@ -61,15 +61,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CustomRuntimeException.class)
-    public ResponseEntity customRuntimeException(CustomRuntimeException ex){
-        CustomResponse customResponse=new CustomResponse(ex.getStatusCode());
+    public ResponseEntity customRuntimeException(CustomRuntimeException ex) {
+        CustomResponse customResponse = new CustomResponse(ex.getStatusCode());
         customResponse.setStatus(ex.getMessage());
         return customResponse.httpResponse();
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity handleMaxSizeException(MaxUploadSizeExceededException exc, HttpServletRequest request, HttpServletResponse response) {
-        CustomResponse customResponse=new CustomResponse(400);
+        CustomResponse customResponse = new CustomResponse(400);
         customResponse.setStatus(exc.getMessage());
         return customResponse.httpResponse();
     }

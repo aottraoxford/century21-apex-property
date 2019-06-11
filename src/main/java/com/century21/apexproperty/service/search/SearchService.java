@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface SearchService {
     List<Project> search(SearchParam searchParam, Pagination pagination);
+
     List<ProjectType> projectTypes();
+
     List<Countries> countries();
 }

@@ -16,9 +16,9 @@ public interface CityRepo {
             "INNER JOIN project ON country.id=project.country_id " +
             "WHERE project.isdisplay IS TRUE ")
     @Results({
-            @Result(property = "countryId",column ="id"),
-            @Result(property = "countryName",column = "name"),
-            @Result(property = "cities",column = "id",many=@Many(select = "cities"))
+            @Result(property = "countryId", column = "id"),
+            @Result(property = "countryName", column = "name"),
+            @Result(property = "cities", column = "id", many = @Many(select = "cities"))
     })
     List<Country> countries();
 

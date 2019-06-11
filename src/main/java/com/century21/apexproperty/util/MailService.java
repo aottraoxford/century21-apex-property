@@ -21,8 +21,8 @@ public class MailService {
     @Autowired
     private UserRepo userRepo;
 
-    public void sendMail(String subject,String email,String message) {
-        UserRepo.MailAccount mailAccount=userRepo.findOneMailAccount();
+    public void sendMail(String subject, String email, String message) {
+        UserRepo.MailAccount mailAccount = userRepo.findOneMailAccount();
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -50,7 +50,7 @@ public class MailService {
             msg.setSentDate(new Date());
             Transport.send(msg);
         } catch (MessagingException e) {
-            throw new CustomRuntimeException(400,e.getMessage());
+            throw new CustomRuntimeException(400, e.getMessage());
         }
     }
 

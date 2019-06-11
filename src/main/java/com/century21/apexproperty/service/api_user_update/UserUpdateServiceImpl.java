@@ -13,12 +13,14 @@ import java.security.Principal;
 public class UserUpdateServiceImpl implements UserUpdateService {
     @Autowired
     private UserUpdateRepo userUpdateRepo;
+
     @Override
     public UserInfo userUpdate(UpdateInfo updateInfo, Principal principal) {
-        if(principal==null) throw new CustomRuntimeException(400,"Token required");
-        Integer userID=userUpdateRepo.getUserIDByEmail(principal.getName());
-        if(userID==null) throw new CustomRuntimeException(404,"USER NOT FOUND");
-        if(userUpdateRepo.updateUser(updateInfo,userID)==null) throw new CustomRuntimeException(400,"CANT UPDATE USER");
+        if (principal == null) throw new CustomRuntimeException(400, "Token required");
+        Integer userID = userUpdateRepo.getUserIDByEmail(principal.getName());
+        if (userID == null) throw new CustomRuntimeException(404, "USER NOT FOUND");
+        if (userUpdateRepo.updateUser(updateInfo, userID) == null)
+            throw new CustomRuntimeException(400, "CANT UPDATE USER");
         return userUpdateRepo.findUser(userID);
     }
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
-@JsonPropertyOrder({"country_id","country_name","types"})
+@JsonPropertyOrder({"country_id", "country_name", "types"})
 public class TypeCountryProject {
     //@ApiModelProperty(position = 1)
     @JsonProperty("country_id")

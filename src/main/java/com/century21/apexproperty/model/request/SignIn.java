@@ -1,5 +1,7 @@
 package com.century21.apexproperty.model.request;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.*;
 
 public class SignIn {
@@ -7,11 +9,13 @@ public class SignIn {
     @NotNull
     @NotBlank
     @Email
+    @ApiModelProperty(example = "darong.vann@zillennium.com")
     private String email;
     @NotBlank
     @NotNull
     @NotEmpty
     @Size(min = 8)
+    @ApiModelProperty(example = "12345678")
     private String password;
 
     public String getEmail() {

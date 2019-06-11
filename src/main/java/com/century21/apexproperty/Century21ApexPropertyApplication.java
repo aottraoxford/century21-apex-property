@@ -46,7 +46,7 @@ public class Century21ApexPropertyApplication extends SpringBootServletInitializ
     }
 
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(Century21ApexPropertyApplication.class);
     }
 }

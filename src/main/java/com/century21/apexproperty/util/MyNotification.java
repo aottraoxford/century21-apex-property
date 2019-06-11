@@ -17,12 +17,14 @@ import java.util.Scanner;
 public class MyNotification {
     @Autowired
     private SaveNotiRepo saveNotiRepo;
-    public void sendToAllSubscriber(String title,String message,String imageUrl,String type,int refID){
-        String jsonResponse=""; int httpResponse=500;
+
+    public void sendToAllSubscriber(String title, String message, String imageUrl, String type, int refID) {
+        String jsonResponse = "";
+        int httpResponse = 500;
         try {
 
             URL url = new URL("https://onesignal.com/api/v1/notifications");
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setUseCaches(false);
             con.setDoOutput(true);
             con.setDoInput(true);
@@ -32,24 +34,24 @@ public class MyNotification {
             con.setRequestMethod("POST");
 
             String strJsonBody = "{"
-                    +   "\"app_id\": \"bc3a4944-d4b8-499c-9db0-07c916166a23\","
-                    +   "\"included_segments\": [\"All\"],"
-                    +   "\"headings\":{\"en\" : \""+title+"\"},"
-                    +   "\"contents\": {\"en\": \""+message+"\"},";
-            if(type.equalsIgnoreCase("project")) {
-                strJsonBody+="\"data\": {" +
+                    + "\"app_id\": \"bc3a4944-d4b8-499c-9db0-07c916166a23\","
+                    + "\"included_segments\": [\"All\"],"
+                    + "\"headings\":{\"en\" : \"" + title + "\"},"
+                    + "\"contents\": {\"en\": \"" + message + "\"},";
+            if (type.equalsIgnoreCase("project")) {
+                strJsonBody += "\"data\": {" +
                         "\"project_id\": \"" + refID + "\"," +
                         "\"post\":\"project\"},";
-            }else if(type.equalsIgnoreCase("event")){
-                strJsonBody+="\"data\": {" +
+            } else if (type.equalsIgnoreCase("event")) {
+                strJsonBody += "\"data\": {" +
                         "\"event_id\": \"" + refID + "\"," +
                         "\"post\":\"event\"},";
-            }else if(type.equalsIgnoreCase("property")){
-                strJsonBody+="\"data\": {" +
+            } else if (type.equalsIgnoreCase("property")) {
+                strJsonBody += "\"data\": {" +
                         "\"property_id\": \"" + refID + "\"," +
                         "\"post\":\"property\"},";
             }
-             strJsonBody+="\"big_picture\": \" "+imageUrl+"\""
+            strJsonBody += "\"big_picture\": \" " + imageUrl + "\""
                     + "}";
             byte[] sendBytes = strJsonBody.getBytes("UTF-8");
             con.setFixedLengthStreamingMode(sendBytes.length);
@@ -59,31 +61,30 @@ public class MyNotification {
 
             httpResponse = con.getResponseCode();
 
-            if (  httpResponse >= HttpURLConnection.HTTP_OK
+            if (httpResponse >= HttpURLConnection.HTTP_OK
                     && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
                 Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
                 jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                 scanner.close();
-            }
-            else {
+            } else {
                 Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
                 jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
                 scanner.close();
             }
             SaveNoti saveNoti = new SaveNoti();
             saveNoti.setRefID(refID);
-            if(type.equalsIgnoreCase("event"))
+            if (type.equalsIgnoreCase("event"))
                 saveNoti.setType("event");
-            else if(type.equalsIgnoreCase("project"))
+            else if (type.equalsIgnoreCase("project"))
                 saveNoti.setType("project");
-            else if(type.equalsIgnoreCase("property"))
+            else if (type.equalsIgnoreCase("property"))
                 saveNoti.setType("property");
             saveNoti.setMessage(message);
             saveNoti.setTitle(title);
-            saveNotiRepo.SaveNoti(saveNoti,null);
+            saveNotiRepo.SaveNoti(saveNoti, null);
 
-        } catch(Throwable t) {
-            throw new CustomRuntimeException(httpResponse,jsonResponse);
+        } catch (Throwable t) {
+            throw new CustomRuntimeException(httpResponse, jsonResponse);
         }
     }
 }

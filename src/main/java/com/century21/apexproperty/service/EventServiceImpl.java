@@ -30,8 +30,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventRepo.EventResponse> findAllEvent(String title, String status, Pagination pagination) {
-        if(title!=null){
-            title=title.trim().replaceAll(" ","%");
+        if (title != null) {
+            title = title.trim().replaceAll(" ", "%");
         }
         List<EventRepo.EventResponse> events = eventRepo.findAllEvent(title, status, pagination.getLimit(), pagination.getOffset());
 
@@ -69,8 +69,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventRepo.EventResponse insertEvent(EventRepo.EventRequest eventRequest) {
-        String fileName=null;
-        if(eventRequest.getFile()!=null){
+        String fileName = null;
+        if (eventRequest.getFile() != null) {
             fileName = fileUploadService.storeImage(eventRequest.getFile(), fileUploadProperty.getEventImage());
         }
         Timestamp date;
@@ -95,5 +95,15 @@ public class EventServiceImpl implements EventService {
         ID id = new ID();
         eventRepo.insertEvent(id, eventRequest, fileName, date);
         return eventRepo.findOneEvent(id.getId());
+    }
+
+    @Override
+    public void removeEventById(Integer id) {
+        EventRepo.EventResponse eventResponse = eventRepo.removeEventById(id);
+        if(eventResponse==null) throw new CustomRuntimeException(404, "event id not found.");
+        if(eventResponse.getBanner()!=null){
+            String fileName = eventResponse.getBanner().substring(eventResponse.getBanner().lastIndexOf("/")+1);
+            fileUploadService.removeImage(fileName,fileUploadProperty.getEventImage());
+        }
     }
 }

@@ -58,8 +58,8 @@ public class Project {
     }
 
     public String getThumbnail() {
-        if(thumbnail!=null)
-            return Url.projectThumbnailUrl+thumbnail;
+        if (thumbnail != null)
+            return Url.projectThumbnailUrl + thumbnail;
         return thumbnail;
     }
 

@@ -14,9 +14,9 @@ public interface ProjectStatisticRepo {
     @Select("SELECT distinct(country_id) " +
             "FROM project")
     @Results({
-            @Result(property = "total",column = "country_id",many = @Many(select = "totalCountry")),
-            @Result(property = "name",column = "country_id",many = @Many(select = "countryName")),
-            @Result(property = "types",column = "country_id",many = @Many(select = "projectTypes"))
+            @Result(property = "total", column = "country_id", many = @Many(select = "totalCountry")),
+            @Result(property = "name", column = "country_id", many = @Many(select = "countryName")),
+            @Result(property = "types", column = "country_id", many = @Many(select = "projectTypes"))
     })
     List<Country> countries();
 
@@ -34,8 +34,8 @@ public interface ProjectStatisticRepo {
             "FROM project " +
             "WHERE country_id=#{country_id}")
     @Results({
-            @Result(property = "type",column = "project_type_id",many = @Many(select = "type")),
-            @Result(property = "total",column = "{cid=country_id,pid=project_type_id}",one = @One(select = "totalProjectTypes"))
+            @Result(property = "type", column = "project_type_id", many = @Many(select = "type")),
+            @Result(property = "total", column = "{cid=country_id,pid=project_type_id}", one = @One(select = "totalProjectTypes"))
     })
     List<Type> projectTypes();
 

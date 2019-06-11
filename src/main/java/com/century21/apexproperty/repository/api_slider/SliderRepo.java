@@ -11,13 +11,13 @@ import java.util.List;
 
 @Repository
 public interface SliderRepo {
-    @SelectProvider(type= SliderUtil.class,method = "getSlider")
+    @SelectProvider(type = SliderUtil.class, method = "getSlider")
     @Results({
-            @Result(property = "slider",column = "banner"),
-            @Result(property = "status",column = "enable")
+            @Result(property = "slider", column = "banner"),
+            @Result(property = "status", column = "enable")
     })
     List<Slider> getSlider(@Param("en") String en);
 
-    @SelectProvider(type= SliderUtil.class,method = "getSliderCount")
+    @SelectProvider(type = SliderUtil.class, method = "getSliderCount")
     int getSliderCount(String en);
 }

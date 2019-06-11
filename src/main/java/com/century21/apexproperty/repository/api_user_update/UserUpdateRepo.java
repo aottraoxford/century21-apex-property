@@ -22,9 +22,9 @@ public interface UserUpdateRepo {
             "FROM users " +
             "WHERE id=#{userID}")
     @Results({
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name"),
-            @Result(property = "phoneNumber",column = "phone_number")
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number")
     })
     UserInfo findUser(int userID);
 

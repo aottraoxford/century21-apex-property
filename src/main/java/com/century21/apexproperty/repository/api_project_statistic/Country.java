@@ -2,7 +2,7 @@ package com.century21.apexproperty.repository.api_project_statistic;
 
 import java.util.List;
 
-public class Country{
+public class Country {
     private String name;
     private int total;
     private List<Type> types;

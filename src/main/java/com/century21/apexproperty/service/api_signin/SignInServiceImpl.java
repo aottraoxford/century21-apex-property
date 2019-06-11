@@ -11,14 +11,15 @@ import java.util.List;
 public class SignInServiceImpl implements SignInService {
     @Autowired
     private SignInRepo signInRepo;
+
     @Override
     public List<String> emailExist(String email) {
-        Boolean emailExist=signInRepo.emailExist(email);
-        if(emailExist==null){
-            throw new CustomRuntimeException(404,"Email not exist");
+        Boolean emailExist = signInRepo.emailExist(email);
+        if (emailExist == null) {
+            throw new CustomRuntimeException(404, "Email not exist");
         }
-        if(emailExist==false){
-            throw new CustomRuntimeException(401,"Email not yet enable");
+        if (emailExist == false) {
+            throw new CustomRuntimeException(401, "Email not yet enable");
         }
         return signInRepo.roles(signInRepo.findIdByEmail(email));
     }

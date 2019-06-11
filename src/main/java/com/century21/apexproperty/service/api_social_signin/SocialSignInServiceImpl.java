@@ -34,13 +34,13 @@ public class SocialSignInServiceImpl implements SocialSignInService {
         CustomResponse customResponse;
 
         //check if >0 email from social is exist
-        if(socialSignInRepo.isEmailExist(socialSignIn.getEmail())>0){
+        if (socialSignInRepo.isEmailExist(socialSignIn.getEmail()) > 0) {
 
         }
 
-        if (socialSignIn.getEmail()==null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
+        if (socialSignIn.getEmail() == null || socialSignIn.getEmail().equalsIgnoreCase("null")) {
             socialSignIn.setEmail(socialSignIn.getSocialId());
-        }else socialSignIn.setEmail(socialSignIn.getEmail()+"|"+UUID.randomUUID());
+        } else socialSignIn.setEmail(socialSignIn.getEmail() + "|" + UUID.randomUUID());
         if (socialSignInRepo.checkSocialAccount(socialSignIn.getSocialId()) < 1) {
             if (socialSignInRepo.saveSocialSignIn(socialSignIn) < 1) {
                 throw new CustomRuntimeException(500, "Insert fail.");
@@ -58,7 +58,7 @@ public class SocialSignInServiceImpl implements SocialSignInService {
                     .queryString("username", socialSignIn.getSocialId())
                     .queryString("password", socialSignIn.getSocialId())
                     .asObject(OAuth2.class);
-            List<String> roles=new ArrayList<>();
+            List<String> roles = new ArrayList<>();
             roles.add(socialSignInRepo.findRoleByAppID(socialSignIn.getSocialId()));
             jsonResponse.getBody().setRoles(roles);
             customResponse = new CustomResponse(200, jsonResponse.getBody());

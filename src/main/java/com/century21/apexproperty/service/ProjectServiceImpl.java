@@ -7,6 +7,7 @@ import com.century21.apexproperty.model.ID;
 import com.century21.apexproperty.model.Pagination;
 import com.century21.apexproperty.repository.ProjectRepo;
 import com.century21.apexproperty.repository.UserRepo;
+import com.century21.apexproperty.repository.api_slider.Slider;
 import com.century21.apexproperty.util.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,14 @@ public class ProjectServiceImpl implements ProjectService {
     private UserRepo userRepo;
 
     @Override
-    public ProjectRepo.Project insertProject(ProjectRepo.ProjectRequest projectRequest,Principal principal) {
-        Integer userID=userRepo.findUserIDByEmail(principal.getName());
-        if(userID==null || userID==0) throw new CustomRuntimeException(404,"user id not found.");
+    public ProjectRepo.Project insertProject(ProjectRepo.ProjectInsertRequest projectRequest, Principal principal) {
+        Integer userID = userRepo.findUserIDByEmail(principal.getName());
+        if (userID == null || userID == 0) throw new CustomRuntimeException(404, "user id not found.");
         ID id = new ID();
-        projectRepo.insertProject(id,userID, projectRequest);
+        projectRepo.insertProject(id, userID, projectRequest);
         int projectID = id.getId();
 
-        if(projectRequest.getTowerTypes()!=null) {
+        if (projectRequest.getTowerTypes() != null) {
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {
                 projectRepo.insertTowerType(projectRequest.getTowerTypes().get(i).getType(), projectID);
             }
@@ -60,34 +61,36 @@ public class ProjectServiceImpl implements ProjectService {
         Collection<Integer> idFromDB;
 
         Integer countryID = projectRepo.findCountryIDByName(projectRequest.getCountry());
-        if(countryID==null) throw new CustomRuntimeException(404,"Country not exist.");
+        if (countryID == null)
+            countryID = projectRepo.insertCountry(projectRequest.getCountry());
         Integer projectTypeID = projectRepo.findProjectTypeIDByName(projectRequest.getProjectType());
-        if(projectTypeID==null) throw new CustomRuntimeException(404,"Project type not exist.");
+        if (projectTypeID == null)
+            projectTypeID = projectRepo.insertProjectType(projectRequest.getProjectType());
 
         projectRequest.setCountryID(countryID);
         projectRequest.setProjectTypeID(projectTypeID);
 
         projectRepo.updateProject(projectRequest);
 
-        if(projectRequest.getProjectIntroductions()!=null){
-            idFromDB=projectRepo.findAllProjectIntroID(projectRequest.getId());
-            for(int i=0;i<projectRequest.getProjectIntroductions().size();i++){
-                ProjectRepo.ProjectIntroduction projectIntroduction=projectRequest.getProjectIntroductions().get(i);
-                if(projectRepo.updateProjectIntro(projectIntroduction,projectRequest.getId())<1)
-                    projectRepo.insertProjectIntro(projectIntroduction,projectRequest.getId());
+        if (projectRequest.getProjectIntroductions() != null) {
+            idFromDB = projectRepo.findAllProjectIntroID(projectRequest.getId());
+            for (int i = 0; i < projectRequest.getProjectIntroductions().size(); i++) {
+                ProjectRepo.ProjectIntroduction projectIntroduction = projectRequest.getProjectIntroductions().get(i);
+                if (projectRepo.updateProjectIntro(projectIntroduction, projectRequest.getId()) < 1)
+                    projectRepo.insertProjectIntro(projectIntroduction, projectRequest.getId());
                 idFromRequest.add(projectIntroduction.getId());
             }
             idFromDB.addAll(idFromRequest);
             idFromDB.removeAll(idFromRequest);
             for (int i = 0; i < idFromDB.size(); i++)
-                projectRepo.removeProjectIntro(((List<Integer>) idFromDB).get(i),projectRequest.getId());
+                projectRepo.removeProjectIntro(((List<Integer>) idFromDB).get(i), projectRequest.getId());
         }
 
         if (projectRequest.getTowerTypes() != null) {
             idFromDB = projectRepo.findAllTowerTypeID(projectRequest.getId());
             for (int i = 0; i < projectRequest.getTowerTypes().size(); i++) {
                 ProjectRepo.TowerType towerType = projectRequest.getTowerTypes().get(i);
-                if (projectRepo.updateTowerType(towerType,projectRequest.getId()) < 1) {
+                if (projectRepo.updateTowerType(towerType, projectRequest.getId()) < 1) {
                     projectRepo.insertTowerType(towerType.getType(), projectRequest.getId());
                 }
                 idFromRequest.add(towerType.getId());
@@ -95,22 +98,22 @@ public class ProjectServiceImpl implements ProjectService {
             idFromDB.addAll(idFromRequest);
             idFromDB.removeAll(idFromRequest);
             for (int i = 0; i < idFromDB.size(); i++)
-                projectRepo.removeTowerType(((List<Integer>) idFromDB).get(i),projectRequest.getId());
+                projectRepo.removeTowerType(((List<Integer>) idFromDB).get(i), projectRequest.getId());
         }
 
         if (projectRequest.getPropertyTypes() != null) {
             idFromDB = projectRepo.findAllPropertyTypeID(projectRequest.getId());
             for (int i = 0; i < projectRequest.getPropertyTypes().size(); i++) {
                 ProjectRepo.PropertyType propertyType = projectRequest.getPropertyTypes().get(i);
-                if (projectRepo.updatePropertyType(propertyType,projectRequest.getId()) < 1) {
+                if (projectRepo.updatePropertyType(propertyType, projectRequest.getId()) < 1) {
                     projectRepo.insertPropertyType(propertyType, projectRequest.getId());
                 }
                 idFromRequest.add(propertyType.getId());
             }
             idFromDB.addAll(idFromRequest);
             idFromDB.removeAll(idFromRequest);
-            for(int i=0;i<idFromDB.size();i++)
-                projectRepo.removePropertyType(((List<Integer>) idFromDB).get(i),projectRequest.getId());
+            for (int i = 0; i < idFromDB.size(); i++)
+                projectRepo.removePropertyType(((List<Integer>) idFromDB).get(i), projectRequest.getId());
         }
 
         return projectRepo.findOneProject(projectRequest.getId());
@@ -122,8 +125,8 @@ public class ProjectServiceImpl implements ProjectService {
         String nameThumbnail = "";
         if (thumbnail != null) {
             if (aThumbnail != null) fileUploadService.removeImage(aThumbnail, fileUploadProperty.getProjectThumbnail());
-            String fileName=fileUploadService.storeImage(thumbnail, fileUploadProperty.getProjectThumbnail());
-            projectRepo.updateThumbnail(fileName,projectID);
+            String fileName = fileUploadService.storeImage(thumbnail, fileUploadProperty.getProjectThumbnail());
+            projectRepo.updateThumbnail(fileName, projectID);
             nameThumbnail = Url.projectThumbnailUrl + fileName;
         }
         List<String> nameGalleries = new ArrayList<>();
@@ -144,7 +147,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRepo.Project projectDetail(int projectID, Principal principal) {
         ProjectRepo.Project project = projectRepo.findOneProject(projectID);
         if (project == null) throw new CustomRuntimeException(404, "ZERO RESULT");
-        if(principal!=null && principal.getName()!=null) {
+        if (principal != null && principal.getName() != null) {
             Integer userID = userRepo.findUserIDByEmail(principal.getName());
             if (userID != null) {
                 Integer favID = projectRepo.favorite(projectID, userID);
@@ -188,11 +191,11 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectRepo.CountryForWeb> projectsFroWeb(int page, int limit) {
         List<ProjectRepo.CountryForWeb> countryForWeb = projectRepo.getCountryForWeb();
         for (int i = 0; i < countryForWeb.size(); i++) {
-            if(countryForWeb.get(i).getCountryID()==1){
-                ProjectRepo.ProjectTypeForWeb projectTypeForWeb=new ProjectRepo.ProjectTypeForWeb();
+            if (countryForWeb.get(i).getCountryID() == 1) {
+                ProjectRepo.ProjectTypeForWeb projectTypeForWeb = new ProjectRepo.ProjectTypeForWeb();
                 projectTypeForWeb.setId(99);
                 projectTypeForWeb.setType("General");
-                countryForWeb.get(i).getProjectTypeForWebList().add(countryForWeb.get(i).getProjectTypeForWebList().size(),projectTypeForWeb);
+                countryForWeb.get(i).getProjectTypeForWebList().add(countryForWeb.get(i).getProjectTypeForWebList().size(), projectTypeForWeb);
             }
             for (int j = 0; j < countryForWeb.get(i).getProjectTypeForWebList().size(); j++) {
                 countryForWeb.get(i).getProjectTypeForWebList().get(j).setProjectList(new ArrayList<>());
@@ -213,10 +216,41 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectRepo.ProjectListingResponse> filterProject(ProjectRepo.FilterRequest filterRequest, Pagination pagination) {
-        List<ProjectRepo.ProjectListingResponse> projects= projectRepo.findAllProjectByFilter(filterRequest,pagination.getLimit(),pagination.getOffset());
-        if(projects==null || projects.size()<1) throw new CustomRuntimeException(404,"ZERO RESULT");
+        List<ProjectRepo.ProjectListingResponse> projects = projectRepo.findAllProjectByFilter(filterRequest, pagination.getLimit(), pagination.getOffset());
+        if (projects == null || projects.size() < 1) throw new CustomRuntimeException(404, "ZERO RESULT");
         pagination.setTotalItem(projectRepo.findAllProjectByFilterCount(filterRequest));
         return projects;
     }
 
+    @Override
+    public void removeSliderById(Integer id) {
+        Slider slider = projectRepo.removeSliderById(id);
+        if(slider==null) throw new CustomRuntimeException(404, "slider id not found.");
+
+        if(slider.getSlider()!=null) {
+            String fileName = slider.getSlider().substring(slider.getSlider().lastIndexOf("/")+1);
+            System.out.println(fileName);
+            fileUploadService.removeImage(fileName, fileUploadProperty.getSlider());
+        }
+    }
+
+    @Override
+    public void removeProjectById(Integer id) {
+        ProjectRepo.Project project=projectRepo.findOneProject(id);
+        if(project==null) throw new CustomRuntimeException(404, "project id not found.");
+        projectRepo.removeProjectById(id);
+        if(project.getProjectGalleries()!=null && project.getProjectGalleries().size()>0) {
+            for (int i = 0; i < project.getProjectGalleries().size(); i++) {
+                String name = project.getProjectGalleries().get(i).getImage();
+                String fileName = name.substring(name.lastIndexOf("/") + 1);
+                fileUploadService.removeImage(fileName, fileUploadProperty.getProjectGallery());
+
+            }
+        }
+        if(project.getThumbnail()!=null){
+            String name = project.getThumbnail();
+            String fileName = name.substring(name.lastIndexOf("/")+1);
+            fileUploadService.removeImage(fileName,fileUploadProperty.getProjectThumbnail());
+        }
+    }
 }

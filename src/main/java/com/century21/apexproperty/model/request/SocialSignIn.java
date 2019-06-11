@@ -28,8 +28,8 @@ public class SocialSignIn {
     }
 
     public String getSocialId() {
-        if(socialId==null)
-            throw new CustomRuntimeException(400,"social_id can not be empty or null");
+        if (socialId == null)
+            throw new CustomRuntimeException(400, "social_id can not be empty or null");
         return socialId;
     }
 

@@ -14,11 +14,11 @@ public interface UserInfoRepo {
             "INNER JOIN authority ON authorizations.authority_id=authority.id " +
             "WHERE users.id=#{userID}")
     @Results({
-        @Result(property = "id",column = "id"),
-        @Result(property = "firstName",column = "first_name"),
-        @Result(property = "lastName",column = "last_name"),
-        @Result(property = "phoneNumber",column = "phone_number"),
-        @Result(property = "accountType",column = "account_type")
+            @Result(property = "id", column = "id"),
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "accountType", column = "account_type")
     })
     UserInfo userInfo(@Param("userID") int userID);
 

@@ -10,20 +10,21 @@ import org.springframework.stereotype.Service;
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoRepo userInfoRepo;
+
     @Override
     public UserInfo userInfo(Integer userID, String email) {
-        if(userID==null){
-            userID=userInfoRepo.getIDByEmail(email);
-            if(userID==null) throw new CustomRuntimeException(404,"USER NOT EXIST");
+        if (userID == null) {
+            userID = userInfoRepo.getIDByEmail(email);
+            if (userID == null) throw new CustomRuntimeException(404, "USER NOT EXIST");
         }
 
         System.out.println(userID);
 
-        UserInfo userInfo=userInfoRepo.userInfo(userID);
+        UserInfo userInfo = userInfoRepo.userInfo(userID);
 
 
-        if(userInfo==null)
-            throw new CustomRuntimeException(404,"ZERO RESULT");
+        if (userInfo == null)
+            throw new CustomRuntimeException(404, "ZERO RESULT");
         return userInfo;
     }
 }

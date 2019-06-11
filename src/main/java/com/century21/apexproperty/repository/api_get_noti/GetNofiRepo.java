@@ -29,10 +29,10 @@ public interface GetNofiRepo {
             "FROM noti " +
             "ORDER BY id DESC limit #{limit} offset #{offset}")
     @Results({
-            @Result(property = "refID",column = "ref_id"),
-            @Result(property = "date",column = "created_at")
+            @Result(property = "refID", column = "ref_id"),
+            @Result(property = "date", column = "created_at")
     })
-    List<GetNoti> getNoti(int limit,int offset);
+    List<GetNoti> getNoti(int limit, int offset);
 
     @Select("SELECT count(id) " +
             "FROM noti ")

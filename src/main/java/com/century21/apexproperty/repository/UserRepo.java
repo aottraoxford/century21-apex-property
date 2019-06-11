@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @Repository
 public interface UserRepo {
     @Select("select 'project' as type,name as title,id from project where id = #{id}")
-    ContactProp findProjectContact(@Param("id")int id);
+    ContactProp findProjectContact(@Param("id") int id);
 
     @Select("select 'property' as type,title,id from property where id= #{id}")
     ContactProp findPropertyContact(int id);
@@ -28,15 +28,15 @@ public interface UserRepo {
             "from contact " +
             "where id=#{id} ")
     @Results({
-            @Result(property = "createAt",column = "created_at"),
-            @Result(property = "projectID",column = "project_id"),
-            @Result(property = "propertyID",column = "property_id")
+            @Result(property = "createAt", column = "created_at"),
+            @Result(property = "projectID", column = "project_id"),
+            @Result(property = "propertyID", column = "property_id")
     })
     Contact findOneContact(int id);
 
     @Update("UPDATE mail SET email=#{email},password=#{password} " +
             "WHERE email ilike #{email}")
-    int updateMailAccount(String email,String password);
+    int updateMailAccount(String email, String password);
 
     @Select("SELECT email,password from " +
             "mail limit 1")
@@ -44,38 +44,38 @@ public interface UserRepo {
 
     @Select("SELECT * " +
             "FROM contact " +
-            "WHERE email IS NULL " +
+            "WHERE type ilike 'inquiry' " +
             "ORDER BY id DESC limit #{limit} offset #{offset} ")
     @Results({
-            @Result(property = "createdAt",column = "created_at")
+            @Result(property = "createdAt", column = "created_at")
     })
-    List<Question> findQuestions(int limit,int offset);
+    List<Question> findQuestions(int limit, int offset);
 
     @Select("SELECT count(id) " +
             "FROM contact " +
-            "WHERE email IS NULL ")
+            "WHERE type ilike 'inquiry' ")
     int findQuestionsCount();
 
     @Select("SELECT first_name,last_name " +
             "FROM users " +
             "WHERE email = #{email}")
     @Results({
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name")
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name")
     })
     User findUserByEmail(String email);
 
-    @SelectProvider(type = UserUtil.class,method = "findAllContactCount")
-    int findAllContactCount(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType);
+    @SelectProvider(type = UserUtil.class, method = "findAllContactCount")
+    int findAllContactCount(@Param("filter") ContactFilter filter, @Param("userID") int userID, @Param("roleType") String roleType);
 
-    @SelectProvider(type = UserUtil.class,method = "findAllContact")
+    @SelectProvider(type = UserUtil.class, method = "findAllContact")
     @Results({
-            @Result(property = "createAt",column = "created_at"),
-            @Result(property = "prop.id",column = "pid"),
-            @Result(property = "prop.type",column = "type"),
-            @Result(property = "prop.title",column = "ptitle")
+            @Result(property = "createAt", column = "created_at"),
+            @Result(property = "prop.id", column = "pid"),
+            @Result(property = "prop.type", column = "type"),
+            @Result(property = "prop.title", column = "ptitle")
     })
-    List<Contact> findAllContact(@Param("filter")ContactFilter filter, @Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset);
+    List<Contact> findAllContact(@Param("filter") ContactFilter filter, @Param("userID") int userID, @Param("roleType") String roleType, @Param("limit") int limit, @Param("offset") int offset);
 
     @Select("SELECT role " +
             "FROM authority " +
@@ -91,33 +91,33 @@ public interface UserRepo {
             "WHERE users.email=#{email}")
     String findUserRoleByEmail(String email);
 
-    @SelectProvider(type = UserUtil.class,method = "findUsers")
+    @SelectProvider(type = UserUtil.class, method = "findUsers")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name"),
-            @Result(property = "phoneNumber",column = "phone_number"),
-            @Result(property = "accountType",column = "account_type"),
-            @Result(property = "role",column = "id",many = @Many(select = "roles"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "accountType", column = "account_type"),
+            @Result(property = "role", column = "id", many = @Many(select = "roles"))
     })
-    List<User> findUsers(String name,String role,int limit,int offset);
+    List<User> findUsers(String name, String role, int limit, int offset);
 
-    @SelectProvider(type = UserUtil.class,method = "findUsersCount")
-    int findUsersCount(String name,String role);
+    @SelectProvider(type = UserUtil.class, method = "findUsersCount")
+    int findUsersCount(String name, String role);
 
-    @SelectProvider(type = UserUtil.class,method = "agentsCount")
-    int agentsCount(@Param("name")String name,@Param("parentID") int parentID);
+    @SelectProvider(type = UserUtil.class, method = "agentsCount")
+    int agentsCount(@Param("name") String name, @Param("parentID") int parentID);
 
-    @SelectProvider(type = UserUtil.class,method = "agents")
+    @SelectProvider(type = UserUtil.class, method = "agents")
     @Results({
-            @Result(property = "id",column = "id"),
-            @Result(property = "firstName",column = "first_name"),
-            @Result(property = "lastName",column = "last_name"),
-            @Result(property = "phoneNumber",column = "phone_number"),
-            @Result(property = "accountType",column = "account_type"),
-            @Result(property = "role",column = "id",many = @Many(select = "roles"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "firstName", column = "first_name"),
+            @Result(property = "lastName", column = "last_name"),
+            @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "accountType", column = "account_type"),
+            @Result(property = "role", column = "id", many = @Many(select = "roles"))
     })
-    List<User> agents(@Param("name")String name,@Param("userID") int userID,int limit,int offset);
+    List<User> agents(@Param("name") String name, @Param("userID") int userID, int limit, int offset);
 
     @Select("SELECT authority.role " +
             "FROM authority " +
@@ -127,11 +127,11 @@ public interface UserRepo {
 
     @Update("UPDATE users SET parent_id=#{parentID} " +
             "WHERE id=#{childID}")
-    int setChild(@Param("parentID")Integer parentID,@Param("childID")int childID);
+    int setChild(@Param("parentID") Integer parentID, @Param("childID") int childID);
 
     @Update("UPDATE authorizations SET authority_id=#{authID} " +
             "WHERE users_id=#{userID}")
-    int updateRole(@Param("userID")int userID,@Param("authID")int authID);
+    int updateRole(@Param("userID") int userID, @Param("authID") int authID);
 
     @Select("SELECT id " +
             "FROM authority " +
@@ -144,7 +144,7 @@ public interface UserRepo {
 
     @Update("UPDATE verification SET enable = TRUE " +
             "WHERE code = #{code} and name ilike #{email}")
-    Integer updateEnable(int code,String email);
+    Integer updateEnable(int code, String email);
 
     @Select("SELECT id " +
             "FROM users " +
@@ -153,7 +153,7 @@ public interface UserRepo {
 
     @Insert("INSERT INTO verification (name,code) " +
             "VALUES (#{email},#{code})")
-    void insertVerification(@Param("email")String email,@Param("code")int code);
+    void insertVerification(@Param("email") String email, @Param("code") int code);
 
     @Delete("Delete " +
             "FROM verification " +
@@ -163,141 +163,151 @@ public interface UserRepo {
 
     @Update("UPDATE users SET password=crypt(#{change.password},gen_salt('bf')) " +
             "WHERE email = #{change.email}")
-    Integer updatePassword(@Param("change")ChangePassword change);
+    Integer updatePassword(@Param("change") ChangePassword change);
 
     @Delete("DELETE FROM verification WHERE expired < now() - interval '60' minute AND enable IS false ")
     Integer removeCode();
 
-    class UserUtil{
-        public String findAllContactCount(@Param("filter")ContactFilter filter,@Param("userID")int userID,@Param("roleType")String roleType){
-            String contactofProperty,contactofProject;
-            if(roleType.equalsIgnoreCase("admin")){
-                contactofProject="select count(contact.id) from contact " +
+    class UserUtil {
+        public String findAllContactCount(@Param("filter") ContactFilter filter, @Param("userID") int userID, @Param("roleType") String roleType) {
+            String contactofProperty, contactofProject;
+            if (roleType.equalsIgnoreCase("admin")) {
+                contactofProject = "select count(contact.id) from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
                         "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
-                contactofProperty="select count(contact.id) from contact " +
+                contactofProperty = "select count(contact.id) from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
                         "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
-            }else if(roleType.equalsIgnoreCase("agent")){
-                contactofProject="select count(contact.id) from contact " +
+            } else if (roleType.equalsIgnoreCase("agent")) {
+                contactofProject = "select count(contact.id) from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
                         "where contact.issue is null and users.id = #{userID}";
-                contactofProperty="select count(contact.id) from contact " +
+                contactofProperty = "select count(contact.id) from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
                         "where contact.issue is null and users.id = #{userID}";
-            }else return "select count(id) from contact limit 0";
-            if(filter.getType().equalsIgnoreCase("project"))
+            } else return "select count(id) from contact limit 0";
+            if (filter.getType().equalsIgnoreCase("project"))
                 return contactofProject;
-            else if(filter.getType().equalsIgnoreCase("property"))
+            else if (filter.getType().equalsIgnoreCase("property"))
                 return contactofProperty;
             else {
-                return "select sum(count) from (("+contactofProject+") union all ("+contactofProperty+"))as foo";
+                return "select sum(count) from ((" + contactofProject + ") union all (" + contactofProperty + "))as foo";
             }
         }
 
-        public String findAllContact(@Param("filter")ContactFilter filter,@Param("userID")int userID,@Param("roleType")String roleType,@Param("limit")int limit,@Param("offset")int offset){
-            String contactofProperty,contactofProject;
-            if(roleType.equalsIgnoreCase("admin")){
-                contactofProject="select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
+        public String findAllContact(@Param("filter") ContactFilter filter, @Param("userID") int userID, @Param("roleType") String roleType, @Param("limit") int limit, @Param("offset") int offset) {
+            String contactofProperty, contactofProject;
+            if (roleType.equalsIgnoreCase("admin")) {
+                contactofProject = "select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
-                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
-                contactofProperty="select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
+                        "where contact.type ilike 'contact' and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+                contactofProperty = "select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
-                        "where contact.issue is null and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
-            }else if(roleType.equalsIgnoreCase("agent")){
-                contactofProject="select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
+                        "where contact.type ilike 'contact' and users.id = #{userID} or users.parent_id=(select parent_id from users where id=#{userID})";
+            } else if (roleType.equalsIgnoreCase("agent")) {
+                contactofProject = "select 'project' as type,contact.*,project.id as pid,project.name as ptitle from contact " +
                         "inner join project on contact.project_id = project.id " +
                         "inner join users on users.id=project.user_id " +
-                        "where contact.issue is null and users.id = #{userID}";
-                contactofProperty="select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
+                        "where contact.type ilike 'contact' and users.id = #{userID}";
+                contactofProperty = "select 'property' as type,contact.*,property.id as pid,property.title as ptitle from contact " +
                         "inner join property on contact.property_id = property.id " +
                         "inner join users on users.id=property.user_id " +
-                        "where contact.issue is null and users.id = #{userID}";
-            }else return "select id from contact limit 0";
-            if(filter.getType().equalsIgnoreCase("project"))
-                return contactofProject+" order by id desc limit #{limit} offset #{offset}";
-            else if(filter.getType().equalsIgnoreCase("property"))
-                return contactofProperty+" order by id desc limit #{limit} offset #{offset}";
+                        "where contact.type ilike 'contact' and users.id = #{userID}";
+            } else return "select id from contact limit 0";
+            if (filter.getType().equalsIgnoreCase("project"))
+                return contactofProject + " order by id desc limit #{limit} offset #{offset}";
+            else if (filter.getType().equalsIgnoreCase("property"))
+                return contactofProperty + " order by id desc limit #{limit} offset #{offset}";
             else {
-                return "("+contactofProject+") union all ("+contactofProperty+") order by id desc limit #{limit} offset #{offset}";
+                return "(" + contactofProject + ") union all (" + contactofProperty + ") order by id desc limit #{limit} offset #{offset}";
             }
         }
 
-        public String findUsers(String name,String role,int limit,int offset){
-            return new SQL(){
+        public String findUsers(String name, String role, int limit, int offset) {
+            return new SQL() {
                 {
                     SELECT("users.id,first_name,last_name,email,gender,phone_number,image,account_type");
                     FROM("users");
-                    if(role!=null && role.trim().length()>0) {
+                    if (role != null && role.trim().length() > 0) {
                         INNER_JOIN("authorizations ON users.id=authorizations.users_id");
                         INNER_JOIN("authority ON authorizations.authority_id=authority.id");
                         WHERE("authority.role ilike #{role}");
                     }
-                    if(name!=null && name.trim().length()>0)
+                    if (name != null && name.trim().length() > 0)
                         WHERE("concat(first_name,' ',last_name) ilike '%'||#{name}||'%'");
                     ORDER_BY("id DESC limit #{limit} offset #{offset}");
                 }
             }.toString();
         }
 
-        public String findUsersCount(String name,String role){
-            return new SQL(){
+        public String findUsersCount(String name, String role) {
+            return new SQL() {
                 {
                     SELECT("count(users.id)");
                     FROM("users");
-                    if(role!=null && role.trim().length()>0) {
+                    if (role != null && role.trim().length() > 0) {
                         INNER_JOIN("authorizations ON users.id=authorizations.users_id");
                         INNER_JOIN("authority ON authorizations.authority_id=authority.id");
                         WHERE("authority.role ilike #{role}");
                     }
-                    if(name!=null && name.trim().length()>0)
+                    if (name != null && name.trim().length() > 0)
                         WHERE("concat(first_name,' ',last_name) ilike '%'||#{name}||'%'");
 
                 }
             }.toString();
         }
 
-        public String agents(@Param("name")String name,@Param("userID") int userID,int limit ,int offset){
-           return new SQL(){
-               {
-                   SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
-                   FROM("users");
-                   WHERE("parent_id=(select id from users where id = #{userID})");
-                   OR();
-                   WHERE("id = #{userID}");
-                   if(name!=null && name.length()>0)
-                       WHERE("name ilike '%'||#{name}||'%'");
-                   ORDER_BY("id DESC limit #{limit} offset #{offset}");
-               }
-           } .toString();
+        public String agents(@Param("name") String name, @Param("userID") int userID, int limit, int offset) {
+            return new SQL() {
+                {
+                    SELECT("id,first_name,last_name,email,gender,phone_number,image,account_type");
+                    FROM("users");
+                    WHERE("parent_id=(select id from users where id = #{userID})");
+                    OR();
+                    WHERE("id = #{userID}");
+                    if (name != null && name.length() > 0)
+                        WHERE("name ilike '%'||#{name}||'%'");
+                    ORDER_BY("id DESC limit #{limit} offset #{offset}");
+                }
+            }.toString();
         }
 
-        public String agentsCount(@Param("name")String name,@Param("parentID") int parentID){
-            return new SQL(){
+        public String agentsCount(@Param("name") String name, @Param("parentID") int parentID) {
+            return new SQL() {
                 {
                     SELECT("count(id)");
                     FROM("users");
                     WHERE("id=#{parentID} OR parent_id=#{parentID}");
-                    if(name!=null && name.length()>0)
+                    if (name != null && name.length() > 0)
                         WHERE("name ilike '%'||#{name}||'%'");
                 }
-            } .toString();
+            }.toString();
         }
     }
-    class Question{
+
+    class Question {
         private int id;
+        private String email;
         private String name;
         private String phone;
         private String country;
         private String issue;
         @JsonProperty("created_at")
         private Date createdAt;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
         public int getId() {
             return id;
@@ -348,7 +358,7 @@ public interface UserRepo {
         }
     }
 
-    class Contact{
+    class Contact {
         private int id;
         @JsonIgnore
         private Integer projectID;
@@ -426,7 +436,7 @@ public interface UserRepo {
         }
     }
 
-    class ContactProp{
+    class ContactProp {
         private Integer id;
         private String type;
         private String title;
@@ -456,7 +466,7 @@ public interface UserRepo {
         }
     }
 
-    class ContactFilter{
+    class ContactFilter {
         @ApiModelProperty(allowableValues = "all,project,property")
         private String type;
 
@@ -470,7 +480,7 @@ public interface UserRepo {
 
     }
 
-    class User{
+    class User {
         private int id;
         @JsonProperty("first_name")
         private String firstName;
@@ -529,15 +539,15 @@ public interface UserRepo {
         }
 
         public String getEmail() {
-            swapEmail=email;
-            if(email.contains("|")) {
+            swapEmail = email;
+            if (email.contains("|")) {
                 String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
                 Pattern pattern;
                 Matcher matcher;
-                pattern=Pattern.compile(EMAIL_REGEX,Pattern.CASE_INSENSITIVE);
-                email=email.split("\\|")[0];
-                matcher=pattern.matcher(email);
-                if(!matcher.matches()) return null;
+                pattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+                email = email.split("\\|")[0];
+                matcher = pattern.matcher(email);
+                if (!matcher.matches()) return null;
             }
             return email;
         }
@@ -582,7 +592,7 @@ public interface UserRepo {
         }
     }
 
-    class ChangePassword{
+    class ChangePassword {
         private String password;
         private String email;
 
@@ -603,7 +613,7 @@ public interface UserRepo {
         }
     }
 
-    class AssignRoleRequest{
+    class AssignRoleRequest {
         @JsonProperty("user_id")
         private int userID;
 
@@ -628,7 +638,7 @@ public interface UserRepo {
         }
     }
 
-    class MailAccountRequest{
+    class MailAccountRequest {
         private String email;
         private String password;
 
@@ -649,7 +659,7 @@ public interface UserRepo {
         }
     }
 
-    class MailAccount{
+    class MailAccount {
         private String email;
         @NotNull
         @NotEmpty
