@@ -78,10 +78,10 @@ public class UserController {
 
     //@ApiOperation("send 4 number to email to verify")
     @GetMapping(value = "/api/send-email-verification-code", produces = "application/json")
-    public ResponseEntity emailVerification(@Email @RequestParam("email") String email, HttpServletRequest httpServletRequest) {
+    public ResponseEntity emailVerification(@Email @RequestParam("email") String email, @RequestHeader("x-auth")String xAuth) {
 
         JwtUtil jwt = new JwtUtil();
-        jwt.tokenToObject(httpServletRequest.getHeader("x-auth"), JwtUtil.secret, String.class);
+        jwt.tokenToObject(xAuth, JwtUtil.secret, String.class);
 
         sendEmailVerificationService.saveEmailId(email);
         CustomResponse customResponse = new CustomResponse(200);
