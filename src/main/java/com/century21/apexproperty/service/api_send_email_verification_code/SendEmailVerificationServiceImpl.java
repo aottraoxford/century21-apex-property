@@ -23,10 +23,10 @@ public class SendEmailVerificationServiceImpl implements SendEmailVerificationSe
         Date date = sendEmailVerificationRepo.findEmailExpiredDate(email);
         if (date != null) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.SECOND, -30);
+            calendar.add(Calendar.SECOND, -15);
 
             if (calendar.getTime().compareTo(date) <= 0) {
-                throw new CustomRuntimeException(400, "Email Send too fast please wait 30 second and try again.");
+                throw new CustomRuntimeException(400, "Email Send too fast please wait 15 second and try again.");
             }
 
         }

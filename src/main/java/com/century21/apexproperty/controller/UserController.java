@@ -76,7 +76,6 @@ public class UserController {
     @Autowired
     private SendEmailVerificationService sendEmailVerificationService;
 
-    //@ApiOperation("send 4 number to email to verify")
     @GetMapping(value = "/api/send-email-verification-code", produces = "application/json")
     public ResponseEntity emailVerification(@Email @RequestParam("email") String email, @RequestHeader("x-auth")String xAuth) {
 
@@ -90,7 +89,7 @@ public class UserController {
     }
 
     @Autowired
-    EnableEmailService enableEmailService;
+    private EnableEmailService enableEmailService;
 
     //@ApiOperation("retrieve email and code to enable email")
     @PatchMapping(value = "/api/enable-email", produces = "application/json")

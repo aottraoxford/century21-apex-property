@@ -12,6 +12,6 @@ public interface EnableEmailRepo {
             "WHERE name ilike #{email} AND code=#{code}")
     int enableEmail(@Param("email") String email, @Param("code") int code);
 
-    @Delete("DELECT FROM verification WHERE email ilike #{email}")
+    @Delete("DELETE FROM verification WHERE name ilike #{email}")
     int removeVerifiesByEmail(String email);
 }
